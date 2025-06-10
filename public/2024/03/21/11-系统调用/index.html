@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="/css2?family=Monda:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/lib/@fortawesome/fontawesome-free/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xuqi.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat","show_result":true},"fold":{"enable":false,"height":500},"language":false,"highlight_shrink":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":true,"nav":true,"disqus":{"shortname":"xuqi1987","count":true,"placeholder":"请开始你的表演","button":"发送","avatar":"mm","meta":"nickname,mail","pageSize":10,"reaction":true}},"stickytabs":false,"motion":{"enable":false,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"labels":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容: ${query}"}}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="第十一章：系统调用11.1 系统调用的基本概念系统调用的作用系统调用的主要功能：  进程控制 文件操作 设备管理 内存管理 网络通信  示例代码： 1234567891011121314151617181920#include &lt;stdio.h&gt;#include &lt;unistd.h&gt;#include &lt;sys&#x2F;types.h&gt;#include &lt;sys&#x2F;s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第十一章：系统调用">
+<meta property="og:url" content="https://xuqi.github.io/2024/03/21/11-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/index.html">
+<meta property="og:site_name" content="程序员的自我修养">
+<meta property="og:description" content="第十一章：系统调用11.1 系统调用的基本概念系统调用的作用系统调用的主要功能：  进程控制 文件操作 设备管理 内存管理 网络通信  示例代码： 1234567891011121314151617181920#include &lt;stdio.h&gt;#include &lt;unistd.h&gt;#include &lt;sys&#x2F;types.h&gt;#include &lt;sys&#x2F;s">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-03-20T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-10T16:40:48.738Z">
+<meta property="article:author" content="Xu Qi">
+<meta property="article:tag" content="链接">
+<meta property="article:tag" content="装载">
+<meta property="article:tag" content="库">
+<meta property="article:tag" content="计算机系统">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xuqi.github.io/2024/03/21/11-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xuqi.github.io/2024/03/21/11-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/","path":"2024/03/21/11-系统调用/","title":"第十一章：系统调用"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>第十一章：系统调用 | 程序员的自我修养</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/animejs/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="/lib/hexo-generator-searchdb/dist/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="程序员的自我修养" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">程序员的自我修养</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">链接、装载与库</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0%EF%BC%9A%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">第十一章：系统调用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#11-1-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">11.1 系统调用的基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">1.1.1.</span> <span class="nav-text">系统调用的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.1.2.</span> <span class="nav-text">系统调用的实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-2-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">11.2 系统调用的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E6%8E%A7%E5%88%B6"><span class="nav-number">1.2.1.</span> <span class="nav-text">进程控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C"><span class="nav-number">1.2.2.</span> <span class="nav-text">文件操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-3-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E4%BC%98%E5%8C%96"><span class="nav-number">1.3.</span> <span class="nav-text">11.3 系统调用的优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">1.3.1.</span> <span class="nav-text">性能优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="nav-number">1.3.2.</span> <span class="nav-text">错误处理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E8%B7%B5%E7%BB%83%E4%B9%A0"><span class="nav-number">1.4.</span> <span class="nav-text">实践练习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%80%83%E9%A2%98"><span class="nav-number">1.5.</span> <span class="nav-text">思考题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.6.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Xu Qi</p>
+  <div class="site-description" itemprop="description">读书笔记和技术分享</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xuqi.github.io/2024/03/21/11-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xu Qi">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员的自我修养">
+      <meta itemprop="description" content="读书笔记和技术分享">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="第十一章：系统调用 | 程序员的自我修养">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第十一章：系统调用
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-03-21 00:00:00" itemprop="dateCreated datePublished" datetime="2024-03-21T00:00:00+08:00">2024-03-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-11 00:40:48" itemprop="dateModified" datetime="2025-06-11T00:40:48+08:00">2025-06-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">读书笔记</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">计算机基础</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="第十一章：系统调用"><a href="#第十一章：系统调用" class="headerlink" title="第十一章：系统调用"></a>第十一章：系统调用</h1><h2 id="11-1-系统调用的基本概念"><a href="#11-1-系统调用的基本概念" class="headerlink" title="11.1 系统调用的基本概念"></a>11.1 系统调用的基本概念</h2><h3 id="系统调用的作用"><a href="#系统调用的作用" class="headerlink" title="系统调用的作用"></a>系统调用的作用</h3><p>系统调用的主要功能：</p>
+<ol>
+<li>进程控制</li>
+<li>文件操作</li>
+<li>设备管理</li>
+<li>内存管理</li>
+<li>网络通信</li>
+</ol>
+<p>示例代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;sys/stat.h&gt;</span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    // 进程控制</span><br><span class="line">    pid_t pid = getpid();</span><br><span class="line">    printf(&quot;Process ID: %d\n&quot;, pid);</span><br><span class="line">    </span><br><span class="line">    // 文件操作</span><br><span class="line">    int fd = open(&quot;test.txt&quot;, O_CREAT | O_WRONLY, 0644);</span><br><span class="line">    if (fd != -1) &#123;</span><br><span class="line">        write(fd, &quot;Hello, World!\n&quot;, 13);</span><br><span class="line">        close(fd);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译和运行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译</span></span><br><span class="line">gcc syscall_basic.c -o syscall_basic</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">./syscall_basic</span><br></pre></td></tr></table></figure>
+
+<h3 id="系统调用的实现"><a href="#系统调用的实现" class="headerlink" title="系统调用的实现"></a>系统调用的实现</h3><p>系统调用的实现方式：</p>
+<ol>
+<li>软中断</li>
+<li>系统调用表</li>
+<li>参数传递</li>
+<li>返回值处理</li>
+</ol>
+<p>示例代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;sys/syscall.h&gt;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    // 直接使用系统调用号</span><br><span class="line">    long ret = syscall(SYS_getpid);</span><br><span class="line">    printf(&quot;Process ID (syscall): %ld\n&quot;, ret);</span><br><span class="line">    </span><br><span class="line">    // 使用系统调用宏</span><br><span class="line">    ret = syscall(SYS_write, STDOUT_FILENO, &quot;Hello\n&quot;, 6);</span><br><span class="line">    printf(&quot;Write bytes: %ld\n&quot;, ret);</span><br><span class="line">    </span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译和运行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译</span></span><br><span class="line">gcc syscall_impl.c -o syscall_impl</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">./syscall_impl</span><br></pre></td></tr></table></figure>
+
+<h2 id="11-2-系统调用的使用"><a href="#11-2-系统调用的使用" class="headerlink" title="11.2 系统调用的使用"></a>11.2 系统调用的使用</h2><h3 id="进程控制"><a href="#进程控制" class="headerlink" title="进程控制"></a>进程控制</h3><p>进程控制相关的系统调用：</p>
+<ol>
+<li>fork</li>
+<li>exec</li>
+<li>wait</li>
+<li>exit</li>
+</ol>
+<p>示例代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;sys/wait.h&gt;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    // 创建子进程</span><br><span class="line">    pid_t pid = fork();</span><br><span class="line">    if (pid == -1) &#123;</span><br><span class="line">        perror(&quot;fork&quot;);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (pid == 0) &#123;</span><br><span class="line">        // 子进程</span><br><span class="line">        printf(&quot;Child process (PID: %d)\n&quot;, getpid());</span><br><span class="line">        sleep(1);</span><br><span class="line">        return 42;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        // 父进程</span><br><span class="line">        printf(&quot;Parent process (PID: %d)\n&quot;, getpid());</span><br><span class="line">        </span><br><span class="line">        // 等待子进程</span><br><span class="line">        int status;</span><br><span class="line">        waitpid(pid, &amp;status, 0);</span><br><span class="line">        </span><br><span class="line">        if (WIFEXITED(status)) &#123;</span><br><span class="line">            printf(&quot;Child exited with status: %d\n&quot;, </span><br><span class="line">                   WEXITSTATUS(status));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译和运行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译</span></span><br><span class="line">gcc process_control.c -o process_control</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">./process_control</span><br></pre></td></tr></table></figure>
+
+<h3 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h3><p>文件操作相关的系统调用：</p>
+<ol>
+<li>open</li>
+<li>read</li>
+<li>write</li>
+<li>close</li>
+</ol>
+<p>示例代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    // 打开文件</span><br><span class="line">    int fd = open(&quot;test.txt&quot;, O_CREAT | O_RDWR, 0644);</span><br><span class="line">    if (fd == -1) &#123;</span><br><span class="line">        perror(&quot;open&quot;);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 写入数据</span><br><span class="line">    const char *msg = &quot;Hello, World!\n&quot;;</span><br><span class="line">    ssize_t n = write(fd, msg, strlen(msg));</span><br><span class="line">    if (n == -1) &#123;</span><br><span class="line">        perror(&quot;write&quot;);</span><br><span class="line">        close(fd);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 定位到文件开始</span><br><span class="line">    lseek(fd, 0, SEEK_SET);</span><br><span class="line">    </span><br><span class="line">    // 读取数据</span><br><span class="line">    char buf[1024];</span><br><span class="line">    n = read(fd, buf, sizeof(buf) - 1);</span><br><span class="line">    if (n &gt; 0) &#123;</span><br><span class="line">        buf[n] = &#x27;\0&#x27;;</span><br><span class="line">        printf(&quot;Read: %s&quot;, buf);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 关闭文件</span><br><span class="line">    close(fd);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译和运行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译</span></span><br><span class="line">gcc file_ops.c -o file_ops</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">./file_ops</span><br></pre></td></tr></table></figure>
+
+<h2 id="11-3-系统调用的优化"><a href="#11-3-系统调用的优化" class="headerlink" title="11.3 系统调用的优化"></a>11.3 系统调用的优化</h2><h3 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h3><p>系统调用性能优化的方法：</p>
+<ol>
+<li>减少系统调用次数</li>
+<li>使用缓冲</li>
+<li>批量操作</li>
+<li>异步I&#x2F;O</li>
+</ol>
+<p>示例代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line"></span><br><span class="line">#define BUFFER_SIZE 4096</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    // 打开文件</span><br><span class="line">    int fd = open(&quot;large.txt&quot;, O_CREAT | O_WRONLY, 0644);</span><br><span class="line">    if (fd == -1) &#123;</span><br><span class="line">        perror(&quot;open&quot;);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 使用缓冲写入</span><br><span class="line">    char buf[BUFFER_SIZE];</span><br><span class="line">    memset(buf, &#x27;A&#x27;, BUFFER_SIZE);</span><br><span class="line">    </span><br><span class="line">    // 批量写入</span><br><span class="line">    for (int i = 0; i &lt; 1000; i++) &#123;</span><br><span class="line">        if (write(fd, buf, BUFFER_SIZE) == -1) &#123;</span><br><span class="line">            perror(&quot;write&quot;);</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    close(fd);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译和运行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译</span></span><br><span class="line">gcc syscall_optimize.c -o syscall_optimize</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">./syscall_optimize</span><br></pre></td></tr></table></figure>
+
+<h3 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h3><p>系统调用错误处理的方法：</p>
+<ol>
+<li>检查返回值</li>
+<li>使用errno</li>
+<li>错误恢复</li>
+<li>日志记录</li>
+</ol>
+<p>示例代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line">#include &lt;errno.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line"></span><br><span class="line">// 错误处理宏</span><br><span class="line">#define CHECK_ERROR(expr, msg) \</span><br><span class="line">    do &#123; \</span><br><span class="line">        if ((expr) == -1) &#123; \</span><br><span class="line">            fprintf(stderr, &quot;%s: %s\n&quot;, msg, strerror(errno)); \</span><br><span class="line">            return 1; \</span><br><span class="line">        &#125; \</span><br><span class="line">    &#125; while (0)</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    // 打开文件</span><br><span class="line">    int fd = open(&quot;test.txt&quot;, O_RDONLY);</span><br><span class="line">    CHECK_ERROR(fd, &quot;open failed&quot;);</span><br><span class="line">    </span><br><span class="line">    // 读取数据</span><br><span class="line">    char buf[1024];</span><br><span class="line">    ssize_t n = read(fd, buf, sizeof(buf) - 1);</span><br><span class="line">    CHECK_ERROR(n, &quot;read failed&quot;);</span><br><span class="line">    </span><br><span class="line">    if (n &gt; 0) &#123;</span><br><span class="line">        buf[n] = &#x27;\0&#x27;;</span><br><span class="line">        printf(&quot;Read: %s&quot;, buf);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 关闭文件</span><br><span class="line">    CHECK_ERROR(close(fd), &quot;close failed&quot;);</span><br><span class="line">    </span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译和运行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译</span></span><br><span class="line">gcc error_handle.c -o error_handle</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">./error_handle</span><br></pre></td></tr></table></figure>
+
+<h2 id="实践练习"><a href="#实践练习" class="headerlink" title="实践练习"></a>实践练习</h2><ol>
+<li>系统调用实验</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建测试程序</span></span><br><span class="line"><span class="built_in">cat</span> &gt; syscall_test.c &lt;&lt; <span class="string">EOL</span></span><br><span class="line"><span class="string">#include &lt;stdio.h&gt;</span></span><br><span class="line"><span class="string">#include &lt;unistd.h&gt;</span></span><br><span class="line"><span class="string">#include &lt;sys/types.h&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">int main() &#123;</span></span><br><span class="line"><span class="string">    printf(&quot;Process ID: %d\n&quot;, getpid());</span></span><br><span class="line"><span class="string">    printf(&quot;Parent Process ID: %d\n&quot;, getppid());</span></span><br><span class="line"><span class="string">    return 0;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOL</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译和运行</span></span><br><span class="line">gcc syscall_test.c -o syscall_test</span><br><span class="line">./syscall_test</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>文件操作实验</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建文件操作测试程序</span></span><br><span class="line"><span class="built_in">cat</span> &gt; file_test.c &lt;&lt; <span class="string">EOL</span></span><br><span class="line"><span class="string">#include &lt;stdio.h&gt;</span></span><br><span class="line"><span class="string">#include &lt;unistd.h&gt;</span></span><br><span class="line"><span class="string">#include &lt;fcntl.h&gt;</span></span><br><span class="line"><span class="string">#include &lt;string.h&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">int main() &#123;</span></span><br><span class="line"><span class="string">    int fd = open(&quot;test.txt&quot;, O_CREAT | O_WRONLY, 0644);</span></span><br><span class="line"><span class="string">    if (fd != -1) &#123;</span></span><br><span class="line"><span class="string">        write(fd, &quot;Test message\n&quot;, 13);</span></span><br><span class="line"><span class="string">        close(fd);</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    return 0;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOL</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译和运行</span></span><br><span class="line">gcc file_test.c -o file_test</span><br><span class="line">./file_test</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>错误处理实验</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建错误处理测试程序</span></span><br><span class="line"><span class="built_in">cat</span> &gt; error_test.c &lt;&lt; <span class="string">EOL</span></span><br><span class="line"><span class="string">#include &lt;stdio.h&gt;</span></span><br><span class="line"><span class="string">#include &lt;unistd.h&gt;</span></span><br><span class="line"><span class="string">#include &lt;fcntl.h&gt;</span></span><br><span class="line"><span class="string">#include &lt;errno.h&gt;</span></span><br><span class="line"><span class="string">#include &lt;string.h&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">int main() &#123;</span></span><br><span class="line"><span class="string">    int fd = open(&quot;nonexistent.txt&quot;, O_RDONLY);</span></span><br><span class="line"><span class="string">    if (fd == -1) &#123;</span></span><br><span class="line"><span class="string">        printf(&quot;Error: %s\n&quot;, strerror(errno));</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    return 0;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOL</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译和运行</span></span><br><span class="line">gcc error_test.c -o error_test</span><br><span class="line">./error_test</span><br></pre></td></tr></table></figure>
+
+<h2 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h2><ol>
+<li>系统调用的主要功能是什么？</li>
+<li>系统调用是如何实现的？</li>
+<li>如何优化系统调用的性能？</li>
+<li>系统调用错误处理的方法有哪些？</li>
+<li>进程控制和文件操作的系统调用有哪些？</li>
+</ol>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li>《程序员的自我修养：链接、装载与库》</li>
+<li><a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man2/syscalls.2.html">Linux 系统调用文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.uclibc.org/docs/psABI-x86_64.pdf">System V ABI</a></li>
+<li><a target="_blank" rel="noopener" href="https://refspecs.linuxfoundation.org/elf/elf.pdf">ELF 文件格式规范</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.gnu.org/software/binutils/">GNU Binutils 文档</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%93%BE%E6%8E%A5/" rel="tag"># 链接</a>
+              <a href="/tags/%E8%A3%85%E8%BD%BD/" rel="tag"># 装载</a>
+              <a href="/tags/%E5%BA%93/" rel="tag"># 库</a>
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/" rel="tag"># 计算机系统</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/03/21/12-%E7%BA%BF%E7%A8%8B%E5%BA%93/" rel="prev" title="第十二章：线程库">
+                  <i class="fa fa-angle-left"></i> 第十二章：线程库
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/03/21/10-%E8%BF%90%E8%A1%8C%E5%BA%93/" rel="next" title="第十章：运行库">
+                  第十章：运行库 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2024 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Xu Qi</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

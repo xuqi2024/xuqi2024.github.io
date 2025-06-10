@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="/css2?family=Monda:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/lib/@fortawesome/fontawesome-free/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xuqi.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat","show_result":true},"fold":{"enable":false,"height":500},"language":false,"highlight_shrink":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":true,"nav":true,"disqus":{"shortname":"xuqi1987","count":true,"placeholder":"请开始你的表演","button":"发送","avatar":"mm","meta":"nickname,mail","pageSize":10,"reaction":true}},"stickytabs":false,"motion":{"enable":false,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"labels":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容: ${query}"}}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="第十二章：线程库12.1 线程的基本概念线程的作用线程的主要功能：  并发执行 资源共享 提高响应性 简化编程模型  示例代码： 12345678910111213141516171819202122232425262728293031#include &lt;stdio.h&gt;#include &lt;pthread.h&gt;#include &lt;unistd.h&gt;&#x2F;&#x2F; 线程函数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第十二章：线程库">
+<meta property="og:url" content="https://xuqi.github.io/2024/03/21/12-%E7%BA%BF%E7%A8%8B%E5%BA%93/index.html">
+<meta property="og:site_name" content="程序员的自我修养">
+<meta property="og:description" content="第十二章：线程库12.1 线程的基本概念线程的作用线程的主要功能：  并发执行 资源共享 提高响应性 简化编程模型  示例代码： 12345678910111213141516171819202122232425262728293031#include &lt;stdio.h&gt;#include &lt;pthread.h&gt;#include &lt;unistd.h&gt;&#x2F;&#x2F; 线程函数">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-03-20T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-10T16:41:36.803Z">
+<meta property="article:author" content="Xu Qi">
+<meta property="article:tag" content="链接">
+<meta property="article:tag" content="装载">
+<meta property="article:tag" content="库">
+<meta property="article:tag" content="计算机系统">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xuqi.github.io/2024/03/21/12-%E7%BA%BF%E7%A8%8B%E5%BA%93/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xuqi.github.io/2024/03/21/12-%E7%BA%BF%E7%A8%8B%E5%BA%93/","path":"2024/03/21/12-线程库/","title":"第十二章：线程库"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>第十二章：线程库 | 程序员的自我修养</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/animejs/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="/lib/hexo-generator-searchdb/dist/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="程序员的自我修养" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">程序员的自我修养</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">链接、装载与库</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E5%8D%81%E4%BA%8C%E7%AB%A0%EF%BC%9A%E7%BA%BF%E7%A8%8B%E5%BA%93"><span class="nav-number">1.</span> <span class="nav-text">第十二章：线程库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#12-1-%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">12.1 线程的基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">1.1.1.</span> <span class="nav-text">线程的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.1.2.</span> <span class="nav-text">线程的实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-2-%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5"><span class="nav-number">1.2.</span> <span class="nav-text">12.2 线程同步</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%92%E6%96%A5%E9%94%81"><span class="nav-number">1.2.1.</span> <span class="nav-text">互斥锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F"><span class="nav-number">1.2.2.</span> <span class="nav-text">条件变量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-3-%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="nav-number">1.3.</span> <span class="nav-text">12.3 线程池</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.3.1.</span> <span class="nav-text">线程池的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">1.3.2.</span> <span class="nav-text">线程池的使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E8%B7%B5%E7%BB%83%E4%B9%A0"><span class="nav-number">1.4.</span> <span class="nav-text">实践练习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%80%83%E9%A2%98"><span class="nav-number">1.5.</span> <span class="nav-text">思考题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.6.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Xu Qi</p>
+  <div class="site-description" itemprop="description">读书笔记和技术分享</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xuqi.github.io/2024/03/21/12-%E7%BA%BF%E7%A8%8B%E5%BA%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xu Qi">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员的自我修养">
+      <meta itemprop="description" content="读书笔记和技术分享">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="第十二章：线程库 | 程序员的自我修养">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第十二章：线程库
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-03-21 00:00:00" itemprop="dateCreated datePublished" datetime="2024-03-21T00:00:00+08:00">2024-03-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-11 00:41:36" itemprop="dateModified" datetime="2025-06-11T00:41:36+08:00">2025-06-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">读书笔记</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">计算机基础</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="第十二章：线程库"><a href="#第十二章：线程库" class="headerlink" title="第十二章：线程库"></a>第十二章：线程库</h1><h2 id="12-1-线程的基本概念"><a href="#12-1-线程的基本概念" class="headerlink" title="12.1 线程的基本概念"></a>12.1 线程的基本概念</h2><h3 id="线程的作用"><a href="#线程的作用" class="headerlink" title="线程的作用"></a>线程的作用</h3><p>线程的主要功能：</p>
+<ol>
+<li>并发执行</li>
+<li>资源共享</li>
+<li>提高响应性</li>
+<li>简化编程模型</li>
+</ol>
+<p>示例代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;pthread.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line"></span><br><span class="line">// 线程函数</span><br><span class="line">void *thread_func(void *arg) &#123;</span><br><span class="line">    int id = *(int *)arg;</span><br><span class="line">    printf(&quot;Thread %d is running\n&quot;, id);</span><br><span class="line">    sleep(1);</span><br><span class="line">    printf(&quot;Thread %d is done\n&quot;, id);</span><br><span class="line">    return NULL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    pthread_t threads[3];</span><br><span class="line">    int thread_ids[3];</span><br><span class="line">    </span><br><span class="line">    // 创建线程</span><br><span class="line">    for (int i = 0; i &lt; 3; i++) &#123;</span><br><span class="line">        thread_ids[i] = i;</span><br><span class="line">        pthread_create(&amp;threads[i], NULL, thread_func, &amp;thread_ids[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 等待线程结束</span><br><span class="line">    for (int i = 0; i &lt; 3; i++) &#123;</span><br><span class="line">        pthread_join(threads[i], NULL);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    printf(&quot;All threads completed\n&quot;);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译和运行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译</span></span><br><span class="line">gcc thread_basic.c -pthread -o thread_basic</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">./thread_basic</span><br></pre></td></tr></table></figure>
+
+<h3 id="线程的实现"><a href="#线程的实现" class="headerlink" title="线程的实现"></a>线程的实现</h3><p>线程的实现方式：</p>
+<ol>
+<li>用户级线程</li>
+<li>内核级线程</li>
+<li>混合实现</li>
+<li>线程调度</li>
+</ol>
+<p>示例代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;pthread.h&gt;</span><br><span class="line">#include &lt;sched.h&gt;</span><br><span class="line"></span><br><span class="line">// 线程函数</span><br><span class="line">void *thread_func(void *arg) &#123;</span><br><span class="line">    // 获取线程ID</span><br><span class="line">    pthread_t tid = pthread_self();</span><br><span class="line">    printf(&quot;Thread ID: %lu\n&quot;, (unsigned long)tid);</span><br><span class="line">    </span><br><span class="line">    // 获取调度策略</span><br><span class="line">    int policy;</span><br><span class="line">    struct sched_param param;</span><br><span class="line">    pthread_getschedparam(pthread_self(), &amp;policy, &amp;param);</span><br><span class="line">    </span><br><span class="line">    printf(&quot;Scheduling policy: %d\n&quot;, policy);</span><br><span class="line">    printf(&quot;Scheduling priority: %d\n&quot;, param.sched_priority);</span><br><span class="line">    </span><br><span class="line">    return NULL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    pthread_t thread;</span><br><span class="line">    </span><br><span class="line">    // 创建线程</span><br><span class="line">    pthread_create(&amp;thread, NULL, thread_func, NULL);</span><br><span class="line">    </span><br><span class="line">    // 等待线程结束</span><br><span class="line">    pthread_join(thread, NULL);</span><br><span class="line">    </span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译和运行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译</span></span><br><span class="line">gcc thread_impl.c -pthread -o thread_impl</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">./thread_impl</span><br></pre></td></tr></table></figure>
+
+<h2 id="12-2-线程同步"><a href="#12-2-线程同步" class="headerlink" title="12.2 线程同步"></a>12.2 线程同步</h2><h3 id="互斥锁"><a href="#互斥锁" class="headerlink" title="互斥锁"></a>互斥锁</h3><p>互斥锁的使用：</p>
+<ol>
+<li>初始化锁</li>
+<li>加锁</li>
+<li>解锁</li>
+<li>销毁锁</li>
+</ol>
+<p>示例代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;pthread.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line"></span><br><span class="line">// 共享资源</span><br><span class="line">int counter = 0;</span><br><span class="line">pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;</span><br><span class="line"></span><br><span class="line">// 线程函数</span><br><span class="line">void *thread_func(void *arg) &#123;</span><br><span class="line">    for (int i = 0; i &lt; 1000000; i++) &#123;</span><br><span class="line">        // 加锁</span><br><span class="line">        pthread_mutex_lock(&amp;mutex);</span><br><span class="line">        </span><br><span class="line">        // 访问共享资源</span><br><span class="line">        counter++;</span><br><span class="line">        </span><br><span class="line">        // 解锁</span><br><span class="line">        pthread_mutex_unlock(&amp;mutex);</span><br><span class="line">    &#125;</span><br><span class="line">    return NULL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    pthread_t threads[2];</span><br><span class="line">    </span><br><span class="line">    // 创建线程</span><br><span class="line">    pthread_create(&amp;threads[0], NULL, thread_func, NULL);</span><br><span class="line">    pthread_create(&amp;threads[1], NULL, thread_func, NULL);</span><br><span class="line">    </span><br><span class="line">    // 等待线程结束</span><br><span class="line">    pthread_join(threads[0], NULL);</span><br><span class="line">    pthread_join(threads[1], NULL);</span><br><span class="line">    </span><br><span class="line">    printf(&quot;Final counter value: %d\n&quot;, counter);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译和运行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译</span></span><br><span class="line">gcc mutex.c -pthread -o mutex</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">./mutex</span><br></pre></td></tr></table></figure>
+
+<h3 id="条件变量"><a href="#条件变量" class="headerlink" title="条件变量"></a>条件变量</h3><p>条件变量的使用：</p>
+<ol>
+<li>初始化条件变量</li>
+<li>等待条件</li>
+<li>发送信号</li>
+<li>销毁条件变量</li>
+</ol>
+<p>示例代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;pthread.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line"></span><br><span class="line">// 共享资源</span><br><span class="line">int data = 0;</span><br><span class="line">pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;</span><br><span class="line">pthread_cond_t cond = PTHREAD_COND_INITIALIZER;</span><br><span class="line"></span><br><span class="line">// 生产者线程</span><br><span class="line">void *producer(void *arg) &#123;</span><br><span class="line">    for (int i = 0; i &lt; 5; i++) &#123;</span><br><span class="line">        pthread_mutex_lock(&amp;mutex);</span><br><span class="line">        </span><br><span class="line">        // 生产数据</span><br><span class="line">        data = i + 1;</span><br><span class="line">        printf(&quot;Produced: %d\n&quot;, data);</span><br><span class="line">        </span><br><span class="line">        // 通知消费者</span><br><span class="line">        pthread_cond_signal(&amp;cond);</span><br><span class="line">        </span><br><span class="line">        pthread_mutex_unlock(&amp;mutex);</span><br><span class="line">        sleep(1);</span><br><span class="line">    &#125;</span><br><span class="line">    return NULL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 消费者线程</span><br><span class="line">void *consumer(void *arg) &#123;</span><br><span class="line">    for (int i = 0; i &lt; 5; i++) &#123;</span><br><span class="line">        pthread_mutex_lock(&amp;mutex);</span><br><span class="line">        </span><br><span class="line">        // 等待数据</span><br><span class="line">        while (data == 0) &#123;</span><br><span class="line">            pthread_cond_wait(&amp;cond, &amp;mutex);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        // 消费数据</span><br><span class="line">        printf(&quot;Consumed: %d\n&quot;, data);</span><br><span class="line">        data = 0;</span><br><span class="line">        </span><br><span class="line">        pthread_mutex_unlock(&amp;mutex);</span><br><span class="line">    &#125;</span><br><span class="line">    return NULL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    pthread_t prod, cons;</span><br><span class="line">    </span><br><span class="line">    // 创建线程</span><br><span class="line">    pthread_create(&amp;prod, NULL, producer, NULL);</span><br><span class="line">    pthread_create(&amp;cons, NULL, consumer, NULL);</span><br><span class="line">    </span><br><span class="line">    // 等待线程结束</span><br><span class="line">    pthread_join(prod, NULL);</span><br><span class="line">    pthread_join(cons, NULL);</span><br><span class="line">    </span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译和运行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译</span></span><br><span class="line">gcc cond_var.c -pthread -o cond_var</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">./cond_var</span><br></pre></td></tr></table></figure>
+
+<h2 id="12-3-线程池"><a href="#12-3-线程池" class="headerlink" title="12.3 线程池"></a>12.3 线程池</h2><h3 id="线程池的实现"><a href="#线程池的实现" class="headerlink" title="线程池的实现"></a>线程池的实现</h3><p>线程池的主要组件：</p>
+<ol>
+<li>任务队列</li>
+<li>工作线程</li>
+<li>线程管理</li>
+<li>任务调度</li>
+</ol>
+<p>示例代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;pthread.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line"></span><br><span class="line">#define THREAD_COUNT 4</span><br><span class="line">#define QUEUE_SIZE 10</span><br><span class="line"></span><br><span class="line">// 任务结构</span><br><span class="line">typedef struct &#123;</span><br><span class="line">    void (*func)(void *);</span><br><span class="line">    void *arg;</span><br><span class="line">&#125; task_t;</span><br><span class="line"></span><br><span class="line">// 线程池结构</span><br><span class="line">typedef struct &#123;</span><br><span class="line">    pthread_t threads[THREAD_COUNT];</span><br><span class="line">    task_t queue[QUEUE_SIZE];</span><br><span class="line">    int queue_size;</span><br><span class="line">    int queue_head;</span><br><span class="line">    int queue_tail;</span><br><span class="line">    pthread_mutex_t mutex;</span><br><span class="line">    pthread_cond_t cond;</span><br><span class="line">    int shutdown;</span><br><span class="line">&#125; thread_pool_t;</span><br><span class="line"></span><br><span class="line">// 初始化线程池</span><br><span class="line">thread_pool_t *pool_init() &#123;</span><br><span class="line">    thread_pool_t *pool = malloc(sizeof(thread_pool_t));</span><br><span class="line">    if (!pool) return NULL;</span><br><span class="line">    </span><br><span class="line">    pool-&gt;queue_size = 0;</span><br><span class="line">    pool-&gt;queue_head = 0;</span><br><span class="line">    pool-&gt;queue_tail = 0;</span><br><span class="line">    pool-&gt;shutdown = 0;</span><br><span class="line">    </span><br><span class="line">    pthread_mutex_init(&amp;pool-&gt;mutex, NULL);</span><br><span class="line">    pthread_cond_init(&amp;pool-&gt;cond, NULL);</span><br><span class="line">    </span><br><span class="line">    // 创建工作线程</span><br><span class="line">    for (int i = 0; i &lt; THREAD_COUNT; i++) &#123;</span><br><span class="line">        pthread_create(&amp;pool-&gt;threads[i], NULL, worker, pool);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return pool;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 工作线程函数</span><br><span class="line">void *worker(void *arg) &#123;</span><br><span class="line">    thread_pool_t *pool = arg;</span><br><span class="line">    </span><br><span class="line">    while (1) &#123;</span><br><span class="line">        pthread_mutex_lock(&amp;pool-&gt;mutex);</span><br><span class="line">        </span><br><span class="line">        // 等待任务</span><br><span class="line">        while (pool-&gt;queue_size == 0 &amp;&amp; !pool-&gt;shutdown) &#123;</span><br><span class="line">            pthread_cond_wait(&amp;pool-&gt;cond, &amp;pool-&gt;mutex);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        if (pool-&gt;shutdown) &#123;</span><br><span class="line">            pthread_mutex_unlock(&amp;pool-&gt;mutex);</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        // 获取任务</span><br><span class="line">        task_t task = pool-&gt;queue[pool-&gt;queue_head];</span><br><span class="line">        pool-&gt;queue_head = (pool-&gt;queue_head + 1) % QUEUE_SIZE;</span><br><span class="line">        pool-&gt;queue_size--;</span><br><span class="line">        </span><br><span class="line">        pthread_mutex_unlock(&amp;pool-&gt;mutex);</span><br><span class="line">        </span><br><span class="line">        // 执行任务</span><br><span class="line">        task.func(task.arg);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return NULL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 添加任务</span><br><span class="line">void pool_add_task(thread_pool_t *pool, void (*func)(void *), void *arg) &#123;</span><br><span class="line">    pthread_mutex_lock(&amp;pool-&gt;mutex);</span><br><span class="line">    </span><br><span class="line">    // 等待队列有空间</span><br><span class="line">    while (pool-&gt;queue_size == QUEUE_SIZE) &#123;</span><br><span class="line">        pthread_cond_wait(&amp;pool-&gt;cond, &amp;pool-&gt;mutex);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 添加任务</span><br><span class="line">    pool-&gt;queue[pool-&gt;queue_tail].func = func;</span><br><span class="line">    pool-&gt;queue[pool-&gt;queue_tail].arg = arg;</span><br><span class="line">    pool-&gt;queue_tail = (pool-&gt;queue_tail + 1) % QUEUE_SIZE;</span><br><span class="line">    pool-&gt;queue_size++;</span><br><span class="line">    </span><br><span class="line">    pthread_cond_signal(&amp;pool-&gt;cond);</span><br><span class="line">    pthread_mutex_unlock(&amp;pool-&gt;mutex);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 销毁线程池</span><br><span class="line">void pool_destroy(thread_pool_t *pool) &#123;</span><br><span class="line">    pthread_mutex_lock(&amp;pool-&gt;mutex);</span><br><span class="line">    pool-&gt;shutdown = 1;</span><br><span class="line">    pthread_cond_broadcast(&amp;pool-&gt;cond);</span><br><span class="line">    pthread_mutex_unlock(&amp;pool-&gt;mutex);</span><br><span class="line">    </span><br><span class="line">    // 等待所有线程结束</span><br><span class="line">    for (int i = 0; i &lt; THREAD_COUNT; i++) &#123;</span><br><span class="line">        pthread_join(pool-&gt;threads[i], NULL);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    pthread_mutex_destroy(&amp;pool-&gt;mutex);</span><br><span class="line">    pthread_cond_destroy(&amp;pool-&gt;cond);</span><br><span class="line">    free(pool);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="线程池的使用"><a href="#线程池的使用" class="headerlink" title="线程池的使用"></a>线程池的使用</h3><p>线程池的使用方法：</p>
+<ol>
+<li>创建线程池</li>
+<li>添加任务</li>
+<li>等待任务完成</li>
+<li>销毁线程池</li>
+</ol>
+<p>示例代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line"></span><br><span class="line">// 任务函数</span><br><span class="line">void task_func(void *arg) &#123;</span><br><span class="line">    int id = *(int *)arg;</span><br><span class="line">    printf(&quot;Task %d is running\n&quot;, id);</span><br><span class="line">    sleep(1);</span><br><span class="line">    printf(&quot;Task %d is done\n&quot;, id);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    // 创建线程池</span><br><span class="line">    thread_pool_t *pool = pool_init();</span><br><span class="line">    if (!pool) return 1;</span><br><span class="line">    </span><br><span class="line">    // 添加任务</span><br><span class="line">    int task_ids[10];</span><br><span class="line">    for (int i = 0; i &lt; 10; i++) &#123;</span><br><span class="line">        task_ids[i] = i;</span><br><span class="line">        pool_add_task(pool, task_func, &amp;task_ids[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 等待一段时间</span><br><span class="line">    sleep(5);</span><br><span class="line">    </span><br><span class="line">    // 销毁线程池</span><br><span class="line">    pool_destroy(pool);</span><br><span class="line">    </span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译和运行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译</span></span><br><span class="line">gcc pool_usage.c thread_pool.c -pthread -o pool_usage</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">./pool_usage</span><br></pre></td></tr></table></figure>
+
+<h2 id="实践练习"><a href="#实践练习" class="headerlink" title="实践练习"></a>实践练习</h2><ol>
+<li>线程基本操作实验</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建测试程序</span></span><br><span class="line"><span class="built_in">cat</span> &gt; thread_test.c &lt;&lt; <span class="string">EOL</span></span><br><span class="line"><span class="string">#include &lt;stdio.h&gt;</span></span><br><span class="line"><span class="string">#include &lt;pthread.h&gt;</span></span><br><span class="line"><span class="string">#include &lt;unistd.h&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">void *thread_func(void *arg) &#123;</span></span><br><span class="line"><span class="string">    printf(&quot;Thread is running\n&quot;);</span></span><br><span class="line"><span class="string">    sleep(1);</span></span><br><span class="line"><span class="string">    printf(&quot;Thread is done\n&quot;);</span></span><br><span class="line"><span class="string">    return NULL;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">int main() &#123;</span></span><br><span class="line"><span class="string">    pthread_t thread;</span></span><br><span class="line"><span class="string">    pthread_create(&amp;thread, NULL, thread_func, NULL);</span></span><br><span class="line"><span class="string">    pthread_join(thread, NULL);</span></span><br><span class="line"><span class="string">    return 0;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOL</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译和运行</span></span><br><span class="line">gcc thread_test.c -pthread -o thread_test</span><br><span class="line">./thread_test</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>线程同步实验</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建同步测试程序</span></span><br><span class="line"><span class="built_in">cat</span> &gt; sync_test.c &lt;&lt; <span class="string">EOL</span></span><br><span class="line"><span class="string">#include &lt;stdio.h&gt;</span></span><br><span class="line"><span class="string">#include &lt;pthread.h&gt;</span></span><br><span class="line"><span class="string">#include &lt;unistd.h&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">int counter = 0;</span></span><br><span class="line"><span class="string">pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">void *thread_func(void *arg) &#123;</span></span><br><span class="line"><span class="string">    pthread_mutex_lock(&amp;mutex);</span></span><br><span class="line"><span class="string">    counter++;</span></span><br><span class="line"><span class="string">    printf(&quot;Counter: %d\n&quot;, counter);</span></span><br><span class="line"><span class="string">    pthread_mutex_unlock(&amp;mutex);</span></span><br><span class="line"><span class="string">    return NULL;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">int main() &#123;</span></span><br><span class="line"><span class="string">    pthread_t threads[3];</span></span><br><span class="line"><span class="string">    for (int i = 0; i &lt; 3; i++) &#123;</span></span><br><span class="line"><span class="string">        pthread_create(&amp;threads[i], NULL, thread_func, NULL);</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    for (int i = 0; i &lt; 3; i++) &#123;</span></span><br><span class="line"><span class="string">        pthread_join(threads[i], NULL);</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    return 0;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOL</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译和运行</span></span><br><span class="line">gcc sync_test.c -pthread -o sync_test</span><br><span class="line">./sync_test</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>线程池实验</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建线程池测试程序</span></span><br><span class="line"><span class="built_in">cat</span> &gt; pool_test.c &lt;&lt; <span class="string">EOL</span></span><br><span class="line"><span class="string">#include &lt;stdio.h&gt;</span></span><br><span class="line"><span class="string">#include &lt;unistd.h&gt;</span></span><br><span class="line"><span class="string">#include &quot;thread_pool.c&quot;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">void task_func(void *arg) &#123;</span></span><br><span class="line"><span class="string">    int id = *(int *)arg;</span></span><br><span class="line"><span class="string">    printf(&quot;Task %d is running\n&quot;, id);</span></span><br><span class="line"><span class="string">    sleep(1);</span></span><br><span class="line"><span class="string">    printf(&quot;Task %d is done\n&quot;, id);</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">int main() &#123;</span></span><br><span class="line"><span class="string">    thread_pool_t *pool = pool_init();</span></span><br><span class="line"><span class="string">    if (!pool) return 1;</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    int task_ids[5];</span></span><br><span class="line"><span class="string">    for (int i = 0; i &lt; 5; i++) &#123;</span></span><br><span class="line"><span class="string">        task_ids[i] = i;</span></span><br><span class="line"><span class="string">        pool_add_task(pool, task_func, &amp;task_ids[i]);</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    sleep(6);</span></span><br><span class="line"><span class="string">    pool_destroy(pool);</span></span><br><span class="line"><span class="string">    return 0;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOL</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译和运行</span></span><br><span class="line">gcc pool_test.c -pthread -o pool_test</span><br><span class="line">./pool_test</span><br></pre></td></tr></table></figure>
+
+<h2 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h2><ol>
+<li>线程的主要功能是什么？</li>
+<li>线程同步的方法有哪些？</li>
+<li>什么是线程池？它有什么优点？</li>
+<li>如何实现线程安全？</li>
+<li>线程和进程的区别是什么？</li>
+</ol>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li>《程序员的自我修养：链接、装载与库》</li>
+<li><a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man7/pthreads.7.html">POSIX Threads 文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.uclibc.org/docs/psABI-x86_64.pdf">System V ABI</a></li>
+<li><a target="_blank" rel="noopener" href="https://refspecs.linuxfoundation.org/elf/elf.pdf">ELF 文件格式规范</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.gnu.org/software/binutils/">GNU Binutils 文档</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%93%BE%E6%8E%A5/" rel="tag"># 链接</a>
+              <a href="/tags/%E8%A3%85%E8%BD%BD/" rel="tag"># 装载</a>
+              <a href="/tags/%E5%BA%93/" rel="tag"># 库</a>
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/" rel="tag"># 计算机系统</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/03/21/13-%E8%B0%83%E8%AF%95/" rel="prev" title="第十三章：调试">
+                  <i class="fa fa-angle-left"></i> 第十三章：调试
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/03/21/11-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" rel="next" title="第十一章：系统调用">
+                  第十一章：系统调用 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2024 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Xu Qi</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

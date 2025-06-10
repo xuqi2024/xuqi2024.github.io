@@ -1,0 +1,103 @@
+# NexT 主题配置
+# 文档: https://theme-next.js.org/docs/
+
+# 主题方案
+scheme: Muse
+
+# 暗黑模式
+darkmode: true
+
+# 自定义字体
+font:
+  enable: true
+  # 全局字体
+  global:
+    external: true
+    family: Monda
+    size:
+
+# 菜单配置
+menu:
+  home: / || fa fa-home
+  archives: /archives/ || fa fa-archive
+  categories: /categories/ || fa fa-folder-open
+  tags: /tags/ || fa fa-tags
+  about: /about/ || fa fa-user
+
+# 侧边栏
+sidebar:
+  position: left
+  display: post
+  offset: 12
+  b2t: false
+  scrollpercent: false
+  onmobile: false
+
+# 页脚
+footer:
+  since: 2024
+  icon:
+    name: fa fa-heart
+    animated: true
+    color: "#ff0000"
+  powered: true
+  beian:
+    enable: false
+    icp:
+    gongan_id:
+    gongan_num:
+    gongan_icon_url:
+
+# 文章配置
+post:
+  copyright:
+    enable: true
+    license: CC BY-NC-SA 4.0
+  reward:
+    enable: false
+  follow_me:
+    enable: true
+    github: xuqi1987
+    twitter:
+    facebook:
+    vk:
+    telegram:
+    weibo:
+    instagram:
+    tumblr:
+    flickr:
+    linkedin:
+    email:
+
+# 代码高亮
+highlight_theme: normal
+codeblock:
+  highlight_shrink: true
+  copy_button:
+    enable: true
+    show_result: true
+    style: flat
+
+# 本地搜索
+local_search:
+  enable: true
+  labels:
+    input_placeholder: 搜索文章
+    hits_empty: "找不到您查询的内容: ${query}"
+
+# 评论系统
+comments:
+  active: disqus
+  storage: true
+  lazyload: true
+  nav: true
+  style: tabs
+  disqus:
+    shortname: xuqi1987
+    count: true
+    placeholder: 请开始你的表演
+    button: 发送
+    avatar: mm
+    meta: nickname,mail
+    pageSize: 10
+    reaction: true 
