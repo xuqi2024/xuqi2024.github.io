@@ -1,0 +1,37 @@
+name: Deploy Hexo Blog
+
+on:
+  push:
+    branches:
+      - main  # 设置为您的主分支名称
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: true  # 检出子模块（主题）
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install Dependencies
+      run: |
+        npm install -g hexo-cli
+        npm install
+
+    - name: Generate Static Files
+      run: hexo generate
+
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: public  # 静态文件目录
+        branch: gh-pages  # 部署分支
+        clean: true  # 清理旧文件 
