@@ -3,17 +3,29 @@ name: Deploy Hexo Blog
 on:
   push:
     branches:
-      - main  # 设置为您的主分支名称
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    
     steps:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        submodules: recursive  # 递归检出子模块（主题）
+        submodules: recursive
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Setup Node.js
@@ -26,13 +38,19 @@ jobs:
       run: |
         npm install -g hexo-cli
         npm install
+        npm install hexo-filter-mermaid2
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v5
 
     - name: Generate Static Files
       run: hexo generate
 
-    - name: Deploy to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@v4
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
       with:
-        folder: public  # 静态文件目录
-        branch: gh-pages  # 部署分支
-        clean: true  # 清理旧文件 
+        path: './public'
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
