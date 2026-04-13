@@ -101,3 +101,10 @@ comments:
     meta: nickname,mail
     pageSize: 10
     reaction: true 
+
+# Mermaid 图表
+mermaid:
+  enable: true
+  theme:
+    light: default
+    dark: dark
