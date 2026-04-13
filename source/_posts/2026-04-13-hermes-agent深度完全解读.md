@@ -33,71 +33,93 @@ Hermes Agent 打破了这一范式。它是**第一个真正意义上具有自�
 
 ### 1.1 系统架构全景图
 
-```mermaid
-graph TB
-    subgraph Entry["入口点"]
-        CLI["CLI (cli.py)<br/>~8500行"]
-        Gateway["Gateway (gateway/run.py)<br/>~7500行"]
-        ACP["ACP (IDE集成)"]
-    end
+**三层架构设计：**
 
-    subgraph Core["AIAgent (run_agent.py) ~9200行"]
-        PB["Prompt Builder<br/>SOUL.md + 记忆 + 技能"]
-        PR["Provider Resolution<br/>OpenRouter/OpenAI/Anthropic"]
-        TD["Tool Dispatch<br/>47工具 + 40工具集"]
-        
-        PB --> PR
-        PR --> TD
-    end
-
-    subgraph Storage["持久化层"]
-        FTS5["SQLite + FTS5<br/>会话存储 + 全文搜索"]
-        Honcho["Honcho<br/>用户画像 + 推理引擎"]
-    end
-
-    subgraph Backends["工具后端"]
-        Terminal["Terminal: 6种后端"]
-        Browser["Browser: 5种后端"]
-        Web["Web: 4种后端"]
-        MCP["MCP: 动态扩展"]
-    end
-
-    Entry --> Core
-    Core --> Storage
-    Core --> Backends
-
-    style CLI fill:#e1f5fe
-    style Gateway fill:#e1f5fe
-    style Core fill:#fff3e0
-    style Storage fill:#e8f5e9
-    style Honcho fill:#f3e5f5
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      入口层 (Entry Points)                   │
+├─────────────────────────────────────────────────────────────┤
+│  CLI (cli.py)          │  Gateway (消息网关)  │  ACP (IDE) │
+│  ~8500行，完整TUI界面  │  ~7500行，15+平台   │  集成     │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    核心层 (AIAgent)                         │
+│                      ~9200行代码                            │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐ │
+│  │   Prompt       │→ │   Provider     │→ │   Tool        │ │
+│  │   Builder      │  │   Resolution  │  │   Dispatch    │ │
+│  │                │  │               │  │               │ │
+│  │  • SOUL.md    │  │  • OpenRouter │  │  • 47工具    │ │
+│  │  • Memory     │  │  • OpenAI    │  │  • 40工具集  │ │
+│  │  • Skills     │  │  • Anthropic │  │               │ │
+│  │  • Context   │  │  • Nous     │  │               │ │
+│  └─────────────────┘  └─────────────────┘  └─────────────────┘ │
+│                                                              │
+│  ┌─────────────────┐  ┌─────────────────┐                     │
+│  │   Context       │  │   Session     │                     │
+│  │   Compressor   │  │   Storage    │                     │
+│  │   (上下文压缩)   │  │   (FTS5)    │                     │
+│  └─────────────────┘  └─────────────────┘                     │
+└─────────────────────────────────────────────────────────────┘
+                              │
+        ┌─────────────────────┴─────────────────────┐
+        ▼                                           ▼
+┌─────────────────────┐               ┌─────────────────────────────┐
+│   SQLite + FTS5    │               │      Honcho 推理引擎        │
+│   持久化存储        │               │                             │
+│   • 会话历史        │               │  • Peer Card 生成          │
+│   • FTS5全文搜索   │               │  • 形式逻辑推理             │
+│   • 记忆持久化      │               │  • 持续学习更新            │
+└─────────────────────┘               └─────────────────────────────┘
 ```
 
 ### 1.2 AIAgent 核心循环
 
-```mermaid
-sequenceDiagram
-    participant User as 用户
-    participant Agent as AIAgent
-    participant LLM as LLM Provider
-    participant Tools as 工具系统
-    participant DB as SQLite/FTS5
+**执行流程：**
 
-    User->>Agent: 用户输入
-    Agent->>Agent: 构建提示词
-    Agent->>Agent: 选择供应商
-    Agent->>LLM: API调用
-    LLM-->>Agent: 响应
-
-    alt 工具调用
-        LLM->>Tools: tool_call
-        Tools->>Tools: 执行工具
-        Tools-->>LLM: 工具结果
-        LLM->>LLM: 继续处理
-    end
-
-    Agent->>DB: 保存会话
-    Agent-->>User: 最终响应
+```
+用户输入
+    │
+    ▼
+┌─────────────────┐
+│  构建提示词      │  ← SOUL.md + Memory + Skills + Context
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  选择供应商      │  ← OpenRouter / OpenAI / Anthropic / Nous
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  调用 LLM API   │
+└────────┬────────┘
+         │
+         ▼
+    ┌────┴────┐
+    │ 响应类型  │
+    └────┬────┘
+    │         │
+ 文本响应   工具调用
+    │         │
+    │         ▼
+    │   ┌─────────────┐
+    │   │  执行工具   │ ← 文件 / Web / 代码 / 终端
+    │   └──────┬──────┘
+    │          │
+    └──────────┘
+         │
+         ▼
+┌─────────────────┐
+│  保存会话       │  ← SQLite + FTS5
+└────────┬────────┘
+         │
+         ▼
+    返回响应给用户
 ```
 
 ### 1.3 核心入口点详解
@@ -121,22 +143,15 @@ sequenceDiagram
 
 位于 `gateway/run.py`，约 **7500 行代码**，连接 15+ 消息平台：
 
-```mermaid
-graph LR
-    subgraph Platforms["支持的平台"]
-        TG["Telegram"]
-        DC["Discord"]
-        WA["WhatsApp"]
-        SL["Slack"]
-        FF["飞书"]
-        DD["钉钉"]
-        WX["微信"]
-        HA["Home Assistant"]
-    end
+| 平台分类 | 支持的平台 |
+|---------|-----------|
+| 即时通讯 | Telegram, Discord, WhatsApp, Signal |
+| 办公协同 | Slack, 飞书, 钉钉, 企业微信 |
+| 其他 | Email, SMS, Matrix, Mattermost, Home Assistant |
 
-    Platforms --> Gateway["Gateway<br/>统一路由"]
-    Gateway --> AIAgent["AIAgent"]
-    AIAgent --> Platforms
+**消息流程：**
+```
+平台消息 → Adapter.on_message() → 授权验证 → 会话解析 → AIAgent → 响应 → 投递回平台
 ```
 
 ---
@@ -149,7 +164,7 @@ graph LR
 
 | 查询方式 | 时间复杂度 | 50万字延迟 |
 |----------|-----------|------------|
-| 传统 LIKE | O(n) | 数秒 |
+| 传统 LIKE | O(n) 逐行扫描 | 数秒 |
 | FTS5 倒排索引 | O(1) | 毫秒级 |
 
 ### 2.2 FTS5 核心原理
@@ -265,46 +280,50 @@ GitHub：https://github.com/plastic-labs/honcho
 
 ### 3.2 Honcho 数据模型
 
-```mermaid
-graph TB
-    W["Workspace<br/>工作空间"]
-    
-    W --> P["Peers<br/>参与者"]
-    W --> S["Sessions<br/>会话"]
-    W --> R["Reasoning<br/>推理引擎"]
-    
-    P --> PC["Peer Card<br/>参与者画像"]
-    S --> M["Messages<br/>消息"]
-    
-    PC --> B["biographical<br/>基本信息"]
-    PC --> PF["preferences<br/>偏好"]
-    PC --> BP["behavioral_patterns<br/>行为模式"]
-    PC --> DI["derived_insights<br/>推理洞察"]
-    
-    R --> EX["explicit<br/>显式结论"]
-    R --> DE["deductive<br/>演绎结论"]
-    R --> IN["inductive<br/>归纳结论"]
-    R --> AB["abductive<br/>溯因结论"]
-    
-    style W fill:#1976d2,color:#fff
-    style Honcho["Honcho"] fill:#7b1fa2,color:#fff
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      数据模型层次                            │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Workspace (工作空间)                                         │
+│  │                                                            │
+│  ├── Peers (参与者) ───────────────────────────────────────  │
+│  │   ├── 用户 (User)                                        │
+│  │   ├── Agent                                              │
+│  │   ├── 群组 (Group)                                      │
+│  │   └── 任何实体...                                         │
+│  │                                                            │
+│  │   └── Peer Card (参与者画像)                             │
+│  │       ├── biographical (姓名、角色等)                     │
+│  │       ├── preferences (偏好)                              │
+│  │       ├── behavioral_patterns (行为模式)                   │
+│  │       └── derived_insights (推理得出的洞察)               │
+│  │                                                            │
+│  ├── Sessions (会话) ────────────────────────────────────  │
+│  │   └── Messages (消息)                                    │
+│  │       ├── 对话内容                                       │
+│  │       ├── 事件                                           │
+│  │       └── 活动/文档                                      │
+│  │                                                            │
+│  └── Reasoning (推理) ───────────────────────────────────  │
+│      ├── explicit (显式结论)                                │
+│      ├── deductive (演绎结论)                               │
+│      ├── inductive (归纳结论)                                │
+│      └── abductive (溯因结论)                               │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ### 3.3 Honcho 推理引擎详解
 
 #### 为什么需要推理？
 
-```mermaid
-graph LR
-    subgraph Traditional["传统 RAG"]
-        S1["存储"] --> R1["检索"] --> RT["返回说过的话"]
-    end
+```
+传统 RAG：
+  存储 → 检索 → 返回（只能返回"说过的话"）
 
-    subgraph Honcho["Honcho"]
-        S2["存储"] --> RE["推理"] --> RG["生成结构化表征"] --> RT2["返回结论"]
-    end
-
-    Traditional -->|"不足"| Honcho
+Honcho：
+  存储 → 推理 → 生成结构化表征 → 返回（返回"结论"）
 ```
 
 **核心洞察：**
@@ -410,59 +429,81 @@ graph LR
 
 ### 4.1 工具注册表架构
 
-```mermaid
-graph TB
-    subgraph Registry["工具注册表 (registry.py)"]
-        R["中心注册表<br/>47工具 + 40工具集"]
-    end
-
-    subgraph Tools["内置工具"]
-        FT["文件工具<br/>read/write/patch/search"]
-        WT["Web工具<br/>search/extract/fetch"]
-        TT["终端工具<br/>6种后端"]
-        MT["MCP工具<br/>动态扩展"]
-        CT["代码执行<br/>Python沙箱"]
-        DT["委托工具<br/>子智能体"]
-    end
-
-    subgraph Toolsets["工具集"]
-        TS1["code"]
-        TS2["web"]
-        TS3["media"]
-        TS4["system"]
-    end
-
-    R --> Tools
-    FT --> TS1
-    WT --> TS2
-    MT --> TS4
-
-    style R fill:#ff9800,color:#fff
-    style Tools fill:#4caf50,color:#fff
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    中心注册表 (registry.py)                 │
+│                    47个工具 + 40个工具集                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│  │  文件工具       │  │  Web工具        │  │  MCP工具        │
+│  │                 │  │                 │  │                 │
+│  │  • read        │  │  • web_search │  │  • MCP客户端   │
+│  │  • write       │  │  • web_extract │  │  • 动态发现    │
+│  │  • patch       │  │  • fetch       │  │  • 安全过滤    │
+│  │  • search       │  │  • browser     │  │                 │
+│  └─────────────────┘  └─────────────────┘  └─────────────────┘
+│                                                              │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│  │  终端工具       │  │  委托工具       │  │  代码执行       │
+│  │                 │  │                 │  │                 │
+│  │  • 6种后端     │  │  • 子智能体    │  │  • Python沙箱  │
+│  │  • local       │  │  • 并行执行    │  │  • 超时控制    │
+│  │  • docker     │  │  • RPC调用     │  │                 │
+│  │  • SSH         │  │                 │  │                 │
+│  │  • Daytona     │  │                 │  │                 │
+│  │  • Modal       │  │                 │  │                 │
+│  │  • Singularity │  │                 │  │                 │
+│  └─────────────────┘  └─────────────────┘  └─────────────────┘
+│                                                              │
+│  ┌─────────────────────────────────────────────────────────┐
+│  │                      工具集 (Toolsets)                   │
+│  │                                                         │
+│  │   code │ web │ media │ system │ mcp │ ...           │
+│  │   (代码) (网络) (媒体) (系统) (扩展)                   │
+│  └─────────────────────────────────────────────────────────┘
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ### 4.2 工具执行流程
 
-```mermaid
-sequenceDiagram
-    participant LLM
-    participant Registry as 工具注册表
-    participant Tool as 具体工具
-    participant User as 用户
-
-    LLM->>Registry: tool_call(name, args)
-    Registry->>Registry: 验证参数
-
-    alt 危险命令
-        Registry->>User: 请求确认
-        User-->>Registry: 批准/拒绝
-    end
-
-    Registry->>Tool: 执行
-    Tool-->>Registry: 结果
-    Registry-->>LLM: 返回
-
-    Note over Registry: 记录执行日志
+```
+LLM 发起 tool_call
+        │
+        ▼
+┌─────────────────┐
+│  验证工具存在   │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  验证参数       │
+└────────┬────────┘
+         │
+         ▼
+    ┌────┴────┐
+    │ 危险命令? │
+    └────┬────┘
+    │         │
+   是         否
+    │         │
+    ▼         │
+┌───────────┐  │
+│ 请求用户确认│  │
+└─────┬─────┘  │
+      │         │
+      ▼         ▼
+┌─────────────────┐
+│    执行工具     │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  记录执行日志  │
+└────────┬────────┘
+         │
+         ▼
+     返回结果
 ```
 
 ### 4.3 终端后端支持
@@ -496,22 +537,51 @@ sequenceDiagram
 
 ### 5.2 架构哲学对比
 
-```mermaid
-graph LR
-    subgraph Hermes["Hermes Agent"]
-        H1["每次对话"] --> H2["经验积累"]
-        H2 --> H3["技能创建"]
-        H3 --> H4["越用越聪明"]
-        H4 --> H1
-    end
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     Hermes Agent                                  │
+│  核心理念: 自我进化 + 跨会话学习                                   │
+│                                                                  │
+│    ┌─────────┐    ┌─────────┐    ┌─────────┐                 │
+│    │  每次   │───►│  经验   │───►│  技能   │                 │
+│    │  对话   │    │  积累   │    │  创建   │                 │
+│    └─────────┘    └─────────┘    └─────────┘                 │
+│         │              │              │                        │
+│         └──────────────┴──────────────┘                        │
+│                        │                                        │
+│                        ▼                                        │
+│         ┌─────────────────────────────┐                       │
+│         │    Honcho 推理引擎           │                       │
+│         │  • 形式逻辑推理              │                       │
+│         │  • Peer Card 生成            │                       │
+│         │  • 持续学习更新              │                       │
+│         └─────────────────────────────┘                       │
+│                                                                  │
+│  特点: 越用越聪明，需要时间积累                                 │
+└─────────────────────────────────────────────────────────────────┘
 
-    subgraph OpenClaw["OpenClaw"]
-        O1["Skills"] --> O2["Tools"]
-        O2 --> O3["Channel"]
-        O3 --> O4["模块化定制"]
-    end
-
-    Hermes ---|"各有优势"| OpenClaw
+┌─────────────────────────────────────────────────────────────────┐
+│                       OpenClaw                                   │
+│  核心理念: 模块化 + 多渠道 + 即时可用                            │
+│                                                                  │
+│    ┌─────────┐    ┌─────────┐    ┌─────────┐                 │
+│    │ Skills │───►│  Tools  │───►│ Channel │                 │
+│    │  技能   │    │  工具   │    │  渠道   │                 │
+│    └─────────┘    └─────────┘    └─────────┘                 │
+│         │              │              │                        │
+│         └──────────────┴──────────────┘                        │
+│                        │                                        │
+│                        ▼                                        │
+│         ┌─────────────────────────────┐                       │
+│         │      Workspace 文件系统        │                      │
+│         │  • MEMORY.md (记忆)          │                      │
+│         │  • USER.md (用户)            │                      │
+│         │  • AGENTS.md (指令)          │                      │
+│         │  • SOUL.md (人格)              │                      │
+│         └─────────────────────────────┘                       │
+│                                                                  │
+│  特点: 轻量快速，高度可定制                                      │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ### 5.3 记忆系统对比
@@ -575,18 +645,57 @@ hermes claw migrate --dry-run
 
 ### 6.1 Cron 工作原理
 
-```mermaid
-flowchart TD
-    A["Scheduler Tick"] --> B{检查 jobs.json}
-    B -->|到期| C["创建 Fresh AIAgent"]
-    C --> D["注入任务提示词"]
-    D --> E["AIAgent.run_conversation()"]
-    E --> F["交付到目标平台"]
-    F --> G["更新下次执行时间"]
-
-    style A fill:#e91e63,color:#fff
-    style C fill:#9c27b0,color:#fff
-    style G fill:#4caf50,color:#fff
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Scheduler Tick                            │
+│         (后台定时检查 jobs.json 中的任务)                   │
+└─────────────────────────┬───────────────────────────────────┘
+                          │
+                          ▼
+              ┌───────────────────────────┐
+              │  检查到期任务               │
+              │  例如: "每天 8:00 日报"    │
+              │  当前: 2026-04-13 08:00   │
+              │  状态: 到期！执行         │
+              └─────────────┬─────────────┘
+                            │
+                            ▼
+              ┌───────────────────────────┐
+              │  创建 Fresh AIAgent       │
+              │  (无历史，干净的开始)     │
+              └─────────────┬─────────────┘
+                            │
+                            ▼
+              ┌───────────────────────────┐
+              │  注入任务提示词           │
+              │                           │
+              │  "请生成昨天的日报，      │
+              │   包含:                   │
+              │   1. 完成的工作           │
+              │   2. 遇到的问题           │
+              │   3. 今日计划"           │
+              └─────────────┬─────────────┘
+                            │
+                            ▼
+              ┌───────────────────────────┐
+              │  AIAgent.run_conversation │
+              │  (执行任务)               │
+              └─────────────┬─────────────┘
+                            │
+                            ▼
+              ┌───────────────────────────┐
+              │  交付到目标平台           │
+              │                           │
+              │  • Telegram: 发送消息     │
+              │  • Email: 发送邮件        │
+              │  • 飞书: Webhook         │
+              └─────────────┬─────────────┘
+                            │
+                            ▼
+              ┌───────────────────────────┐
+              │  更新 jobs.json          │
+              │  设置下次执行时间         │
+              └───────────────────────────┘
 ```
 
 ### 6.2 自然语言任务定义
@@ -613,26 +722,40 @@ flowchart TD
 
 ### 7.1 并行加速原理
 
-```mermaid
-graph TB
-    subgraph Serial["传统串行 (12分钟)"]
-        S1["分析目录结构<br/>2分钟"] --> S2["检查代码质量<br/>5分钟"]
-        S2 --> S3["生成测试报告<br/>3分钟"]
-        S3 --> S4["整理文档<br/>2分钟"]
-    end
-
-    subgraph Parallel["Delegate并行 (5分钟)"]
-        P1["分析目录结构<br/>2分钟"]
-        P2["检查代码质量<br/>5分钟"]
-        P3["生成测试报告<br/>3分钟"]
-        P4["整理文档<br/>2分钟"]
-    end
-
-    P1 & P2 & P3 & P4 --> P5["汇总结果"]
-
-    Serial -->|"12分钟"| Result["结果"]
-    Parallel -->|"5分钟"| Result
+**传统串行方式 (12分钟)：**
 ```
+步骤1: 分析目录结构 ──────► 2分钟
+        │
+        ▼
+步骤2: 检查代码质量 ──────► 5分钟
+        │
+        ▼
+步骤3: 生成测试报告 ──────► 3分钟
+        │
+        ▼
+步骤4: 整理文档 ─────────► 2分钟
+                                总计: 12分钟
+```
+
+**Delegate 并行方式 (5分钟)：**
+```
+分支1: 分析目录结构 ──────────────────► 2分钟
+                                           │
+分支2: 检查代码质量 ──────────────────────► 5分钟
+                                               │
+分支3: 生成测试报告 ────────────────────────► 3分钟
+                                                   │
+分支4: 整理文档 ──────────────────────────► 2分钟
+                                                       │
+                                                       ▼
+                                              汇总所有结果
+                                                        │
+                                                        ▼
+                                                   总计: 5分钟
+                                              (最慢分支的时间)
+```
+
+**加速效果: 12分钟 → 5分钟 = 2.4x 提速**
 
 ### 7.2 使用示例
 
@@ -642,8 +765,8 @@ graph TB
 Hermes 执行:
 /parallel
   /delegate "分析代码目录结构和模块划分"
-  /delegate "检查代码质量问题"
-  /delegate "安全审计"
+  /delegate "检查代码质量问题：命名规范、注释率、复杂度"
+  /delegate "安全审计：SQL注入、XSS、密码存储等"
   /delegate "生成测试覆盖率报告"
 ```
 
@@ -657,6 +780,9 @@ Hermes 执行:
 # Linux / macOS / WSL2
 curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
 
+# 安装后
+source ~/.bashrc  # 或 source ~/.zshrc
+
 # 验证安装
 hermes --version
 ```
@@ -669,10 +795,12 @@ version: '3.8'
 services:
   hermes:
     image: nousresearch/hermes-agent:latest
+    container_name: hermes
     volumes:
       - ./hermes_data:/root/.hermes
     environment:
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+    restart: unless-stopped
 ```
 
 ```bash
@@ -681,7 +809,7 @@ docker-compose up -d
 
 ### 8.3 服务器部署（Systemd）
 
-```bash
+```ini
 # /etc/systemd/system/hermes.service
 [Unit]
 Description=Hermes Agent
@@ -692,6 +820,7 @@ Type=simple
 User=ubuntu
 ExecStart=/usr/local/bin/hermes gateway start
 Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
@@ -700,6 +829,7 @@ WantedBy=multi-user.target
 ```bash
 sudo systemctl enable hermes
 sudo systemctl start hermes
+sudo systemctl status hermes
 ```
 
 ---
