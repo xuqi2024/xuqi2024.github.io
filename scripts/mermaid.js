@@ -1,11 +1,3 @@
-hexo.extend.filter.register('after_post_render', function(data) {
-  if (data.layout === 'post' || data.layout === 'page') {
-    if (data.content && data.content.includes('mermaid')) {
-      data.content = data.content.replace(
-        '</head>',
-        '<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script></head>'
-      );
-    }
-  }
-  return data;
-});
+// This file is intentionally left empty.
+// Mermaid support is handled by NexT theme (mermaid.enable: true in _config.next.yml)
+// and the class conversion filter in scripts/mermaid-cdn.js.
