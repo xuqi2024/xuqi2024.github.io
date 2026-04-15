@@ -31,7 +31,7 @@ tags:
 
 很多人以为 Claude Code 就是一个调用 Claude API 的命令行工具。源码告诉我们：它是一个 **50万行 TypeScript 的完整 Agent 操作系统**。
 
-```
+```text
 src/
 ├── tools.py              # 43个工具的注册表 + 权限系统
 ├── runtime.py            # 核心运行时会话编排
@@ -68,22 +68,27 @@ Rust 移植版（rust/）目前只实现了约 **50-60%** 的功能：
 
 Claude Code 的每次用户输入，都经过这个精细的管道：
 
-```
-用户输入
-    ↓
-PortRuntime.route_prompt()      → 路由匹配（命令？工具？普通对话？）
-    ↓
-PortContext.build_context()    → 构建上下文（workspace检测、文件统计等）
-    ↓
-system_init_message + render_context → 组装系统提示
-    ↓
-StreamingToolExecutor         → 流式执行工具
-    ↓
-ToolHooks 拦截                → 钩子预处理/后处理
-    ↓
-ToolOrchestration             → 工具编排
-    ↓
-session_store.persist()      → 持久化
+```mermaid
+graph TD
+    UI["👤 用户输入"]
+    RR["🔀 PortRuntime.route_prompt()\n路由匹配: 命令 / 工具 / 普通对话"]
+    BC["📦 PortContext.build_context()\n构建上下文: workspace检测 · 文件统计"]
+    SI["📋 system_init_message + render_context\n组装系统提示"]
+    SE["⚡ StreamingToolExecutor\n流式执行工具"]
+    TH["🪝 ToolHooks 拦截\nPreToolUse / PostToolUse 钩子"]
+    TO["🎼 ToolOrchestration\n工具编排与协调"]
+    SP["💾 session_store.persist()\n持久化会话状态"]
+
+    UI --> RR --> BC --> SI --> SE --> TH --> TO --> SP
+
+    style UI fill:#1565C0,color:#fff
+    style RR fill:#283593,color:#fff
+    style BC fill:#283593,color:#fff
+    style SI fill:#283593,color:#fff
+    style SE fill:#1B5E20,color:#fff
+    style TH fill:#1B5E20,color:#fff
+    style TO fill:#1B5E20,color:#fff
+    style SP fill:#4A148C,color:#fff
 ```
 
 ### 2.2 工具 = Name + Hint + Permission + Execute
@@ -128,7 +133,7 @@ find_tools("如何运行测试") → 自动找到 BashTool + 测试命令
 
 Claude Code **没有用 Pinecone/Milvus 这些向量数据库**，纯粹是 Markdown 文件加上一套自动整理机制。
 
-```
+```text
 memdir/
 ├── index.md          # 入口索引（必须 < 25KB）
 ├── logs/
@@ -174,15 +179,22 @@ memdir/
 Claude Code 有一套内置的多 Agent 编排系统，不是简单的"一个 Agent 调用另一个"：
 
 ### 团队构成
-```
-研究员 Agent（只读）
-  → 搜索、阅读代码、查文档
-  
-编码员 Agent（全权限）
-  → 写代码、执行命令、提交PR
+```mermaid
+graph TD
+    C["👤 协调者 你\n通过自然语言分配任务"]
+    R["🔍 研究员 Agent\n只读权限\n搜索 · 阅读代码 · 查文档"]
+    W["✏️ 编码员 Agent\n全权限\n写代码 · 执行命令 · 提交PR"]
+    TL["📋 共享任务看板\nUnix Domain Socket 通信"]
 
-协调者（你）
-  → 通过自然语言分配任务
+    C -->|"分配只读任务"| R
+    C -->|"分配执行任务"| W
+    R <-->|"Bridge协议通信"| TL
+    W <-->|"Bridge协议通信"| TL
+
+    style C fill:#1565C0,color:#fff
+    style R fill:#2E7D32,color:#fff
+    style W fill:#E65100,color:#fff
+    style TL fill:#4A148C,color:#fff
 ```
 
 ### 通信机制
@@ -220,7 +232,7 @@ Claude Code 有一套内置的多 Agent 编排系统，不是简单的"一个 Ag
 
 Claude Code 有一段**无法通过配置修改**的硬编码安全指令：
 
-```
+```text
 可协助：
 ✅ 授权渗透测试
 ✅ 防守安全
@@ -241,7 +253,7 @@ Claude Code 有一段**无法通过配置修改**的硬编码安全指令：
 
 ### 6.2 权限分级
 
-```
+```text
 DangerFullAccess    — 完全信任（全权限）
 ReadOnly            — 只读模式
 Ask                 — 每次询问
@@ -266,16 +278,23 @@ Ask                 — 每次询问
 
 Claude Code 在 API 成本上做了极致优化：
 
-```
-发送的提示 = 静态部分（不变） + 动态部分（每轮变化）
+```mermaid
+graph LR
+    PS["📤 静态部分\n系统提示 · 工具定义 · 固定规则\n缓存: 只在变化时重新发送"]
+    PD["🔄 动态部分\n用户输入 · 对话历史 · 执行结果\n每轮都变化"]
+    API["🤖 Claude API"]
 
-静态部分缓存，只在变化时重新发送
-→ 节省约 50% 的 API token 成本
+    PS -->|"缓存命中节省~50% token"| API
+    PD -->|"每轮发送"| API
+
+    style PS fill:#1565C0,color:#fff
+    style PD fill:#E65100,color:#fff
+    style API fill:#4A148C,color:#fff
 ```
 
 ### 内部版本的词数限制（公开版没有）
 
-```
+```text
 公开版："be concise"（模糊要求）
 内部版：
 - 工具调用之间 ≤ 25 个词
@@ -323,7 +342,7 @@ Claude Code 在 API 成本上做了极致优化：
 
 ### 模式1：Memory as Markdown（记忆即文件）
 
-```
+```text
 不需要向量数据库
 存储 = Markdown文件 + 索引 + 维护循环
 复杂在维护，不在存储
@@ -342,7 +361,7 @@ ToolModule(
 
 ### 模式3：Multi-Agent via Task Lists
 
-```
+```text
 不是 A agent 调用 B agent
 而是 共享任务看板 + 各自认领
 通过 Bridge 协议通信
@@ -350,7 +369,7 @@ ToolModule(
 
 ### 模式4：Reversibility × Blast Radius 分类
 
-```
+```text
 执行前评估每个操作的风险
 高风险 → 用户确认
 低风险 → 直接执行
@@ -358,7 +377,7 @@ ToolModule(
 
 ### 模式5：Static/Dynamic Prompt Split
 
-```
+```text
 缓存静态部分，节省50% API成本
 用 CACHED_MICROCOMPACT flag 控制
 ```

@@ -28,19 +28,18 @@ tags: [汽车电子, SOC, Agent开发, 编程语言, Rust, C++]
 
 ### 1.2 汽车SoC Agent开发的特点
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    汽车SOC Agent                         │
-├─────────────────────────────────────────────────────────┤
-│  ┌───────────┐  ┌───────────┐  ┌───────────┐           │
-│  │ 感知融合   │  │ 决策规划   │  │ 控制执行   │           │
-│  │ (Sensor   │→ │ (Planning │→ │ (Control  │           │
-│  │  Fusion)  │  │  & Agent) │  │  Actuate) │           │
-│  └───────────┘  └───────────┘  └───────────┘           │
-│       ↓              ↓              ↓                  │
-│   C/C++/Rust      Python/AI     C/Rust(ISO26262)        │
-│   (实时处理)     (ML推理)       (功能安全)               │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph LR
+    SF["🔍 感知融合\nSensor Fusion\nC / C++ / Rust\n实时处理"]
+    PP["🧠 决策规划\nPlanning & Agent\nPython / AI\nML推理"]
+    CA["⚙️ 控制执行\nControl & Actuate\nC / Rust\nISO 26262 功能安全"]
+
+    SF -->|"传感器数据流"| PP
+    PP -->|"决策指令"| CA
+
+    style SF fill:#1565C0,color:#fff,stroke:#0D47A1,stroke-width:2px
+    style PP fill:#2E7D32,color:#fff,stroke:#1B5E20,stroke-width:2px
+    style CA fill:#B71C1C,color:#fff,stroke:#7F0000,stroke-width:2px
 ```
 
 ## 二、编程语言深度对比
@@ -133,26 +132,17 @@ tags: [汽车电子, SOC, Agent开发, 编程语言, Rust, C++]
 
 ### 3.1 三层架构模型
 
-```
-┌────────────────────────────────────────────────────────────┐
-│  Layer 3: 云端Agent层 (Cloud Agent)                        │
-│  ────────────────────────────────────────────────────────  │
-│  语言: Python / JavaScript                                  │
-│  功能: OTA升级, 大模型推理, 数据分析, 车队管理              │
-│  特点: 不受资源限制，追求开发效率                           │
-├────────────────────────────────────────────────────────────┤
-│  Layer 2: 车载AI推理层 (On-board AI)                       │
-│  ────────────────────────────────────────────────────────  │
-│  语言: C++ / Python(CPython/嵌入式) / Rust                 │
-│  功能: 感知融合, 行为决策, 场景理解, Agent推理               │
-│  特点: 异构计算(GPU/NPU)，性能敏感                         │
-├────────────────────────────────────────────────────────────┤
-│  Layer 1: 功能安全层 (Safety Critical)                     │
-│  ────────────────────────────────────────────────────────  │
-│  语言: C (dominant) / Rust (emerging)                      │
-│  功能: 车辆控制, 动力管理, 故障响应, 实时监控                │
-│  特点: ISO 26262 ASIL-D, 硬实时                            │
-└────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    L3["☁️ Layer 3: 云端Agent层 Cloud Agent\n语言: Python / JavaScript\n功能: OTA升级 · 大模型推理 · 数据分析 · 车队管理\n特点: 不受资源限制，追求开发效率"]
+    L2["🚗 Layer 2: 车载AI推理层 On-board AI\n语言: C++ / Python / Rust\n功能: 感知融合 · 行为决策 · 场景理解 · Agent推理\n特点: 异构计算 GPU/NPU，性能敏感"]
+    L1["🔒 Layer 1: 功能安全层 Safety Critical\n语言: C dominant / Rust emerging\n功能: 车辆控制 · 动力管理 · 故障响应 · 实时监控\n特点: ISO 26262 ASIL-D，硬实时"]
+
+    L3 --> L2 --> L1
+
+    style L3 fill:#1565C0,color:#fff,stroke:#0D47A1,stroke-width:2px
+    style L2 fill:#2E7D32,color:#fff,stroke:#1B5E20,stroke-width:2px
+    style L1 fill:#B71C1C,color:#fff,stroke:#7F0000,stroke-width:2px
 ```
 
 ### 3.2 Agent开发语言推荐
@@ -171,13 +161,12 @@ tags: [汽车电子, SOC, Agent开发, 编程语言, Rust, C++]
 
 ### 4.1 行业采用数据
 
-```
-编程语言在汽车行业的采用趋势 (2020-2025):
-
-C语言:     ████████████████████████████████████  80% (下降)
-C++:       ██████████████████████████  65% (稳定)
-Rust:      ████████  15% (快速上升)
-Python:    ████████████  35% (AI相关快速上升)
+```mermaid
+xychart-beta
+    title "编程语言在汽车行业采用趋势 (2025)"
+    x-axis ["C语言 (下降)", "C++ (稳定)", "Python (快速上升)", "Rust (爆发增长)"]
+    y-axis "采用率 (%)" 0 --> 100
+    bar [80, 65, 35, 15]
 ```
 
 **来源**: Embedded Markets Study 2025, automotive survey (n=450)
@@ -225,17 +214,15 @@ Python:    ████████████  35% (AI相关快速上升)
 
 ### 5.3 未来展望（2026-2030）
 
-```
-技术演进路线图:
-
-2025-2026: Rust在汽车领域规模应用元年
-           → 预计20%新项目采用Rust作为安全关键语言
-
-2027-2028: AI Native汽车软件开发
-           → Python+C++混合→Rust统一（性能+安全）
-
-2029-2030: 下一代计算平台
-           → Rust+形式化验证成为功能安全新标准
+```mermaid
+timeline
+    title 汽车SoC编程语言演进路线图
+    2025-2026 : Rust在汽车领域规模应用元年
+              : 预计20%新项目采用Rust安全关键语言
+    2027-2028 : AI Native汽车软件开发
+              : Python+C++混合架构向Rust统一演进
+    2029-2030 : 下一代计算平台
+              : Rust+形式化验证成为功能安全新标准
 ```
 
 ## 参考资料

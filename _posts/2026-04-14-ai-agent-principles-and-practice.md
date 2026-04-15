@@ -41,21 +41,22 @@ AI Agent 则不同，它是一个"能干的助手"：
 
 Agent 的工作方式遵循一个闭环：
 
-```
-┌─────────────────────────────────────────┐
-│           🔄 Agent Loop                 │
-│                                         │
-│  ┌─────────┐    ┌──────────┐            │
-│  │ 感知     │───▶│ 规划     │            │
-│  │Observe  │    │ Plan     │            │
-│  └─────────┘    └──────────┘            │
-│       ▲              │                 │
-│       │              ▼                 │
-│  ┌─────────┐    ┌──────────┐            │
-│  │ 观察     │◀───│ 行动     │            │
-│  │ Reflect │    │ Act      │            │
-│  └─────────┘    └──────────┘            │
-└─────────────────────────────────────────┘
+```mermaid
+graph LR
+    OB["👁️ 感知\nObserve\n接收输入 · 读取状态"]
+    PL["🧠 规划\nPlan\n任务拆解 · 路径选择"]
+    AC["⚡ 行动\nAct\n调用工具 · 执行操作"]
+    RF["🔍 观察\nReflect\n检查结果 · 自我修正"]
+
+    OB -->|"理解环境"| PL
+    PL -->|"选择行动"| AC
+    AC -->|"获取结果"| RF
+    RF -->|"更新认知"| OB
+
+    style OB fill:#1565C0,color:#fff,stroke:#0D47A1,stroke-width:2px
+    style PL fill:#2E7D32,color:#fff,stroke:#1B5E20,stroke-width:2px
+    style AC fill:#E65100,color:#fff,stroke:#BF360C,stroke-width:2px
+    style RF fill:#4A148C,color:#fff,stroke:#38006b,stroke-width:2px
 ```
 
 ### 2.1 感知（Observe）
@@ -91,14 +92,22 @@ Agent 的工作方式遵循一个闭环：
 
 ## 三、Agent 的四大核心模块
 
-```
-┌──────────────────────────────────────────────────┐
-│                   AI Agent                        │
-│  ┌────────┐  ┌────────┐  ┌────────┐  ┌────────┐  │
-│  │ 记忆   │  │ 规划   │  │ 工具   │  │ 行动   │  │
-│  │Memory  │  │Planner │  │Tools  │  │Action │  │
-│  └────────┘  └────────┘  └────────┘  └────────┘  │
-└──────────────────────────────────────────────────┘
+```mermaid
+graph LR
+    subgraph Agent["🤖 AI Agent 核心架构"]
+        M["🗄️ 记忆\nMemory\n短期/长期记忆\n向量数据库"]
+        P["🎯 规划\nPlanner\n任务拆解\n优先级排序"]
+        T["🔧 工具\nTools\n代码执行\nAPI调用"]
+        A["⚡ 行动\nAction\n结果输出\n环境交互"]
+    end
+
+    M --> P --> T --> A
+    A -->|"反馈循环"| M
+
+    style M fill:#1565C0,color:#fff
+    style P fill:#2E7D32,color:#fff
+    style T fill:#E65100,color:#fff
+    style A fill:#4A148C,color:#fff
 ```
 
 ### 3.1 记忆模块（Memory）
@@ -179,7 +188,7 @@ Agent 能调用的外部能力集合：
 
 **提示词模板**：
 
-```
+```text
 你是一个 AI Agent。请按照以下格式思考和行动：
 
 思考 (Thought)：描述你对当前情况的分析
@@ -325,16 +334,24 @@ if __name__ == "__main__":
 
 **架构对比**：
 
-```
-ReAct（线性串行）:
-  Step1: Thought → Action1 → Observation1
-  Step2: Thought → Action2 → Observation2
-  Step3: Thought → Action3 → Observation3
+```mermaid
+graph TD
+    subgraph ReAct["🔄 ReAct（线性串行）"]
+        direction LR
+        R1["Thought1"] --> A1["Action1"] --> O1["Observation1"]
+        O1 --> R2["Thought2"] --> A2["Action2"] --> O2["Observation2"]
+        O2 --> R3["Thought3"] --> A3["Action3"] --> O3["Observation3"]
+    end
 
-ReWOO（规划-执行分离）:
-  Plan: Action1, Action2, Action3  ← 先规划所有行动
-  执行: 统一执行所有 Action
-  汇总: 基于所有 Observation 给出答案
+    subgraph ReWOO["⚡ ReWOO（规划-执行分离）"]
+        direction LR
+        PL["Plan:\nAction1, Action2, Action3"] --> EX["并行执行:\nAction1 + Action2 + Action3"]
+        EX --> SUM["汇总:\n基于所有Observation给出答案"]
+    end
+
+    style PL fill:#1565C0,color:#fff
+    style EX fill:#2E7D32,color:#fff
+    style SUM fill:#4A148C,color:#fff
 ```
 
 **代码实现**：
@@ -785,28 +802,35 @@ OpenClaw 是一个**生产级别的 Agent 运行框架**，它不仅仅是单个
 
 #### 核心架构
 
-```
-┌─────────────────────────────────────────────────────┐
-│                  OpenClaw Gateway                    │
-│                                                     │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐ │
-│  │  Channel    │  │  Agent      │  │  Skills     │ │
-│  │  Router     │──▶│  Runtime    │──▶│  Loader     │ │
-│  │  (多渠道)    │  │  (pi-mono)  │  │  (可扩展)    │ │
-│  └─────────────┘  └─────────────┘  └─────────────┘ │
-│                         │                          │
-│                         ▼                          │
-│  ┌─────────────────────────────────────────────┐   │
-│  │           Agent Loop（完整生命周期）          │   │
-│  │  Observe → Plan → Act → Reflect            │   │
-│  └─────────────────────────────────────────────┘   │
-│                         │                          │
-│                         ▼                          │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐ │
-│  │  Memory     │  │  Tools      │  │  Sessions   │ │
-│  │  Compaction │  │  Registry   │  │  Manager    │ │
-│  └─────────────┘  └─────────────┘  └─────────────┘ │
-└─────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    subgraph GW["🌐 OpenClaw Gateway"]
+        CR["📡 Channel Router\n多渠道输入\nHTTP · WebSocket · CLI"]
+        AR["⚙️ Agent Runtime\npi-mono 核心"]
+        SL["🔌 Skills Loader\n可扩展技能库"]
+
+        CR -->|"路由分发"| AR
+        AR -->|"加载技能"| SL
+    end
+
+    subgraph AL["🔄 Agent Loop（完整生命周期）"]
+        direction LR
+        OB2["Observe"] --> PL2["Plan"] --> AC2["Act"] --> RF2["Reflect"]
+        RF2 -->|"循环"| OB2
+    end
+
+    subgraph ST["💾 状态管理"]
+        MC["Memory Compaction\n记忆压缩"]
+        TR["Tools Registry\n工具注册表"]
+        SM["Sessions Manager\n会话管理"]
+    end
+
+    AR --> AL
+    AL --> ST
+
+    style CR fill:#1565C0,color:#fff
+    style AR fill:#2E7D32,color:#fff
+    style SL fill:#E65100,color:#fff
 ```
 
 #### OpenClaw 的多 Agent 路由
@@ -1106,18 +1130,21 @@ MCP 是 Anthropic 推出的**标准化的 Agent-工具连接协议**，让 Agent
 
 #### MCP 架构
 
-```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│   AI Model      │────▶│   MCP Host      │────▶│   MCP Servers   │
-│   (Claude)      │◀────│   (应用层)       │◀────│   (工具提供者)   │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
-                                                      │
-                                                      ▼
-                                              ┌─────────────────┐
-                                              │   本地资源       │
-                                              │ 文件系统/数据库  │
-                                              │ API/服务        │
-                                              └─────────────────┘
+```mermaid
+graph LR
+    AI["🤖 AI Model\nClaude / GPT"]
+    MH["🖥️ MCP Host\n应用层\n请求路由 · 权限控制"]
+    MS["🔧 MCP Servers\n工具提供者\n标准化接口"]
+    LR["📦 本地资源\n文件系统 · 数据库\nAPI · 外部服务"]
+
+    AI <-->|"工具请求 / 结果返回"| MH
+    MH <-->|"MCP协议"| MS
+    MS -->|"调用"| LR
+
+    style AI fill:#1565C0,color:#fff
+    style MH fill:#2E7D32,color:#fff
+    style MS fill:#E65100,color:#fff
+    style LR fill:#4A148C,color:#fff
 ```
 
 #### MCP Server 示例
