@@ -34,71 +34,59 @@ Hermes Agent 打破了这一范式。它是**第一个真正意义上具有自�
 ### 1.1 系统架构全景图
 
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                     Hermes Agent 系统架构三层模型                     │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐   │
-│  │      CLI          │  │    Gateway      │  │       ACP        │   │
-│  │   (TUI界面)     │  │  (消息网关)     │  │   (IDE集成)     │   │
-│  │   ~8500行       │  │   ~7500行       │  │                  │   │
-│  └────────┬─────────┘  └────────┬─────────┘  └────────┬─────────┘   │
-│           └───────────────────────┼───────────────────────┘           │
-│                                   ▼                                    │
-│  ┌─────────────────────────────────────────────────────────────────┐ │
-│  │                      AIAgent Core (~9200行)                     │ │
-│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐          │ │
-│  │  │   Prompt   │→ │  Provider  │→ │    Tool    │          │ │
-│  │  │  Builder   │  │ Resolution  │  │  Dispatch  │          │ │
-│  │  └─────────────┘  └─────────────┘  └─────────────┘          │ │
-│  └─────────────────────────────────────────────────────────────────┘ │
-│                                   │                                    │
-│           ┌───────────────────────┴───────────────────────┐            │
-│           ▼                                               ▼            │
-│  ┌─────────────────┐                      ┌─────────────────────────┐ │
-│  │  SQLite + FTS5 │                      │   Honcho 推理引擎        │ │
-│  │  持久化存储     │                      │   用户画像 + 推理       │ │
-│  └─────────────────┘                      └─────────────────────────┘ │
-└─────────────────────────────────────────────────────────────────────┘
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1b4b', 'primaryTextColor': '#e0e7ff', 'primaryBorderColor': '#818cf8', 'lineColor': '#818cf8', 'secondaryColor': '#2e1065', 'tertiaryColor': '#0c3a4a', 'background': '#0a0914', 'mainBkg': '#1e1b4b', 'nodeBorder': '#818cf8', 'clusterBkg': '#110d2e', 'clusterBorder': '#4f46e5', 'titleColor': '#c7d2fe', 'edgeLabelBackground': '#1e1b4b'}}}%%
+flowchart TD
+    classDef iface fill:#1e3a5f,stroke:#38bdf8,color:#e0f2fe
+    classDef pipeline fill:#3b0764,stroke:#a78bfa,color:#f5f3ff
+    classDef store fill:#134e4a,stroke:#34d399,color:#d1fae5
+
+    subgraph IF["接入层"]
+        CLI["CLI\nTUI 界面 · ~8500 行"]:::iface
+        GW["Gateway\n消息网关 · ~7500 行"]:::iface
+        ACP["ACP\nIDE 集成"]:::iface
+    end
+
+    subgraph CORE["AIAgent Core · ~9200 行"]
+        PB["Prompt Builder\n系统提示 + 历史 + 记忆"]:::pipeline
+        PR["Provider Resolution\n18+ 供应商自动选择"]:::pipeline
+        TD["Tool Dispatch\n47 内置工具 + MCP"]:::pipeline
+        PB --> PR --> TD
+    end
+
+    subgraph STORE["存储层"]
+        DB["SQLite + FTS5\n持久化 · 毫秒级检索"]:::store
+        HC["Honcho 推理引擎\n用户画像 + 形式逻辑推理"]:::store
+    end
+
+    CLI & GW & ACP --> CORE
+    CORE --> DB & HC
 ```
 
 
 ### 1.2 AIAgent 核心循环
 
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        AIAgent 核心执行循环                          │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│   用户输入 / 工具执行结果反馈                                        │
-│        │                                                             │
-│        ▼                                                             │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │  Prompt 构建器                                               │  │
-│  │  系统提示 + 历史消息 + Honcho 记忆 + 技能列表               │  │
-│  └──────────────────────────┬───────────────────────────────────┘  │
-│                              │                                       │
-│                              ▼                                       │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │  LLM 调用 (Provider 自动选择，18+ 供应商)                    │  │
-│  └──────────────────────────┬───────────────────────────────────┘  │
-│                              │                                       │
-│                              ▼                                       │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │  响应解析 → 是否包含 tool_call？                             │  │
-│  └────────────────┬─────────────────────────────┬───────────────┘  │
-│                   │ 是                           │ 否               │
-│                   ▼                               ▼                  │
-│  ┌────────────────────────┐    ┌──────────────────────────────┐   │
-│  │  Tool Dispatcher       │    │  输出响应给用户              │   │
-│  │  解析参数 → 执行后端   │    │  更新 Honcho 记忆            │   │
-│  │  → 收集结果            │    └──────────────────────────────┘   │
-│  └────────────┬───────────┘                                         │
-│               └──── 结果追加到消息历史 ──→ 返回循环顶部            │
-│                                                                      │
-└─────────────────────────────────────────────────────────────────────┘
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1b4b', 'primaryTextColor': '#e0e7ff', 'primaryBorderColor': '#818cf8', 'lineColor': '#818cf8', 'secondaryColor': '#2e1065', 'tertiaryColor': '#0c3a4a', 'background': '#0a0914', 'mainBkg': '#1e1b4b', 'nodeBorder': '#818cf8', 'clusterBkg': '#110d2e', 'clusterBorder': '#4f46e5', 'titleColor': '#c7d2fe', 'edgeLabelBackground': '#1e1b4b'}}}%%
+flowchart TD
+    classDef input fill:#1e3a5f,stroke:#38bdf8,color:#e0f2fe
+    classDef process fill:#312e81,stroke:#818cf8,color:#e0e7ff
+    classDef decision fill:#451a03,stroke:#fbbf24,color:#fef3c7
+    classDef tool fill:#3b0764,stroke:#a78bfa,color:#f5f3ff
+    classDef output fill:#052e16,stroke:#34d399,color:#d1fae5
+
+    A["用户输入 / 工具执行结果反馈"]:::input
+    B["Prompt 构建器\n系统提示 + 历史消息 + Honcho 记忆 + 技能列表"]:::process
+    C["LLM 调用\nProvider 自动选择 · 18+ 供应商"]:::process
+    D{"包含 tool_call？"}:::decision
+    E["Tool Dispatcher\n解析参数 → 选择后端 → 执行 → 收集结果"]:::tool
+    F["输出响应给用户\n更新 Honcho 记忆"]:::output
+
+    A --> B --> C --> D
+    D -- 是 --> E
+    D -- 否 --> F
+    E -- 结果追加消息历史 --> B
 ```
 
 
@@ -124,32 +112,33 @@ Hermes Agent 打破了这一范式。它是**第一个真正意义上具有自�
 位于 `gateway/run.py`，约 **7500 行代码**，连接 15+ 消息平台：
 
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                      Gateway 消息平台连接架构                        │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  消息平台层（15+ 平台）                                              │
-│  ┌───────┐ ┌───────┐ ┌───────┐ ┌───────┐ ┌───────┐ ┌───────┐     │
-│  │  TG   │ │  DC   │ │  WA   │ │  飞书 │ │  钉钉 │ │  企微 │     │
-│  └───┬───┘ └───┬───┘ └───┬───┘ └───┬───┘ └───┬───┘ └───┬───┘     │
-│      └─────────┴─────────┴─────────┴─────────┴─────────┘          │
-│                                  │                                   │
-│                                  ▼                                   │
-│  ┌───────────────────────────────────────────────────────────────┐  │
-│  │                Gateway Core  (gateway/run.py ~7500行)         │  │
-│  │  ┌─────────────────┐  ┌─────────────────┐  ┌──────────────┐  │  │
-│  │  │   消息标准化    │  │   权限校验      │  │  多路复用    │  │  │
-│  │  │  (统一格式)     │  │  (用户/群组)    │  │  路由分发    │  │  │
-│  │  └─────────────────┘  └─────────────────┘  └──────────────┘  │  │
-│  └──────────────────────────────┬────────────────────────────────┘  │
-│                                  │                                   │
-│                                  ▼                                   │
-│  ┌───────────────────────────────────────────────────────────────┐  │
-│  │                       AIAgent Core                            │  │
-│  └───────────────────────────────────────────────────────────────┘  │
-│                                                                      │
-└─────────────────────────────────────────────────────────────────────┘
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1b4b', 'primaryTextColor': '#e0e7ff', 'primaryBorderColor': '#818cf8', 'lineColor': '#818cf8', 'secondaryColor': '#2e1065', 'tertiaryColor': '#0c3a4a', 'background': '#0a0914', 'mainBkg': '#1e1b4b', 'nodeBorder': '#818cf8', 'clusterBkg': '#110d2e', 'clusterBorder': '#4f46e5', 'titleColor': '#c7d2fe', 'edgeLabelBackground': '#1e1b4b'}}}%%
+flowchart TD
+    classDef platform fill:#1e3a5f,stroke:#38bdf8,color:#e0f2fe
+    classDef gw fill:#312e81,stroke:#818cf8,color:#e0e7ff
+    classDef agent fill:#3b0764,stroke:#a78bfa,color:#f5f3ff
+
+    subgraph PLAT["消息平台层 · 15+ 平台"]
+        TG["Telegram"]:::platform
+        DC["Discord"]:::platform
+        WA["WhatsApp"]:::platform
+        FS["飞书"]:::platform
+        DD["钉钉"]:::platform
+        QW["企微"]:::platform
+    end
+
+    subgraph GWC["Gateway Core · gateway/run.py · ~7500 行"]
+        N["消息标准化\n统一格式"]:::gw
+        P["权限校验\n用户 / 群组"]:::gw
+        R["多路复用\n路由分发"]:::gw
+        N --> P --> R
+    end
+
+    AGENT["AIAgent Core"]:::agent
+
+    TG & DC & WA & FS & DD & QW --> GWC
+    R --> AGENT
 ```
 
 
@@ -280,34 +269,25 @@ GitHub：https://github.com/plastic-labs/honcho
 ### 3.2 Honcho 数据模型
 
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        Honcho 层级数据模型                           │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  ┌───────────────────────────────────────────────────────────────┐  │
-│  │  App  app_id: "hermes-agent"                                  │  │
-│  │  ┌─────────────────────────────────────────────────────────┐  │  │
-│  │  │  User  user_id: "user_xuqi"                             │  │  │
-│  │  │                                                          │  │  │
-│  │  │  ┌──────────────────────────────────────────────────┐   │  │  │
-│  │  │  │ Session  session_id: "sess_20260413"             │   │  │  │
-│  │  │  │  ┌─────────────────┐  ┌──────────────────────┐  │   │  │  │
-│  │  │  │  │    Message      │  │     Metamessage      │  │   │  │  │
-│  │  │  │  │ is_human: True  │  │  推理标注/记忆更新   │  │   │  │  │
-│  │  │  │  │ content: "..."  │  │  content: "用户偏好" │  │   │  │  │
-│  │  │  │  └─────────────────┘  └──────────────────────┘  │   │  │  │
-│  │  │  └──────────────────────────────────────────────────┘   │  │  │
-│  │  │                                                          │  │  │
-│  │  │  ┌─────────────────────────────────────────────────┐    │  │  │
-│  │  │  │  Peer Card（用户画像）                          │    │  │  │
-│  │  │  │  biographical / preferences / behavioral        │    │  │  │
-│  │  │  │  derived_insights（推理结论）                   │    │  │  │
-│  │  │  └─────────────────────────────────────────────────┘    │  │  │
-│  │  └─────────────────────────────────────────────────────────┘  │  │
-│  └───────────────────────────────────────────────────────────────┘  │
-│                                                                      │
-└─────────────────────────────────────────────────────────────────────┘
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1b4b', 'primaryTextColor': '#e0e7ff', 'primaryBorderColor': '#818cf8', 'lineColor': '#818cf8', 'secondaryColor': '#2e1065', 'tertiaryColor': '#0c3a4a', 'background': '#0a0914', 'mainBkg': '#1e1b4b', 'nodeBorder': '#818cf8', 'clusterBkg': '#110d2e', 'clusterBorder': '#4f46e5', 'titleColor': '#c7d2fe', 'edgeLabelBackground': '#1e1b4b'}}}%%
+flowchart TD
+    classDef tier1 fill:#1e3a5f,stroke:#38bdf8,color:#e0f2fe
+    classDef tier2 fill:#312e81,stroke:#818cf8,color:#e0e7ff
+    classDef tier3 fill:#3b0764,stroke:#a78bfa,color:#f5f3ff
+    classDef tier4 fill:#134e4a,stroke:#34d399,color:#d1fae5
+    classDef profile fill:#451a03,stroke:#fbbf24,color:#fef3c7
+
+    APP["App\napp_id: hermes-agent"]:::tier1
+    USER["User\nuser_id: user_xuqi"]:::tier2
+    SESS["Session\nsession_id: sess_20260413"]:::tier3
+    MSG["Message\nis_human: true · content: ..."]:::tier4
+    META["Metamessage\n推理标注 / 记忆更新 / 用户偏好"]:::tier4
+    CARD["Peer Card · 用户画像\nbiographical · preferences\nbehavioral · derived_insights"]:::profile
+
+    APP --> USER
+    USER --> SESS & CARD
+    SESS --> MSG & META
 ```
 
 
@@ -316,28 +296,29 @@ GitHub：https://github.com/plastic-labs/honcho
 #### 为什么需要推理？
 
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│              传统 RAG 与 Honcho 推理引擎对比                         │
-├─────────────────────────────────┬───────────────────────────────────┤
-│         传统 RAG                │         Honcho 推理引擎           │
-├─────────────────────────────────┼───────────────────────────────────┤
-│  输入: "我喜欢代码示例"         │  输入: "我喜欢代码示例"           │
-│          │                      │          │                         │
-│          ▼                      │          ▼                         │
-│  [向量检索相似对话]              │  [提取显式事实]                   │
-│          │                      │  → "用户说喜欢看代码示例"         │
-│          ▼                      │          │                         │
-│  返回: "用户说他喜欢            │          ▼                         │
-│   看代码示例（原文）"           │  [演绎推理]                       │
-│                                 │  → "用户偏好实践导向学习"         │
-│  ❌ 只返回说过的话               │          │                         │
-│                                 │          ▼                         │
-│                                 │  [归纳推理]                       │
-│                                 │  → "用户是实践型学习者"           │
-│                                 │                                    │
-│                                 │  ✅ 返回从话语推导出的结论         │
-└─────────────────────────────────┴───────────────────────────────────┘
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1b4b', 'primaryTextColor': '#e0e7ff', 'primaryBorderColor': '#818cf8', 'lineColor': '#818cf8', 'secondaryColor': '#2e1065', 'tertiaryColor': '#0c3a4a', 'background': '#0a0914', 'mainBkg': '#1e1b4b', 'nodeBorder': '#818cf8', 'clusterBkg': '#110d2e', 'clusterBorder': '#4f46e5', 'titleColor': '#c7d2fe', 'edgeLabelBackground': '#1e1b4b'}}}%%
+flowchart LR
+    classDef input fill:#1e3a5f,stroke:#38bdf8,color:#e0f2fe
+    classDef ragnode fill:#450a0a,stroke:#f87171,color:#fee2e2
+    classDef honcho fill:#312e81,stroke:#818cf8,color:#e0e7ff
+    classDef bad fill:#7f1d1d,stroke:#ef4444,color:#fecaca
+    classDef good fill:#052e16,stroke:#10b981,color:#ecfdf5
+
+    subgraph RAG["❌  传统 RAG"]
+        RA["用户输入\n'我喜欢代码示例'"]:::input
+        RB["向量检索\n相似对话片段"]:::ragnode
+        RC["仅返回原文\n'用户说他喜欢代码示例'"]:::bad
+        RA --> RB --> RC
+    end
+
+    subgraph HON["✅  Honcho 推理引擎"]
+        HA["用户输入\n'我喜欢代码示例'"]:::input
+        HB["提取显式事实\n用户说喜欢看代码示例"]:::honcho
+        HC2["演绎推理\n用户偏好实践导向学习"]:::honcho
+        HD["归纳推理结论\n用户是实践型学习者"]:::good
+        HA --> HB --> HC2 --> HD
+    end
 ```
 
 
@@ -445,79 +426,55 @@ GitHub：https://github.com/plastic-labs/honcho
 ### 4.1 工具注册表架构
 
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                          工具注册表架构                              │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  ┌───────────────────────────────────────────────────────────────┐  │
-│  │                  Tool Registry (工具注册表)                   │  │
-│  ├────────────────┬────────────────┬───────────────┬─────────────┤  │
-│  │   文件操作     │   代码执行     │   网络访问    │  记忆管理   │  │
-│  │  read_file     │  bash_exec     │  web_search   │search_memory│  │
-│  │  write_file    │  python_run    │  web_fetch    │save_memory  │  │
-│  │  list_dir      │  node_run      │  http_req     │list_skills  │  │
-│  └────────┬───────┴────────┬───────┴───────┬───────┴─────────────┘  │
-│           └────────────────┴───────────────┘                        │
-│                                  │                                   │
-│                                  ▼                                   │
-│  ┌───────────────────────────────────────────────────────────────┐  │
-│  │               Tool Dispatcher（工具分发器）                   │  │
-│  │    tool_name → 查找注册表 → 校验参数 → 选择执行后端          │  │
-│  └──────────────────────────┬────────────────────────────────────┘  │
-│                              │                                       │
-│             ┌────────────────┴────────────────┐                     │
-│             ▼                                  ▼                     │
-│  ┌────────────────────────┐     ┌──────────────────────────────┐   │
-│  │  内置工具 (47个)       │     │  MCP 扩展工具（可选）        │   │
-│  │  本地/Docker/SSH执行   │     │  外部服务 API 集成           │   │
-│  └────────────────────────┘     └──────────────────────────────┘   │
-│                                                                      │
-└─────────────────────────────────────────────────────────────────────┘
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1b4b', 'primaryTextColor': '#e0e7ff', 'primaryBorderColor': '#818cf8', 'lineColor': '#818cf8', 'secondaryColor': '#2e1065', 'tertiaryColor': '#0c3a4a', 'background': '#0a0914', 'mainBkg': '#1e1b4b', 'nodeBorder': '#818cf8', 'clusterBkg': '#110d2e', 'clusterBorder': '#4f46e5', 'titleColor': '#c7d2fe', 'edgeLabelBackground': '#1e1b4b'}}}%%
+flowchart TD
+    classDef tool fill:#1e3a5f,stroke:#38bdf8,color:#e0f2fe
+    classDef dispatch fill:#3b0764,stroke:#a78bfa,color:#f5f3ff
+    classDef backend fill:#134e4a,stroke:#34d399,color:#d1fae5
+
+    subgraph REG["工具注册表 Tool Registry · 47 内置工具"]
+        T1["文件操作\nread_file · write_file · list_dir"]:::tool
+        T2["代码执行\nbash_exec · python_run · node_run"]:::tool
+        T3["网络访问\nweb_search · web_fetch · http_req"]:::tool
+        T4["记忆管理\nsearch_memory · save_memory · list_skills"]:::tool
+    end
+
+    DISP["Tool Dispatcher\ntool_name → 注册表查找 → 参数校验 → 选择执行后端"]:::dispatch
+    BUILT["内置工具执行\nlocal · Docker · SSH · Modal"]:::backend
+    MCP["MCP 扩展工具\n外部服务 API 集成"]:::backend
+
+    REG --> DISP
+    DISP --> BUILT & MCP
 ```
 
 
 ### 4.2 工具执行流程
 
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                          工具执行完整流程                            │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│   LLM 输出包含 tool_call                                             │
-│        │                                                             │
-│        ▼                                                             │
-│  ┌───────────────────────────────────────────────────────────────┐  │
-│  │  1. 解析工具名 + 参数                                         │  │
-│  └──────────────────────────┬────────────────────────────────────┘  │
-│                              │                                       │
-│                              ▼                                       │
-│  ┌───────────────────────────────────────────────────────────────┐  │
-│  │  2. 参数校验 (JSON Schema)                                    │  │
-│  └──────────────────────────┬────────────────────────────────────┘  │
-│                              │                                       │
-│              ┌───────────────┴──────────────┐                       │
-│              │ 校验通过？                    │                       │
-│              └──────┬───────────────┬────────┘                       │
-│                     │ 是            │ 否                             │
-│                     ▼               ▼                                │
-│         ┌──────────────────┐   返回错误信息给 LLM 重试              │
-│         │ 3. 选择执行后端  │                                         │
-│         │ local / docker   │                                         │
-│         │ SSH / Modal      │                                         │
-│         └────────┬─────────┘                                         │
-│                  │                                                    │
-│                  ▼                                                    │
-│         ┌──────────────────┐                                         │
-│         │ 4. 执行工具      │                                         │
-│         │ 捕获输出 / 超时  │                                         │
-│         └────────┬─────────┘                                         │
-│                  │                                                    │
-│                  ▼                                                    │
-│         返回 tool_result 追加到消息历史，触发下一轮循环              │
-│                                                                      │
-└─────────────────────────────────────────────────────────────────────┘
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1b4b', 'primaryTextColor': '#e0e7ff', 'primaryBorderColor': '#818cf8', 'lineColor': '#818cf8', 'secondaryColor': '#2e1065', 'tertiaryColor': '#0c3a4a', 'background': '#0a0914', 'mainBkg': '#1e1b4b', 'nodeBorder': '#818cf8', 'clusterBkg': '#110d2e', 'clusterBorder': '#4f46e5', 'titleColor': '#c7d2fe', 'edgeLabelBackground': '#1e1b4b'}}}%%
+flowchart TD
+    classDef trigger fill:#1e3a5f,stroke:#38bdf8,color:#e0f2fe
+    classDef process fill:#312e81,stroke:#818cf8,color:#e0e7ff
+    classDef decision fill:#451a03,stroke:#fbbf24,color:#fef3c7
+    classDef error fill:#450a0a,stroke:#f87171,color:#fee2e2
+    classDef execute fill:#3b0764,stroke:#a78bfa,color:#f5f3ff
+    classDef result fill:#052e16,stroke:#34d399,color:#d1fae5
+
+    A["LLM 输出包含 tool_call"]:::trigger
+    B["① 解析工具名 + 参数"]:::process
+    C["② 参数校验\nJSON Schema 验证"]:::process
+    D{"校验通过？"}:::decision
+    E["返回错误信息\nLLM 重试修正参数"]:::error
+    F["③ 选择执行后端\nlocal · docker · SSH · Modal"]:::execute
+    G["④ 执行工具\n捕获输出 / 超时控制"]:::execute
+    H["返回 tool_result\n追加消息历史 → 触发下一轮循环"]:::result
+
+    A --> B --> C --> D
+    D -- 否 --> E
+    D -- 是 --> F --> G --> H
+    E -- 重试 --> A
 ```
 
 
@@ -553,31 +510,34 @@ GitHub：https://github.com/plastic-labs/honcho
 ### 5.2 架构哲学对比
 
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    Hermes vs OpenClaw 架构哲学对比                   │
-├──────────────────────────────┬──────────────────────────────────────┤
-│        Hermes Agent          │             OpenClaw                 │
-│       （自我进化派）          │           （工具编排派）             │
-│        Python ~50k行         │          TypeScript/Node.js          │
-├──────────────────────────────┼──────────────────────────────────────┤
-│  用户输入                    │  用户输入                            │
-│      │                       │      │                               │
-│      ▼                       │      ▼                               │
-│  Honcho 记忆检索             │  MEMORY.md / SOUL.md 读取           │
-│  + 用户画像推理              │  USER.md 用户配置                   │
-│      │                       │      │                               │
-│      ▼                       │      ▼                               │
-│  LLM (18+ 供应商)            │  LLM (多供应商)                     │
-│      │                       │      │                               │
-│      ▼                       │      ▼                               │
-│  47内置工具 + MCP 扩展       │  Skills 扩展体系                    │
-│      │                       │      │                               │
-│      ▼                       │      ▼                               │
-│  ✅ 自动更新 Honcho 记忆      │  返回结果（无状态）                  │
-│  ✅ 生成可复用技能            │                                      │
-│  ✅ 用户画像持续优化          │                                      │
-└──────────────────────────────┴──────────────────────────────────────┘
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1b4b', 'primaryTextColor': '#e0e7ff', 'primaryBorderColor': '#818cf8', 'lineColor': '#818cf8', 'secondaryColor': '#2e1065', 'tertiaryColor': '#0c3a4a', 'background': '#0a0914', 'mainBkg': '#1e1b4b', 'nodeBorder': '#818cf8', 'clusterBkg': '#110d2e', 'clusterBorder': '#4f46e5', 'titleColor': '#c7d2fe', 'edgeLabelBackground': '#1e1b4b'}}}%%
+flowchart LR
+    classDef hermes fill:#312e81,stroke:#818cf8,color:#e0e7ff
+    classDef claw fill:#134e4a,stroke:#34d399,color:#d1fae5
+    classDef input fill:#1e1b4b,stroke:#6366f1,color:#c7d2fe
+    classDef hermes_out fill:#052e16,stroke:#10b981,color:#ecfdf5
+    classDef claw_out fill:#0c3a4a,stroke:#0891b2,color:#cffafe
+
+    subgraph HM["Hermes Agent · 自我进化派 · Python ~50k行"]
+        direction TB
+        HA["用户输入"]:::input
+        HB["Honcho 记忆检索\n+ 用户画像推理"]:::hermes
+        HC2["LLM · 18+ 供应商"]:::hermes
+        HD["47 内置工具 + MCP 扩展"]:::hermes
+        HE["✅ 自动更新 Honcho 记忆\n✅ 生成可复用技能\n✅ 用户画像持续优化"]:::hermes_out
+        HA --> HB --> HC2 --> HD --> HE
+    end
+
+    subgraph OC["OpenClaw · 工具编排派 · TypeScript/Node.js"]
+        direction TB
+        OA["用户输入"]:::input
+        OB["MEMORY.md · SOUL.md\nUSER.md 用户配置"]:::claw
+        OC2["LLM · 多供应商"]:::claw
+        OD["Skills 扩展体系"]:::claw
+        OE["返回结果（无状态）"]:::claw_out
+        OA --> OB --> OC2 --> OD --> OE
+    end
 ```
 
 
@@ -643,38 +603,29 @@ hermes claw migrate --dry-run
 ### 6.1 Cron 工作原理
 
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        Cron 定时任务工作原理                         │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  ┌───────────────────────────────────────────────────────────────┐  │
-│  │  任务配置 (cron_jobs.json)                                    │  │
-│  │  { "schedule": "0 8 * * *", "prompt": "生成日报", ... }      │  │
-│  └────────────────────────────┬──────────────────────────────────┘  │
-│                               │                                      │
-│                               ▼                                      │
-│  ┌───────────────────────────────────────────────────────────────┐  │
-│  │  APScheduler 调度器                                           │  │
-│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌─────────────┐  │  │
-│  │  │ 每日报告 │  │ 记忆提醒 │  │ 系统监控 │  │  自定义任务 │  │  │
-│  │  │0 8 * * * │  │*/30 * * *│  │0 * * * * │  │  cron 表达式│  │  │
-│  │  └────┬─────┘  └────┬─────┘  └────┬─────┘  └──────┬──────┘  │  │
-│  └───────┼─────────────┼─────────────┼────────────────┼──────────┘  │
-│          └─────────────┴──────┬──────┴────────────────┘              │
-│                               │ 触发                                 │
-│                               ▼                                      │
-│  ┌───────────────────────────────────────────────────────────────┐  │
-│  │  AIAgent 执行                                                 │  │
-│  │  构建任务提示词 → LLM 调用 → 工具执行                        │  │
-│  └────────────────────────────┬──────────────────────────────────┘  │
-│                               │                                      │
-│                               ▼                                      │
-│  ┌───────────────────────────────────────────────────────────────┐  │
-│  │  结果投递：Telegram / Discord / Email / 飞书                  │  │
-│  └───────────────────────────────────────────────────────────────┘  │
-│                                                                      │
-└─────────────────────────────────────────────────────────────────────┘
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1b4b', 'primaryTextColor': '#e0e7ff', 'primaryBorderColor': '#818cf8', 'lineColor': '#818cf8', 'secondaryColor': '#2e1065', 'tertiaryColor': '#0c3a4a', 'background': '#0a0914', 'mainBkg': '#1e1b4b', 'nodeBorder': '#818cf8', 'clusterBkg': '#110d2e', 'clusterBorder': '#4f46e5', 'titleColor': '#c7d2fe', 'edgeLabelBackground': '#1e1b4b'}}}%%
+flowchart TD
+    classDef config fill:#1e3a5f,stroke:#38bdf8,color:#e0f2fe
+    classDef job fill:#312e81,stroke:#818cf8,color:#e0e7ff
+    classDef execute fill:#3b0764,stroke:#a78bfa,color:#f5f3ff
+    classDef deliver fill:#052e16,stroke:#34d399,color:#d1fae5
+
+    CONFIG["任务配置 cron_jobs.json\nschedule: '0 8 * * *'\nprompt: '生成日报'"]:::config
+
+    subgraph SCHED["APScheduler 调度器"]
+        S1["每日报告\n0 8 * * *"]:::job
+        S2["记忆提醒\n*/30 * * *"]:::job
+        S3["系统监控\n0 * * * *"]:::job
+        S4["自定义任务\ncron 表达式"]:::job
+    end
+
+    EXEC["AIAgent 执行\n构建提示词 → LLM 调用 → 工具执行"]:::execute
+    DELIVER["结果投递\nTelegram · Discord · Email · 飞书"]:::deliver
+
+    CONFIG --> SCHED
+    S1 & S2 & S3 & S4 --> EXEC
+    EXEC --> DELIVER
 ```
 
 
@@ -703,37 +654,24 @@ hermes claw migrate --dry-run
 ### 7.1 并行加速原理
 
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                       子智能体并行委托加速                           │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  用户: "分析代码质量、安全性和测试覆盖率"                            │
-│                    │                                                 │
-│                    ▼                                                 │
-│           ┌─────────────────────┐                                   │
-│           │   主 Hermes Agent   │                                   │
-│           │   任务拆解 /parallel│                                   │
-│           └──────────┬──────────┘                                   │
-│                      │                                               │
-│        ┌─────────────┼─────────────────┐                            │
-│        ▼             ▼                 ▼                             │
-│  ┌──────────┐  ┌──────────────┐  ┌──────────────┐                  │
-│  │子Agent A │  │  子 Agent B  │  │  子 Agent C  │                  │
-│  │目录结构  │  │  代码质量    │  │  安全审计    │                  │
-│  │分析      │  │  问题检查    │  │  漏洞扫描    │                  │
-│  └────┬─────┘  └──────┬───────┘  └──────┬───────┘                  │
-│       │  并行执行      │  并行执行        │  并行执行               │
-│       └───────────────┴──────────────────┘                          │
-│                      │                                               │
-│                      ▼                                               │
-│           ┌─────────────────────┐                                   │
-│           │ 汇总结果 + 综合报告 │                                   │
-│           │ 总耗时=max(各任务)  │                                   │
-│           │ 而非 sum(各任务)    │                                   │
-│           └─────────────────────┘                                   │
-│                                                                      │
-└─────────────────────────────────────────────────────────────────────┘
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1b4b', 'primaryTextColor': '#e0e7ff', 'primaryBorderColor': '#818cf8', 'lineColor': '#818cf8', 'secondaryColor': '#2e1065', 'tertiaryColor': '#0c3a4a', 'background': '#0a0914', 'mainBkg': '#1e1b4b', 'nodeBorder': '#818cf8', 'clusterBkg': '#110d2e', 'clusterBorder': '#4f46e5', 'titleColor': '#c7d2fe', 'edgeLabelBackground': '#1e1b4b'}}}%%
+flowchart TD
+    classDef user fill:#1e3a5f,stroke:#38bdf8,color:#e0f2fe
+    classDef main fill:#3b0764,stroke:#a78bfa,color:#f5f3ff
+    classDef sub fill:#312e81,stroke:#818cf8,color:#e0e7ff
+    classDef summary fill:#052e16,stroke:#34d399,color:#d1fae5
+
+    USER["用户: '分析代码质量、安全性和测试覆盖率'"]:::user
+    MAIN["主 Hermes Agent\n任务拆解 /parallel"]:::main
+    A["子 Agent A\n目录结构分析"]:::sub
+    B["子 Agent B\n代码质量检查"]:::sub
+    C["子 Agent C\n安全审计 · 漏洞扫描"]:::sub
+    SUM["汇总结果 + 综合报告\n总耗时 = max(各任务)\n而非 sum(各任务)"]:::summary
+
+    USER --> MAIN
+    MAIN --> A & B & C
+    A & B & C -- 并行执行 --> SUM
 ```
 
 
