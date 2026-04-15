@@ -2,7 +2,7 @@
 title: Claude Code 源码深度解析：它为什么这么强
 date: 2026-04-15 08:50:00
 categories:
-- AI
+- 技术分析
 tags:
 - Claude Code
 - AI Agent
@@ -81,14 +81,14 @@ graph TD
 
     UI --> RR --> BC --> SI --> SE --> TH --> TO --> SP
 
-    style UI fill:#1565C0,color:#fff
-    style RR fill:#283593,color:#fff
-    style BC fill:#283593,color:#fff
-    style SI fill:#283593,color:#fff
-    style SE fill:#1B5E20,color:#fff
-    style TH fill:#1B5E20,color:#fff
-    style TO fill:#1B5E20,color:#fff
-    style SP fill:#4A148C,color:#fff
+    style UI fill:#C7CEEA,stroke:#9FA8DA,color:#333
+    style RR fill:#E8D5F5,stroke:#CE93D8,color:#333
+    style BC fill:#E8D5F5,stroke:#CE93D8,color:#333
+    style SI fill:#E8D5F5,stroke:#CE93D8,color:#333
+    style SE fill:#B5EAD7,stroke:#80CBC4,color:#333
+    style TH fill:#B5EAD7,stroke:#80CBC4,color:#333
+    style TO fill:#B5EAD7,stroke:#80CBC4,color:#333
+    style SP fill:#E8D5F5,stroke:#CE93D8,color:#333
 ```
 
 ### 2.2 工具 = Name + Hint + Permission + Execute
@@ -191,10 +191,10 @@ graph TD
     R <-->|"Bridge协议通信"| TL
     W <-->|"Bridge协议通信"| TL
 
-    style C fill:#1565C0,color:#fff
-    style R fill:#2E7D32,color:#fff
-    style W fill:#E65100,color:#fff
-    style TL fill:#4A148C,color:#fff
+    style C fill:#C7CEEA,stroke:#9FA8DA,color:#333
+    style R fill:#B5EAD7,stroke:#80CBC4,color:#333
+    style W fill:#FFDAB9,stroke:#FFAB76,color:#333
+    style TL fill:#E8D5F5,stroke:#CE93D8,color:#333
 ```
 
 ### 通信机制
@@ -287,9 +287,9 @@ graph LR
     PS -->|"缓存命中节省~50% token"| API
     PD -->|"每轮发送"| API
 
-    style PS fill:#1565C0,color:#fff
-    style PD fill:#E65100,color:#fff
-    style API fill:#4A148C,color:#fff
+    style PS fill:#C7CEEA,stroke:#9FA8DA,color:#333
+    style PD fill:#FFDAB9,stroke:#FFAB76,color:#333
+    style API fill:#E8D5F5,stroke:#CE93D8,color:#333
 ```
 
 ### 内部版本的词数限制（公开版没有）
