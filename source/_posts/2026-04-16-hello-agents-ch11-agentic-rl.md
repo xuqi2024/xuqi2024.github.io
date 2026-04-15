@@ -1,5 +1,5 @@
 ---
-title: 用强化学习"驯服"AI Agent：GRPO与Agentic RL全解析
+title: 【第11章】用强化学习"驯服"AI Agent：GRPO与Agentic RL全解析
 date: 2026-04-16 11:00:00
 categories:
 - 技术科普
@@ -91,16 +91,16 @@ AI 训练范式经历了清晰的四个阶段演进。每一阶段都在解决�
 
 ```mermaid
 graph TD
-    A["📚 阶段一：预训练\nPretrain\n海量文本·预测下一个Token\n获得语言基础能力"]
-    B["🎯 阶段二：监督微调\nSFT\n人类示范数据·模仿学习\n学会特定任务格式"]
-    C["👥 阶段三：RLHF\nHuman Feedback RL\n人类偏好→奖励模型\n对齐人类价值观"]
-    D["🤖 阶段四：Agentic RL\n环境奖励驱动\n真实任务执行结果作为Reward\n超越人类示范上限"]
-    E["🏆 目标\n自主完成复杂任务\n持续自我改进"]
+    A["📚 阶段一：预训练<br/>Pretrain<br/>海量文本·预测下一个Token<br/>获得语言基础能力"]
+    B["🎯 阶段二：监督微调<br/>SFT<br/>人类示范数据·模仿学习<br/>学会特定任务格式"]
+    C["👥 阶段三：RLHF<br/>Human Feedback RL<br/>人类偏好→奖励模型<br/>对齐人类价值观"]
+    D["🤖 阶段四：Agentic RL<br/>环境奖励驱动<br/>真实任务执行结果作为Reward<br/>超越人类示范上限"]
+    E["🏆 目标<br/>自主完成复杂任务<br/>持续自我改进"]
 
     A --> B --> C --> D --> E
 
-    B -.->|"局限：被训练数据上限锁死\n无法超越人类示范质量"| C
-    C -.->|"局限：人类反馈成本极高\n主观性强·难以规模化"| D
+    B -.->|"局限：被训练数据上限锁死<br/>无法超越人类示范质量"| C
+    C -.->|"局限：人类反馈成本极高<br/>主观性强·难以规模化"| D
 
     style A fill:#C7CEEA,stroke:#9FA8DA,stroke-width:2px,color:#333
     style B fill:#FFDAB9,stroke:#FFAB76,stroke-width:2px,color:#333
@@ -420,17 +420,17 @@ if __name__ == "__main__":
 
 ```mermaid
 flowchart TD
-    START(["🤔 你的 Agent 需要 RL 吗？"]) --> Q1{"Prompt 工程\n或 RAG 能解决问题吗？"}
-    Q1 -->|"✅ 能解决"| NO1["❌ 不需要 RL\n继续优化 Prompt / RAG\n（成本最低的选项）"]
-    Q1 -->|"❌ 不够用"| Q2{"SFT 基线\n做了吗？"}
-    Q2 -->|"❌ 还没有"| NO2["⚠️ 先做 SFT 打基线\nRL 必须建立在 SFT 基础上"]
-    Q2 -->|"✅ 做了且已达瓶颈"| Q3{"训练数据\n有 10K+ 样本吗？"}
-    Q3 -->|"❌ 数据太少"| NO3["⚠️ 先扩充数据集\n或用数据增强"]
-    Q3 -->|"✅ 数据充足"| Q4{"任务有明确\n可量化的奖励信号？"}
-    Q4 -->|"❌ 奖励难设计"| NO4["⚠️ 先设计奖励函数\n这是 RL 的必要前提"]
-    Q4 -->|"✅ 奖励清晰"| Q5{"计算预算\n充足？"}
-    Q5 -->|"⚠️ 预算有限"| YES1["✅ 选 GRPO\n显存需求减半\n适合中小团队"]
-    Q5 -->|"✅ 预算充足"| YES2["✅ PPO 或 GRPO 皆可\n根据任务性质选择"]
+    START(["🤔 你的 Agent 需要 RL 吗？"]) --> Q1{"Prompt 工程<br/>或 RAG 能解决问题吗？"}
+    Q1 -->|"✅ 能解决"| NO1["❌ 不需要 RL<br/>继续优化 Prompt / RAG<br/>（成本最低的选项）"]
+    Q1 -->|"❌ 不够用"| Q2{"SFT 基线<br/>做了吗？"}
+    Q2 -->|"❌ 还没有"| NO2["⚠️ 先做 SFT 打基线<br/>RL 必须建立在 SFT 基础上"]
+    Q2 -->|"✅ 做了且已达瓶颈"| Q3{"训练数据<br/>有 10K+ 样本吗？"}
+    Q3 -->|"❌ 数据太少"| NO3["⚠️ 先扩充数据集<br/>或用数据增强"]
+    Q3 -->|"✅ 数据充足"| Q4{"任务有明确<br/>可量化的奖励信号？"}
+    Q4 -->|"❌ 奖励难设计"| NO4["⚠️ 先设计奖励函数<br/>这是 RL 的必要前提"]
+    Q4 -->|"✅ 奖励清晰"| Q5{"计算预算<br/>充足？"}
+    Q5 -->|"⚠️ 预算有限"| YES1["✅ 选 GRPO<br/>显存需求减半<br/>适合中小团队"]
+    Q5 -->|"✅ 预算充足"| YES2["✅ PPO 或 GRPO 皆可<br/>根据任务性质选择"]
 
     style START fill:#C7CEEA,stroke:#9FA8DA,stroke-width:2px,color:#333
     style Q1 fill:#FFF9C4,stroke:#F9A825,stroke-width:2px,color:#333
@@ -492,3 +492,28 @@ Agentic RL 不是终点，它是 AI Agent 真正开始"自主进化"的起点。
 ---
 
 > **延伸阅读**：深入了解 GRPO 的数学推导，推荐阅读 DeepSeek-R1 技术报告（2025）。hello-agents 项目的 Chapter 11 提供了完整的实战训练代码和多任务奖励函数设计示例，建议结合本文一起阅读实践。
+
+---
+## 📚 Hello Agents 系列导航
+
+> 本文是《Hello Agents》入门系列第 **11** 章，共 16 章。
+
+| 章节 | 标题 | 状态 |
+|:---:|---|:---:|
+| 第1章 | [初识智能体：LLM会聊天，Agent能办事](/2026/04/16/2026-04-16-hello-agents-ch01-intro-to-agents/) | ✅ |
+| 第2章 | [智能体60年：从会下棋到能打工](/2026/04/16/2026-04-16-hello-agents-ch02-agent-history/) | ✅ |
+| 第3章 | [LLM原理：它不理解语言，却比你更会用语言](/2026/04/16/2026-04-16-hello-agents-ch03-llm-basics/) | ✅ |
+| 第4章 | [Agent思考三剑客：ReAct、Plan-and-Solve与Reflection](/2026/04/16/2026-04-16-hello-agents-ch04-classic-paradigms/) | ✅ |
+| 第5章 | [不会写代码也能搭AI Agent？低代码平台实战指南](/2026/04/16/2026-04-16-hello-agents-ch05-low-code-platforms/) | ✅ |
+| 第6章 | [当一个Agent不够用时：三大框架多智能体实战](/2026/04/16/2026-04-16-hello-agents-ch06-framework-practice/) | ✅ |
+| 第7章 | [为什么要造轮子？200行Python手写Agent框架](/2026/04/16/2026-04-16-hello-agents-ch07-build-your-framework/) | ✅ |
+| 第8章 | [Agent为何失忆？RAG与记忆系统深度解析](/2026/04/16/2026-04-16-hello-agents-ch08-memory-retrieval/) | ✅ |
+| 第9章 | [Context Engineering：让Agent真正聪明的隐秘武器](/2026/04/16/2026-04-16-hello-agents-ch09-context-engineering/) | ✅ |
+| 第10章 | [AI Agent如何与世界对话：MCP、A2A、ANP协议全解析](/2026/04/16/2026-04-16-hello-agents-ch10-agent-protocols/) | ✅ |
+| **第11章** | **[用强化学习驯服AI Agent：GRPO与Agentic RL全解析](/2026/04/16/2026-04-16-hello-agents-ch11-agentic-rl/)** | 👉 当前 |
+| 第12章 | [你的Agent真的好用吗？智能体评估体系完全指南](/2026/04/16/2026-04-16-hello-agents-ch12-evaluation/) | ✅ |
+| 第13章 | [用Agent规划日本5日游，2分钟搞定2小时的活](/2026/04/16/2026-04-16-hello-agents-ch13-travel-assistant/) | ✅ |
+| 第14章 | [自动写研究报告的Agent：比ChatGPT深，但有盲点](/2026/04/16/2026-04-16-hello-agents-ch14-deep-research/) | ✅ |
+| 第15章 | [赛博小镇：25个AI角色自主生活，涌现了什么？](/2026/04/16/2026-04-16-hello-agents-ch15-cyber-town/) | ✅ |
+| 第16章 | [学完16章，现在从0构建你自己的Agent](/2026/04/16/2026-04-16-hello-agents-ch16-graduation/) | ✅ |
+

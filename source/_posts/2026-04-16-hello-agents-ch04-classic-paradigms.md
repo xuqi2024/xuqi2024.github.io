@@ -1,5 +1,5 @@
 ---
-title: Agent思考三剑客：ReAct、Plan-and-Solve与Reflection
+title: 【第4章】Agent思考三剑客：ReAct、Plan-and-Solve与Reflection
 date: 2026-04-16 12:00:00
 categories:
 - 技术科普
@@ -75,11 +75,11 @@ description: "Agent不是一个新概念，ReAct、CoT、Plan-and-Execute这三�
 ```mermaid
 flowchart TD
     START(["🚀 输入问题"])
-    THINK["🟣 Thought\n分析当前情况\n决定下一步行动"]
-    ACT["🟢 Action\n调用工具执行\n搜索/计算/查询"]
-    OBS["🟡 Observation\n收集工具返回结果"]
-    CHECK{"🔴 是否可以\n给出答案？"}
-    FINISH["✅ Finish\n输出最终答案"]
+    THINK["🟣 Thought<br/>分析当前情况<br/>决定下一步行动"]
+    ACT["🟢 Action<br/>调用工具执行<br/>搜索/计算/查询"]
+    OBS["🟡 Observation<br/>收集工具返回结果"]
+    CHECK{"🔴 是否可以<br/>给出答案？"}
+    FINISH["✅ Finish<br/>输出最终答案"]
 
     START --> THINK --> ACT --> OBS --> CHECK
     CHECK -->|"不够，继续"| THINK
@@ -252,11 +252,11 @@ if __name__ == "__main__":
 ```mermaid
 flowchart TD
     START(["🚀 输入复杂任务"])
-    PLAN["🔵 规划阶段\n将任务分解为\n有序子步骤清单"]
-    EXEC1["🟢 执行步骤1\n可能调用工具"]
-    EXEC2["🟢 执行步骤2\n利用上一步结果"]
-    EXECN["🟢 执行步骤N\n..."]
-    INTEGRATE["🟡 整合结果\n综合所有步骤输出"]
+    PLAN["🔵 规划阶段<br/>将任务分解为<br/>有序子步骤清单"]
+    EXEC1["🟢 执行步骤1<br/>可能调用工具"]
+    EXEC2["🟢 执行步骤2<br/>利用上一步结果"]
+    EXECN["🟢 执行步骤N<br/>..."]
+    INTEGRATE["🟡 整合结果<br/>综合所有步骤输出"]
     FINISH["✅ 最终答案"]
 
     START --> PLAN --> EXEC1 --> EXEC2 --> EXECN --> INTEGRATE --> FINISH
@@ -363,10 +363,10 @@ if __name__ == "__main__":
 ```mermaid
 flowchart TD
     START(["🚀 输入任务"])
-    INIT["🟢 初始生成\n产出第一版答案"]
-    REFLECT["🔴 Reflection\n评审员角色\n指出问题和改进方向"]
-    CHECK{"🟡 达到终止\n条件了吗？"}
-    REFINE["🟣 Refine\n根据反馈\n生成改进版本"]
+    INIT["🟢 初始生成<br/>产出第一版答案"]
+    REFLECT["🔴 Reflection<br/>评审员角色<br/>指出问题和改进方向"]
+    CHECK{"🟡 达到终止<br/>条件了吗？"}
+    REFINE["🟣 Refine<br/>根据反馈<br/>生成改进版本"]
     FINAL["✅ 最终输出"]
 
     START --> INIT --> REFLECT --> CHECK
@@ -492,13 +492,13 @@ if __name__ == "__main__":
 graph LR
     TASK["📥 收到任务"]
 
-    Q1{"需要实时查询\n外部信息？"}
-    Q2{"任务结构清晰\n步骤可预定义？"}
-    Q3{"需要高质量输出\n允许多次迭代？"}
+    Q1{"需要实时查询<br/>外部信息？"}
+    Q2{"任务结构清晰<br/>步骤可预定义？"}
+    Q3{"需要高质量输出<br/>允许多次迭代？"}
 
-    REACT["⚡ ReAct\n动态探索\n边想边做"]
-    PAS["📋 Plan-and-Solve\n先谋后动\n按图索骥"]
-    REF["🪞 Reflection\n迭代精进\n不断优化"]
+    REACT["⚡ ReAct<br/>动态探索<br/>边想边做"]
+    PAS["📋 Plan-and-Solve<br/>先谋后动<br/>按图索骥"]
+    REF["🪞 Reflection<br/>迭代精进<br/>不断优化"]
 
     TASK --> Q1
     Q1 -->|"是"| REACT
@@ -564,3 +564,28 @@ ReAct论文发表时轰动了圈子，但它并非万能。**在任务结构清�
 ---
 
 > 📚 本文参考：[datawhalechina/hello-agents](https://github.com/datawhalechina/hello-agents) 第四章
+
+---
+## 📚 Hello Agents 系列导航
+
+> 本文是《Hello Agents》入门系列第 **4** 章，共 16 章。
+
+| 章节 | 标题 | 状态 |
+|:---:|---|:---:|
+| 第1章 | [初识智能体：LLM会聊天，Agent能办事](/2026/04/16/2026-04-16-hello-agents-ch01-intro-to-agents/) | ✅ |
+| 第2章 | [智能体60年：从会下棋到能打工](/2026/04/16/2026-04-16-hello-agents-ch02-agent-history/) | ✅ |
+| 第3章 | [LLM原理：它不理解语言，却比你更会用语言](/2026/04/16/2026-04-16-hello-agents-ch03-llm-basics/) | ✅ |
+| **第4章** | **[Agent思考三剑客：ReAct、Plan-and-Solve与Reflection](/2026/04/16/2026-04-16-hello-agents-ch04-classic-paradigms/)** | 👉 当前 |
+| 第5章 | [不会写代码也能搭AI Agent？低代码平台实战指南](/2026/04/16/2026-04-16-hello-agents-ch05-low-code-platforms/) | ✅ |
+| 第6章 | [当一个Agent不够用时：三大框架多智能体实战](/2026/04/16/2026-04-16-hello-agents-ch06-framework-practice/) | ✅ |
+| 第7章 | [为什么要造轮子？200行Python手写Agent框架](/2026/04/16/2026-04-16-hello-agents-ch07-build-your-framework/) | ✅ |
+| 第8章 | [Agent为何失忆？RAG与记忆系统深度解析](/2026/04/16/2026-04-16-hello-agents-ch08-memory-retrieval/) | ✅ |
+| 第9章 | [Context Engineering：让Agent真正聪明的隐秘武器](/2026/04/16/2026-04-16-hello-agents-ch09-context-engineering/) | ✅ |
+| 第10章 | [AI Agent如何与世界对话：MCP、A2A、ANP协议全解析](/2026/04/16/2026-04-16-hello-agents-ch10-agent-protocols/) | ✅ |
+| 第11章 | [用强化学习驯服AI Agent：GRPO与Agentic RL全解析](/2026/04/16/2026-04-16-hello-agents-ch11-agentic-rl/) | ✅ |
+| 第12章 | [你的Agent真的好用吗？智能体评估体系完全指南](/2026/04/16/2026-04-16-hello-agents-ch12-evaluation/) | ✅ |
+| 第13章 | [用Agent规划日本5日游，2分钟搞定2小时的活](/2026/04/16/2026-04-16-hello-agents-ch13-travel-assistant/) | ✅ |
+| 第14章 | [自动写研究报告的Agent：比ChatGPT深，但有盲点](/2026/04/16/2026-04-16-hello-agents-ch14-deep-research/) | ✅ |
+| 第15章 | [赛博小镇：25个AI角色自主生活，涌现了什么？](/2026/04/16/2026-04-16-hello-agents-ch15-cyber-town/) | ✅ |
+| 第16章 | [学完16章，现在从0构建你自己的Agent](/2026/04/16/2026-04-16-hello-agents-ch16-graduation/) | ✅ |
+
