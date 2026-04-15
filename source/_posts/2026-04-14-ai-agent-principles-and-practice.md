@@ -8,6 +8,7 @@ tags:
 - LLM
 - ReAct
 - AutoGPT
+description: "本文涵盖 Agent 核心架构、主流实现原理、技术优势对比，以及可直接运行的完整代码。"
 ---
 
 # AI Agent 原理与实战：从概念到落地的完整指南

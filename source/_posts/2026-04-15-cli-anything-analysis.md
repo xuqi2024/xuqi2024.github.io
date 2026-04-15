@@ -3,6 +3,7 @@ title: CLI-Anything深度解析：重新定义AI Agent与软件的关系
 date: 2026-04-15 21:12:00
 categories: 技术洞察
 tags: [CLI, AI Agent, 工具调用, CLI-Anything, 智能座舱, MCP, Agent生态]
+description: "Today's Software Serves Humans👨💻. Tomorrow's Users will be Agents🤖."
 ---
 
 # CLI-Anything深度解析：重新定义AI Agent与软件的关系

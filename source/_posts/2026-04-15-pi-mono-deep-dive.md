@@ -9,6 +9,7 @@ tags:
 - 开源项目
 - LLM
 - CLI
+description: "核心结论： pi-mono 用 read、write、edit、bash 四个工具覆盖了 99% 的编程自动化需求——它不是 AI 框架，而是一套让你真正掌控 AI 的'乐高积木'。"
 ---
 
 > **核心结论：** pi-mono 用 `read`、`write`、`edit`、`bash` 四个工具覆盖了 99% 的编程自动化需求——它不是 AI 框架，而是一套让你真正掌控 AI 的"乐高积木"。

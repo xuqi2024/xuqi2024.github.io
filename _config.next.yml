@@ -104,6 +104,7 @@ comments:
 
 # Custom file paths for overriding theme styles
 custom_file_path:
+  head: source/_data/head.njk
   style: source/_data/styles.styl
 
 # Mermaid 图表
@@ -112,3 +113,26 @@ mermaid:
   theme:
     light: neutral
     dark: dark
+
+# CDN providers
+# internal: NexT internal scripts (local keeps them on your server for reliability)
+# plugins: jsdelivr loads mermaid + other libs from a fast global CDN
+vendors:
+  internal: local
+  plugins: jsdelivr
+
+# Lazy-load images (improves LCP on image-heavy pages)
+lazyload: true
+
+# Page entry animations: async prevents animations from blocking content render
+motion:
+  enable: true
+  async: true
+  duration: 200
+  transition:
+    menu_item: fadeInDown
+    post_block: fadeIn
+    post_header: fadeInDown
+    post_body: fadeInDown
+    coll_header: fadeInLeft
+    sidebar: fadeInUp

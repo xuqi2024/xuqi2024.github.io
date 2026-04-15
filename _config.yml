@@ -103,6 +103,18 @@ ignore:
 ## Themes: https://hexo.io/themes/
 theme: next
 
+# HTML/CSS Minification (hexo-neat)
+neat_enable: true
+neat_html:
+  enable: true
+  exclude:
+neat_css:
+  enable: true
+  exclude:
+    - '**/*.min.css'
+neat_js:
+  enable: false
+
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
