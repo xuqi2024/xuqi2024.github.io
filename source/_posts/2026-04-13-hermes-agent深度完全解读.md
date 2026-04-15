@@ -35,28 +35,28 @@ Hermes Agent 打破了这一范式。它是**第一个真正意义上具有自�
 
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1b4b', 'primaryTextColor': '#e0e7ff', 'primaryBorderColor': '#818cf8', 'lineColor': '#818cf8', 'secondaryColor': '#2e1065', 'tertiaryColor': '#0c3a4a', 'background': '#0a0914', 'mainBkg': '#1e1b4b', 'nodeBorder': '#818cf8', 'clusterBkg': '#110d2e', 'clusterBorder': '#4f46e5', 'titleColor': '#c7d2fe', 'edgeLabelBackground': '#1e1b4b'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#FFB3C1', 'primaryTextColor': '#4A1942', 'primaryBorderColor': '#FF85A1', 'lineColor': '#C299E0', 'secondaryColor': '#C8E6C9', 'tertiaryColor': '#AED9E0', 'background': '#FFF8FB', 'mainBkg': '#FFB3C1', 'nodeBorder': '#FF85A1', 'clusterBkg': '#FFF0F7', 'clusterBorder': '#FFB3C1', 'titleColor': '#6D3B8C', 'edgeLabelBackground': '#FFF8FB'}}}%%
 flowchart TD
-    classDef iface fill:#1e3a5f,stroke:#38bdf8,color:#e0f2fe
-    classDef pipeline fill:#3b0764,stroke:#a78bfa,color:#f5f3ff
-    classDef store fill:#134e4a,stroke:#34d399,color:#d1fae5
+    classDef iface fill:#AED9E0,stroke:#48B2C8,color:#1A3A4A
+    classDef pipeline fill:#FFDAB9,stroke:#E8956D,color:#4A2200
+    classDef store fill:#B5EAD7,stroke:#52B788,color:#1B4332
 
     subgraph IF["接入层"]
-        CLI["CLI\nTUI 界面 · ~8500 行"]:::iface
-        GW["Gateway\n消息网关 · ~7500 行"]:::iface
-        ACP["ACP\nIDE 集成"]:::iface
+        CLI["CLI<br/>TUI 界面 · ~8500 行"]:::iface
+        GW["Gateway<br/>消息网关 · ~7500 行"]:::iface
+        ACP["ACP<br/>IDE 集成"]:::iface
     end
 
     subgraph CORE["AIAgent Core · ~9200 行"]
-        PB["Prompt Builder\n系统提示 + 历史 + 记忆"]:::pipeline
-        PR["Provider Resolution\n18+ 供应商自动选择"]:::pipeline
-        TD["Tool Dispatch\n47 内置工具 + MCP"]:::pipeline
+        PB["Prompt Builder<br/>系统提示 + 历史 + 记忆"]:::pipeline
+        PR["Provider Resolution<br/>18+ 供应商自动选择"]:::pipeline
+        TD["Tool Dispatch<br/>47 内置工具 + MCP"]:::pipeline
         PB --> PR --> TD
     end
 
     subgraph STORE["存储层"]
-        DB["SQLite + FTS5\n持久化 · 毫秒级检索"]:::store
-        HC["Honcho 推理引擎\n用户画像 + 形式逻辑推理"]:::store
+        DB["SQLite + FTS5<br/>持久化 · 毫秒级检索"]:::store
+        HC["Honcho 推理引擎<br/>用户画像 + 形式逻辑推理"]:::store
     end
 
     CLI & GW & ACP --> CORE
@@ -68,20 +68,20 @@ flowchart TD
 
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1b4b', 'primaryTextColor': '#e0e7ff', 'primaryBorderColor': '#818cf8', 'lineColor': '#818cf8', 'secondaryColor': '#2e1065', 'tertiaryColor': '#0c3a4a', 'background': '#0a0914', 'mainBkg': '#1e1b4b', 'nodeBorder': '#818cf8', 'clusterBkg': '#110d2e', 'clusterBorder': '#4f46e5', 'titleColor': '#c7d2fe', 'edgeLabelBackground': '#1e1b4b'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#FFB3C1', 'primaryTextColor': '#4A1942', 'primaryBorderColor': '#FF85A1', 'lineColor': '#C299E0', 'secondaryColor': '#C8E6C9', 'tertiaryColor': '#AED9E0', 'background': '#FFF8FB', 'mainBkg': '#FFB3C1', 'nodeBorder': '#FF85A1', 'clusterBkg': '#FFF0F7', 'clusterBorder': '#FFB3C1', 'titleColor': '#6D3B8C', 'edgeLabelBackground': '#FFF8FB'}}}%%
 flowchart TD
-    classDef input fill:#1e3a5f,stroke:#38bdf8,color:#e0f2fe
-    classDef process fill:#312e81,stroke:#818cf8,color:#e0e7ff
-    classDef decision fill:#451a03,stroke:#fbbf24,color:#fef3c7
-    classDef tool fill:#3b0764,stroke:#a78bfa,color:#f5f3ff
-    classDef output fill:#052e16,stroke:#34d399,color:#d1fae5
+    classDef input fill:#AED9E0,stroke:#48B2C8,color:#1A3A4A
+    classDef process fill:#D4C5F9,stroke:#9B72CF,color:#3D2B4F
+    classDef decision fill:#FFF0A8,stroke:#E6C229,color:#4A3900
+    classDef tool fill:#FFDAB9,stroke:#E8956D,color:#4A2200
+    classDef output fill:#B5EAD7,stroke:#52B788,color:#1B4332
 
     A["用户输入 / 工具执行结果反馈"]:::input
-    B["Prompt 构建器\n系统提示 + 历史消息 + Honcho 记忆 + 技能列表"]:::process
-    C["LLM 调用\nProvider 自动选择 · 18+ 供应商"]:::process
+    B["Prompt 构建器<br/>系统提示 + 历史消息 + Honcho 记忆 + 技能列表"]:::process
+    C["LLM 调用<br/>Provider 自动选择 · 18+ 供应商"]:::process
     D{"包含 tool_call？"}:::decision
-    E["Tool Dispatcher\n解析参数 → 选择后端 → 执行 → 收集结果"]:::tool
-    F["输出响应给用户\n更新 Honcho 记忆"]:::output
+    E["Tool Dispatcher<br/>解析参数 → 选择后端 → 执行 → 收集结果"]:::tool
+    F["输出响应给用户<br/>更新 Honcho 记忆"]:::output
 
     A --> B --> C --> D
     D -- 是 --> E
@@ -113,11 +113,11 @@ flowchart TD
 
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1b4b', 'primaryTextColor': '#e0e7ff', 'primaryBorderColor': '#818cf8', 'lineColor': '#818cf8', 'secondaryColor': '#2e1065', 'tertiaryColor': '#0c3a4a', 'background': '#0a0914', 'mainBkg': '#1e1b4b', 'nodeBorder': '#818cf8', 'clusterBkg': '#110d2e', 'clusterBorder': '#4f46e5', 'titleColor': '#c7d2fe', 'edgeLabelBackground': '#1e1b4b'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#FFB3C1', 'primaryTextColor': '#4A1942', 'primaryBorderColor': '#FF85A1', 'lineColor': '#C299E0', 'secondaryColor': '#C8E6C9', 'tertiaryColor': '#AED9E0', 'background': '#FFF8FB', 'mainBkg': '#FFB3C1', 'nodeBorder': '#FF85A1', 'clusterBkg': '#FFF0F7', 'clusterBorder': '#FFB3C1', 'titleColor': '#6D3B8C', 'edgeLabelBackground': '#FFF8FB'}}}%%
 flowchart TD
-    classDef platform fill:#1e3a5f,stroke:#38bdf8,color:#e0f2fe
-    classDef gw fill:#312e81,stroke:#818cf8,color:#e0e7ff
-    classDef agent fill:#3b0764,stroke:#a78bfa,color:#f5f3ff
+    classDef platform fill:#AED9E0,stroke:#48B2C8,color:#1A3A4A
+    classDef gw fill:#D4C5F9,stroke:#9B72CF,color:#3D2B4F
+    classDef agent fill:#FFDAB9,stroke:#E8956D,color:#4A2200
 
     subgraph PLAT["消息平台层 · 15+ 平台"]
         TG["Telegram"]:::platform
@@ -129,9 +129,9 @@ flowchart TD
     end
 
     subgraph GWC["Gateway Core · gateway/run.py · ~7500 行"]
-        N["消息标准化\n统一格式"]:::gw
-        P["权限校验\n用户 / 群组"]:::gw
-        R["多路复用\n路由分发"]:::gw
+        N["消息标准化<br/>统一格式"]:::gw
+        P["权限校验<br/>用户 / 群组"]:::gw
+        R["多路复用<br/>路由分发"]:::gw
         N --> P --> R
     end
 
@@ -270,20 +270,20 @@ GitHub：https://github.com/plastic-labs/honcho
 
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1b4b', 'primaryTextColor': '#e0e7ff', 'primaryBorderColor': '#818cf8', 'lineColor': '#818cf8', 'secondaryColor': '#2e1065', 'tertiaryColor': '#0c3a4a', 'background': '#0a0914', 'mainBkg': '#1e1b4b', 'nodeBorder': '#818cf8', 'clusterBkg': '#110d2e', 'clusterBorder': '#4f46e5', 'titleColor': '#c7d2fe', 'edgeLabelBackground': '#1e1b4b'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#FFB3C1', 'primaryTextColor': '#4A1942', 'primaryBorderColor': '#FF85A1', 'lineColor': '#C299E0', 'secondaryColor': '#C8E6C9', 'tertiaryColor': '#AED9E0', 'background': '#FFF8FB', 'mainBkg': '#FFB3C1', 'nodeBorder': '#FF85A1', 'clusterBkg': '#FFF0F7', 'clusterBorder': '#FFB3C1', 'titleColor': '#6D3B8C', 'edgeLabelBackground': '#FFF8FB'}}}%%
 flowchart TD
-    classDef tier1 fill:#1e3a5f,stroke:#38bdf8,color:#e0f2fe
-    classDef tier2 fill:#312e81,stroke:#818cf8,color:#e0e7ff
-    classDef tier3 fill:#3b0764,stroke:#a78bfa,color:#f5f3ff
-    classDef tier4 fill:#134e4a,stroke:#34d399,color:#d1fae5
-    classDef profile fill:#451a03,stroke:#fbbf24,color:#fef3c7
+    classDef tier1 fill:#AED9E0,stroke:#48B2C8,color:#1A3A4A
+    classDef tier2 fill:#D4C5F9,stroke:#9B72CF,color:#3D2B4F
+    classDef tier3 fill:#FFDAB9,stroke:#E8956D,color:#4A2200
+    classDef tier4 fill:#B5EAD7,stroke:#52B788,color:#1B4332
+    classDef profile fill:#FFF0A8,stroke:#E6C229,color:#4A3900
 
-    APP["App\napp_id: hermes-agent"]:::tier1
-    USER["User\nuser_id: user_xuqi"]:::tier2
-    SESS["Session\nsession_id: sess_20260413"]:::tier3
-    MSG["Message\nis_human: true · content: ..."]:::tier4
-    META["Metamessage\n推理标注 / 记忆更新 / 用户偏好"]:::tier4
-    CARD["Peer Card · 用户画像\nbiographical · preferences\nbehavioral · derived_insights"]:::profile
+    APP["App<br/>app_id: hermes-agent"]:::tier1
+    USER["User<br/>user_id: user_xuqi"]:::tier2
+    SESS["Session<br/>session_id: sess_20260413"]:::tier3
+    MSG["Message<br/>is_human: true · content: ..."]:::tier4
+    META["Metamessage<br/>推理标注 / 记忆更新 / 用户偏好"]:::tier4
+    CARD["Peer Card · 用户画像<br/>biographical · preferences<br/>behavioral · derived_insights"]:::profile
 
     APP --> USER
     USER --> SESS & CARD
@@ -297,26 +297,26 @@ flowchart TD
 
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1b4b', 'primaryTextColor': '#e0e7ff', 'primaryBorderColor': '#818cf8', 'lineColor': '#818cf8', 'secondaryColor': '#2e1065', 'tertiaryColor': '#0c3a4a', 'background': '#0a0914', 'mainBkg': '#1e1b4b', 'nodeBorder': '#818cf8', 'clusterBkg': '#110d2e', 'clusterBorder': '#4f46e5', 'titleColor': '#c7d2fe', 'edgeLabelBackground': '#1e1b4b'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#FFB3C1', 'primaryTextColor': '#4A1942', 'primaryBorderColor': '#FF85A1', 'lineColor': '#C299E0', 'secondaryColor': '#C8E6C9', 'tertiaryColor': '#AED9E0', 'background': '#FFF8FB', 'mainBkg': '#FFB3C1', 'nodeBorder': '#FF85A1', 'clusterBkg': '#FFF0F7', 'clusterBorder': '#FFB3C1', 'titleColor': '#6D3B8C', 'edgeLabelBackground': '#FFF8FB'}}}%%
 flowchart LR
-    classDef input fill:#1e3a5f,stroke:#38bdf8,color:#e0f2fe
-    classDef ragnode fill:#450a0a,stroke:#f87171,color:#fee2e2
-    classDef honcho fill:#312e81,stroke:#818cf8,color:#e0e7ff
-    classDef bad fill:#7f1d1d,stroke:#ef4444,color:#fecaca
-    classDef good fill:#052e16,stroke:#10b981,color:#ecfdf5
+    classDef input fill:#AED9E0,stroke:#48B2C8,color:#1A3A4A
+    classDef ragnode fill:#FFCDD2,stroke:#E57373,color:#4A1942
+    classDef honcho fill:#D4C5F9,stroke:#9B72CF,color:#3D2B4F
+    classDef bad fill:#FFCDD2,stroke:#E57373,color:#4A1942
+    classDef good fill:#B5EAD7,stroke:#52B788,color:#1B4332
 
     subgraph RAG["❌  传统 RAG"]
-        RA["用户输入\n'我喜欢代码示例'"]:::input
-        RB["向量检索\n相似对话片段"]:::ragnode
-        RC["仅返回原文\n'用户说他喜欢代码示例'"]:::bad
+        RA["用户输入<br/>'我喜欢代码示例'"]:::input
+        RB["向量检索<br/>相似对话片段"]:::ragnode
+        RC["仅返回原文<br/>'用户说他喜欢代码示例'"]:::bad
         RA --> RB --> RC
     end
 
     subgraph HON["✅  Honcho 推理引擎"]
-        HA["用户输入\n'我喜欢代码示例'"]:::input
-        HB["提取显式事实\n用户说喜欢看代码示例"]:::honcho
-        HC2["演绎推理\n用户偏好实践导向学习"]:::honcho
-        HD["归纳推理结论\n用户是实践型学习者"]:::good
+        HA["用户输入<br/>'我喜欢代码示例'"]:::input
+        HB["提取显式事实<br/>用户说喜欢看代码示例"]:::honcho
+        HC2["演绎推理<br/>用户偏好实践导向学习"]:::honcho
+        HD["归纳推理结论<br/>用户是实践型学习者"]:::good
         HA --> HB --> HC2 --> HD
     end
 ```
@@ -427,22 +427,22 @@ flowchart LR
 
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1b4b', 'primaryTextColor': '#e0e7ff', 'primaryBorderColor': '#818cf8', 'lineColor': '#818cf8', 'secondaryColor': '#2e1065', 'tertiaryColor': '#0c3a4a', 'background': '#0a0914', 'mainBkg': '#1e1b4b', 'nodeBorder': '#818cf8', 'clusterBkg': '#110d2e', 'clusterBorder': '#4f46e5', 'titleColor': '#c7d2fe', 'edgeLabelBackground': '#1e1b4b'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#FFB3C1', 'primaryTextColor': '#4A1942', 'primaryBorderColor': '#FF85A1', 'lineColor': '#C299E0', 'secondaryColor': '#C8E6C9', 'tertiaryColor': '#AED9E0', 'background': '#FFF8FB', 'mainBkg': '#FFB3C1', 'nodeBorder': '#FF85A1', 'clusterBkg': '#FFF0F7', 'clusterBorder': '#FFB3C1', 'titleColor': '#6D3B8C', 'edgeLabelBackground': '#FFF8FB'}}}%%
 flowchart TD
-    classDef tool fill:#1e3a5f,stroke:#38bdf8,color:#e0f2fe
-    classDef dispatch fill:#3b0764,stroke:#a78bfa,color:#f5f3ff
-    classDef backend fill:#134e4a,stroke:#34d399,color:#d1fae5
+    classDef tool fill:#AED9E0,stroke:#48B2C8,color:#1A3A4A
+    classDef dispatch fill:#FFDAB9,stroke:#E8956D,color:#4A2200
+    classDef backend fill:#B5EAD7,stroke:#52B788,color:#1B4332
 
     subgraph REG["工具注册表 Tool Registry · 47 内置工具"]
-        T1["文件操作\nread_file · write_file · list_dir"]:::tool
-        T2["代码执行\nbash_exec · python_run · node_run"]:::tool
-        T3["网络访问\nweb_search · web_fetch · http_req"]:::tool
-        T4["记忆管理\nsearch_memory · save_memory · list_skills"]:::tool
+        T1["文件操作<br/>read_file · write_file · list_dir"]:::tool
+        T2["代码执行<br/>bash_exec · python_run · node_run"]:::tool
+        T3["网络访问<br/>web_search · web_fetch · http_req"]:::tool
+        T4["记忆管理<br/>search_memory · save_memory · list_skills"]:::tool
     end
 
-    DISP["Tool Dispatcher\ntool_name → 注册表查找 → 参数校验 → 选择执行后端"]:::dispatch
-    BUILT["内置工具执行\nlocal · Docker · SSH · Modal"]:::backend
-    MCP["MCP 扩展工具\n外部服务 API 集成"]:::backend
+    DISP["Tool Dispatcher<br/>tool_name → 注册表查找 → 参数校验 → 选择执行后端"]:::dispatch
+    BUILT["内置工具执行<br/>local · Docker · SSH · Modal"]:::backend
+    MCP["MCP 扩展工具<br/>外部服务 API 集成"]:::backend
 
     REG --> DISP
     DISP --> BUILT & MCP
@@ -453,23 +453,23 @@ flowchart TD
 
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1b4b', 'primaryTextColor': '#e0e7ff', 'primaryBorderColor': '#818cf8', 'lineColor': '#818cf8', 'secondaryColor': '#2e1065', 'tertiaryColor': '#0c3a4a', 'background': '#0a0914', 'mainBkg': '#1e1b4b', 'nodeBorder': '#818cf8', 'clusterBkg': '#110d2e', 'clusterBorder': '#4f46e5', 'titleColor': '#c7d2fe', 'edgeLabelBackground': '#1e1b4b'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#FFB3C1', 'primaryTextColor': '#4A1942', 'primaryBorderColor': '#FF85A1', 'lineColor': '#C299E0', 'secondaryColor': '#C8E6C9', 'tertiaryColor': '#AED9E0', 'background': '#FFF8FB', 'mainBkg': '#FFB3C1', 'nodeBorder': '#FF85A1', 'clusterBkg': '#FFF0F7', 'clusterBorder': '#FFB3C1', 'titleColor': '#6D3B8C', 'edgeLabelBackground': '#FFF8FB'}}}%%
 flowchart TD
-    classDef trigger fill:#1e3a5f,stroke:#38bdf8,color:#e0f2fe
-    classDef process fill:#312e81,stroke:#818cf8,color:#e0e7ff
-    classDef decision fill:#451a03,stroke:#fbbf24,color:#fef3c7
-    classDef error fill:#450a0a,stroke:#f87171,color:#fee2e2
-    classDef execute fill:#3b0764,stroke:#a78bfa,color:#f5f3ff
-    classDef result fill:#052e16,stroke:#34d399,color:#d1fae5
+    classDef trigger fill:#AED9E0,stroke:#48B2C8,color:#1A3A4A
+    classDef process fill:#D4C5F9,stroke:#9B72CF,color:#3D2B4F
+    classDef decision fill:#FFF0A8,stroke:#E6C229,color:#4A3900
+    classDef error fill:#FFCDD2,stroke:#E57373,color:#4A1942
+    classDef execute fill:#FFDAB9,stroke:#E8956D,color:#4A2200
+    classDef result fill:#B5EAD7,stroke:#52B788,color:#1B4332
 
     A["LLM 输出包含 tool_call"]:::trigger
     B["① 解析工具名 + 参数"]:::process
-    C["② 参数校验\nJSON Schema 验证"]:::process
+    C["② 参数校验<br/>JSON Schema 验证"]:::process
     D{"校验通过？"}:::decision
-    E["返回错误信息\nLLM 重试修正参数"]:::error
-    F["③ 选择执行后端\nlocal · docker · SSH · Modal"]:::execute
-    G["④ 执行工具\n捕获输出 / 超时控制"]:::execute
-    H["返回 tool_result\n追加消息历史 → 触发下一轮循环"]:::result
+    E["返回错误信息<br/>LLM 重试修正参数"]:::error
+    F["③ 选择执行后端<br/>local · docker · SSH · Modal"]:::execute
+    G["④ 执行工具<br/>捕获输出 / 超时控制"]:::execute
+    H["返回 tool_result<br/>追加消息历史 → 触发下一轮循环"]:::result
 
     A --> B --> C --> D
     D -- 否 --> E
@@ -511,28 +511,28 @@ flowchart TD
 
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1b4b', 'primaryTextColor': '#e0e7ff', 'primaryBorderColor': '#818cf8', 'lineColor': '#818cf8', 'secondaryColor': '#2e1065', 'tertiaryColor': '#0c3a4a', 'background': '#0a0914', 'mainBkg': '#1e1b4b', 'nodeBorder': '#818cf8', 'clusterBkg': '#110d2e', 'clusterBorder': '#4f46e5', 'titleColor': '#c7d2fe', 'edgeLabelBackground': '#1e1b4b'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#FFB3C1', 'primaryTextColor': '#4A1942', 'primaryBorderColor': '#FF85A1', 'lineColor': '#C299E0', 'secondaryColor': '#C8E6C9', 'tertiaryColor': '#AED9E0', 'background': '#FFF8FB', 'mainBkg': '#FFB3C1', 'nodeBorder': '#FF85A1', 'clusterBkg': '#FFF0F7', 'clusterBorder': '#FFB3C1', 'titleColor': '#6D3B8C', 'edgeLabelBackground': '#FFF8FB'}}}%%
 flowchart LR
-    classDef hermes fill:#312e81,stroke:#818cf8,color:#e0e7ff
-    classDef claw fill:#134e4a,stroke:#34d399,color:#d1fae5
-    classDef input fill:#1e1b4b,stroke:#6366f1,color:#c7d2fe
-    classDef hermes_out fill:#052e16,stroke:#10b981,color:#ecfdf5
-    classDef claw_out fill:#0c3a4a,stroke:#0891b2,color:#cffafe
+    classDef hermes fill:#D4C5F9,stroke:#9B72CF,color:#3D2B4F
+    classDef claw fill:#B5EAD7,stroke:#52B788,color:#1B4332
+    classDef input fill:#AED9E0,stroke:#48B2C8,color:#1A3A4A
+    classDef hermes_out fill:#B5EAD7,stroke:#52B788,color:#1B4332
+    classDef claw_out fill:#AED9E0,stroke:#48B2C8,color:#1A3A4A
 
     subgraph HM["Hermes Agent · 自我进化派 · Python ~50k行"]
         direction TB
         HA["用户输入"]:::input
-        HB["Honcho 记忆检索\n+ 用户画像推理"]:::hermes
+        HB["Honcho 记忆检索<br/>+ 用户画像推理"]:::hermes
         HC2["LLM · 18+ 供应商"]:::hermes
         HD["47 内置工具 + MCP 扩展"]:::hermes
-        HE["✅ 自动更新 Honcho 记忆\n✅ 生成可复用技能\n✅ 用户画像持续优化"]:::hermes_out
+        HE["✅ 自动更新 Honcho 记忆<br/>✅ 生成可复用技能<br/>✅ 用户画像持续优化"]:::hermes_out
         HA --> HB --> HC2 --> HD --> HE
     end
 
     subgraph OC["OpenClaw · 工具编排派 · TypeScript/Node.js"]
         direction TB
         OA["用户输入"]:::input
-        OB["MEMORY.md · SOUL.md\nUSER.md 用户配置"]:::claw
+        OB["MEMORY.md · SOUL.md<br/>USER.md 用户配置"]:::claw
         OC2["LLM · 多供应商"]:::claw
         OD["Skills 扩展体系"]:::claw
         OE["返回结果（无状态）"]:::claw_out
@@ -604,24 +604,24 @@ hermes claw migrate --dry-run
 
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1b4b', 'primaryTextColor': '#e0e7ff', 'primaryBorderColor': '#818cf8', 'lineColor': '#818cf8', 'secondaryColor': '#2e1065', 'tertiaryColor': '#0c3a4a', 'background': '#0a0914', 'mainBkg': '#1e1b4b', 'nodeBorder': '#818cf8', 'clusterBkg': '#110d2e', 'clusterBorder': '#4f46e5', 'titleColor': '#c7d2fe', 'edgeLabelBackground': '#1e1b4b'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#FFB3C1', 'primaryTextColor': '#4A1942', 'primaryBorderColor': '#FF85A1', 'lineColor': '#C299E0', 'secondaryColor': '#C8E6C9', 'tertiaryColor': '#AED9E0', 'background': '#FFF8FB', 'mainBkg': '#FFB3C1', 'nodeBorder': '#FF85A1', 'clusterBkg': '#FFF0F7', 'clusterBorder': '#FFB3C1', 'titleColor': '#6D3B8C', 'edgeLabelBackground': '#FFF8FB'}}}%%
 flowchart TD
-    classDef config fill:#1e3a5f,stroke:#38bdf8,color:#e0f2fe
-    classDef job fill:#312e81,stroke:#818cf8,color:#e0e7ff
-    classDef execute fill:#3b0764,stroke:#a78bfa,color:#f5f3ff
-    classDef deliver fill:#052e16,stroke:#34d399,color:#d1fae5
+    classDef config fill:#AED9E0,stroke:#48B2C8,color:#1A3A4A
+    classDef job fill:#D4C5F9,stroke:#9B72CF,color:#3D2B4F
+    classDef execute fill:#FFDAB9,stroke:#E8956D,color:#4A2200
+    classDef deliver fill:#B5EAD7,stroke:#52B788,color:#1B4332
 
-    CONFIG["任务配置 cron_jobs.json\nschedule: '0 8 * * *'\nprompt: '生成日报'"]:::config
+    CONFIG["任务配置 cron_jobs.json<br/>schedule: '0 8 * * *'<br/>prompt: '生成日报'"]:::config
 
     subgraph SCHED["APScheduler 调度器"]
-        S1["每日报告\n0 8 * * *"]:::job
-        S2["记忆提醒\n*/30 * * *"]:::job
-        S3["系统监控\n0 * * * *"]:::job
-        S4["自定义任务\ncron 表达式"]:::job
+        S1["每日报告<br/>0 8 * * *"]:::job
+        S2["记忆提醒<br/>*/30 * * *"]:::job
+        S3["系统监控<br/>0 * * * *"]:::job
+        S4["自定义任务<br/>cron 表达式"]:::job
     end
 
-    EXEC["AIAgent 执行\n构建提示词 → LLM 调用 → 工具执行"]:::execute
-    DELIVER["结果投递\nTelegram · Discord · Email · 飞书"]:::deliver
+    EXEC["AIAgent 执行<br/>构建提示词 → LLM 调用 → 工具执行"]:::execute
+    DELIVER["结果投递<br/>Telegram · Discord · Email · 飞书"]:::deliver
 
     CONFIG --> SCHED
     S1 & S2 & S3 & S4 --> EXEC
@@ -655,19 +655,19 @@ flowchart TD
 
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e1b4b', 'primaryTextColor': '#e0e7ff', 'primaryBorderColor': '#818cf8', 'lineColor': '#818cf8', 'secondaryColor': '#2e1065', 'tertiaryColor': '#0c3a4a', 'background': '#0a0914', 'mainBkg': '#1e1b4b', 'nodeBorder': '#818cf8', 'clusterBkg': '#110d2e', 'clusterBorder': '#4f46e5', 'titleColor': '#c7d2fe', 'edgeLabelBackground': '#1e1b4b'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#FFB3C1', 'primaryTextColor': '#4A1942', 'primaryBorderColor': '#FF85A1', 'lineColor': '#C299E0', 'secondaryColor': '#C8E6C9', 'tertiaryColor': '#AED9E0', 'background': '#FFF8FB', 'mainBkg': '#FFB3C1', 'nodeBorder': '#FF85A1', 'clusterBkg': '#FFF0F7', 'clusterBorder': '#FFB3C1', 'titleColor': '#6D3B8C', 'edgeLabelBackground': '#FFF8FB'}}}%%
 flowchart TD
-    classDef user fill:#1e3a5f,stroke:#38bdf8,color:#e0f2fe
-    classDef main fill:#3b0764,stroke:#a78bfa,color:#f5f3ff
-    classDef sub fill:#312e81,stroke:#818cf8,color:#e0e7ff
-    classDef summary fill:#052e16,stroke:#34d399,color:#d1fae5
+    classDef user fill:#AED9E0,stroke:#48B2C8,color:#1A3A4A
+    classDef main fill:#FFDAB9,stroke:#E8956D,color:#4A2200
+    classDef sub fill:#D4C5F9,stroke:#9B72CF,color:#3D2B4F
+    classDef summary fill:#B5EAD7,stroke:#52B788,color:#1B4332
 
     USER["用户: '分析代码质量、安全性和测试覆盖率'"]:::user
-    MAIN["主 Hermes Agent\n任务拆解 /parallel"]:::main
-    A["子 Agent A\n目录结构分析"]:::sub
-    B["子 Agent B\n代码质量检查"]:::sub
-    C["子 Agent C\n安全审计 · 漏洞扫描"]:::sub
-    SUM["汇总结果 + 综合报告\n总耗时 = max(各任务)\n而非 sum(各任务)"]:::summary
+    MAIN["主 Hermes Agent<br/>任务拆解 /parallel"]:::main
+    A["子 Agent A<br/>目录结构分析"]:::sub
+    B["子 Agent B<br/>代码质量检查"]:::sub
+    C["子 Agent C<br/>安全审计 · 漏洞扫描"]:::sub
+    SUM["汇总结果 + 综合报告<br/>总耗时 = max(各任务)<br/>而非 sum(各任务)"]:::summary
 
     USER --> MAIN
     MAIN --> A & B & C

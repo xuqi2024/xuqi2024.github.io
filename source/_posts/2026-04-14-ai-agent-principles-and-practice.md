@@ -53,10 +53,10 @@ graph LR
     AC -->|"获取结果"| RF
     RF -->|"更新认知"| OB
 
-    style OB fill:#1565C0,color:#fff,stroke:#0D47A1,stroke-width:2px
-    style PL fill:#2E7D32,color:#fff,stroke:#1B5E20,stroke-width:2px
-    style AC fill:#E65100,color:#fff,stroke:#BF360C,stroke-width:2px
-    style RF fill:#4A148C,color:#fff,stroke:#38006b,stroke-width:2px
+    style OB fill:#AED9E0,color:#1A3A4A,stroke:#48B2C8,stroke-width:2px
+    style PL fill:#B5EAD7,color:#1B4332,stroke:#52B788,stroke-width:2px
+    style AC fill:#FFDAB9,color:#4A2200,stroke:#E8956D,stroke-width:2px
+    style RF fill:#D4C5F9,color:#3D2B4F,stroke:#9B72CF,stroke-width:2px
 ```
 
 ### 2.1 感知（Observe）
@@ -104,10 +104,10 @@ graph LR
     M --> P --> T --> A
     A -->|"反馈循环"| M
 
-    style M fill:#1565C0,color:#fff
-    style P fill:#2E7D32,color:#fff
-    style T fill:#E65100,color:#fff
-    style A fill:#4A148C,color:#fff
+    style M fill:#AED9E0,color:#1A3A4A
+    style P fill:#B5EAD7,color:#1B4332
+    style T fill:#FFDAB9,color:#4A2200
+    style A fill:#D4C5F9,color:#3D2B4F
 ```
 
 ### 3.1 记忆模块（Memory）
@@ -349,9 +349,9 @@ graph TD
         EX --> SUM["汇总:<br/>基于所有Observation给出答案"]
     end
 
-    style PL fill:#1565C0,color:#fff
-    style EX fill:#2E7D32,color:#fff
-    style SUM fill:#4A148C,color:#fff
+    style PL fill:#AED9E0,color:#1A3A4A
+    style EX fill:#B5EAD7,color:#1B4332
+    style SUM fill:#D4C5F9,color:#3D2B4F
 ```
 
 **代码实现**：
@@ -828,9 +828,9 @@ graph TD
     AR --> AL
     AL --> ST
 
-    style CR fill:#1565C0,color:#fff
-    style AR fill:#2E7D32,color:#fff
-    style SL fill:#E65100,color:#fff
+    style CR fill:#AED9E0,color:#1A3A4A
+    style AR fill:#B5EAD7,color:#1B4332
+    style SL fill:#FFDAB9,color:#4A2200
 ```
 
 #### OpenClaw 的多 Agent 路由
@@ -1141,10 +1141,10 @@ graph LR
     MH <-->|"MCP协议"| MS
     MS -->|"调用"| LR
 
-    style AI fill:#1565C0,color:#fff
-    style MH fill:#2E7D32,color:#fff
-    style MS fill:#E65100,color:#fff
-    style LR fill:#4A148C,color:#fff
+    style AI fill:#AED9E0,color:#1A3A4A
+    style MH fill:#B5EAD7,color:#1B4332
+    style MS fill:#FFDAB9,color:#4A2200
+    style LR fill:#D4C5F9,color:#3D2B4F
 ```
 
 #### MCP Server 示例

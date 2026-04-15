@@ -81,14 +81,14 @@ graph TD
 
     UI --> RR --> BC --> SI --> SE --> TH --> TO --> SP
 
-    style UI fill:#1565C0,color:#fff
-    style RR fill:#283593,color:#fff
-    style BC fill:#283593,color:#fff
-    style SI fill:#283593,color:#fff
-    style SE fill:#1B5E20,color:#fff
-    style TH fill:#1B5E20,color:#fff
-    style TO fill:#1B5E20,color:#fff
-    style SP fill:#4A148C,color:#fff
+    style UI fill:#AED9E0,color:#1A3A4A
+    style RR fill:#AED9E0,color:#1A3A4A
+    style BC fill:#AED9E0,color:#1A3A4A
+    style SI fill:#AED9E0,color:#1A3A4A
+    style SE fill:#B5EAD7,color:#1B4332
+    style TH fill:#B5EAD7,color:#1B4332
+    style TO fill:#B5EAD7,color:#1B4332
+    style SP fill:#D4C5F9,color:#3D2B4F
 ```
 
 ### 2.2 工具 = Name + Hint + Permission + Execute
@@ -191,10 +191,10 @@ graph TD
     R <-->|"Bridge协议通信"| TL
     W <-->|"Bridge协议通信"| TL
 
-    style C fill:#1565C0,color:#fff
-    style R fill:#2E7D32,color:#fff
-    style W fill:#E65100,color:#fff
-    style TL fill:#4A148C,color:#fff
+    style C fill:#AED9E0,color:#1A3A4A
+    style R fill:#B5EAD7,color:#1B4332
+    style W fill:#FFDAB9,color:#4A2200
+    style TL fill:#D4C5F9,color:#3D2B4F
 ```
 
 ### 通信机制
@@ -287,9 +287,9 @@ graph LR
     PS -->|"缓存命中节省~50% token"| API
     PD -->|"每轮发送"| API
 
-    style PS fill:#1565C0,color:#fff
-    style PD fill:#E65100,color:#fff
-    style API fill:#4A148C,color:#fff
+    style PS fill:#AED9E0,color:#1A3A4A
+    style PD fill:#FFDAB9,color:#4A2200
+    style API fill:#D4C5F9,color:#3D2B4F
 ```
 
 ### 内部版本的词数限制（公开版没有）

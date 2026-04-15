@@ -37,9 +37,9 @@ graph LR
     SF -->|"传感器数据流"| PP
     PP -->|"决策指令"| CA
 
-    style SF fill:#1565C0,color:#fff,stroke:#0D47A1,stroke-width:2px
-    style PP fill:#2E7D32,color:#fff,stroke:#1B5E20,stroke-width:2px
-    style CA fill:#B71C1C,color:#fff,stroke:#7F0000,stroke-width:2px
+    style SF fill:#AED9E0,color:#1A3A4A,stroke:#48B2C8,stroke-width:2px
+    style PP fill:#B5EAD7,color:#1B4332,stroke:#52B788,stroke-width:2px
+    style CA fill:#FFCDD2,color:#4A1942,stroke:#E57373,stroke-width:2px
 ```
 
 ## 二、编程语言深度对比
@@ -140,9 +140,9 @@ graph TB
 
     L3 --> L2 --> L1
 
-    style L3 fill:#1565C0,color:#fff,stroke:#0D47A1,stroke-width:2px
-    style L2 fill:#2E7D32,color:#fff,stroke:#1B5E20,stroke-width:2px
-    style L1 fill:#B71C1C,color:#fff,stroke:#7F0000,stroke-width:2px
+    style L3 fill:#AED9E0,color:#1A3A4A,stroke:#48B2C8,stroke-width:2px
+    style L2 fill:#B5EAD7,color:#1B4332,stroke:#52B788,stroke-width:2px
+    style L1 fill:#FFCDD2,color:#4A1942,stroke:#E57373,stroke-width:2px
 ```
 
 ### 3.2 Agent开发语言推荐
