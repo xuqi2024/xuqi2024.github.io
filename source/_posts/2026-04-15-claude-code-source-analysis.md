@@ -71,13 +71,13 @@ Claude Code 的每次用户输入，都经过这个精细的管道：
 ```mermaid
 graph TD
     UI["👤 用户输入"]
-    RR["🔀 PortRuntime.route_prompt()\n路由匹配: 命令 / 工具 / 普通对话"]
-    BC["📦 PortContext.build_context()\n构建上下文: workspace检测 · 文件统计"]
-    SI["📋 system_init_message + render_context\n组装系统提示"]
-    SE["⚡ StreamingToolExecutor\n流式执行工具"]
-    TH["🪝 ToolHooks 拦截\nPreToolUse / PostToolUse 钩子"]
-    TO["🎼 ToolOrchestration\n工具编排与协调"]
-    SP["💾 session_store.persist()\n持久化会话状态"]
+    RR["🔀 PortRuntime.route_prompt()<br/>路由匹配: 命令 / 工具 / 普通对话"]
+    BC["📦 PortContext.build_context()<br/>构建上下文: workspace检测 · 文件统计"]
+    SI["📋 system_init_message + render_context<br/>组装系统提示"]
+    SE["⚡ StreamingToolExecutor<br/>流式执行工具"]
+    TH["🪝 ToolHooks 拦截<br/>PreToolUse / PostToolUse 钩子"]
+    TO["🎼 ToolOrchestration<br/>工具编排与协调"]
+    SP["💾 session_store.persist()<br/>持久化会话状态"]
 
     UI --> RR --> BC --> SI --> SE --> TH --> TO --> SP
 
@@ -181,10 +181,10 @@ Claude Code 有一套内置的多 Agent 编排系统，不是简单的"一个 Ag
 ### 团队构成
 ```mermaid
 graph TD
-    C["👤 协调者 你\n通过自然语言分配任务"]
-    R["🔍 研究员 Agent\n只读权限\n搜索 · 阅读代码 · 查文档"]
-    W["✏️ 编码员 Agent\n全权限\n写代码 · 执行命令 · 提交PR"]
-    TL["📋 共享任务看板\nUnix Domain Socket 通信"]
+    C["👤 协调者 你<br/>通过自然语言分配任务"]
+    R["🔍 研究员 Agent<br/>只读权限<br/>搜索 · 阅读代码 · 查文档"]
+    W["✏️ 编码员 Agent<br/>全权限<br/>写代码 · 执行命令 · 提交PR"]
+    TL["📋 共享任务看板<br/>Unix Domain Socket 通信"]
 
     C -->|"分配只读任务"| R
     C -->|"分配执行任务"| W
@@ -280,8 +280,8 @@ Claude Code 在 API 成本上做了极致优化：
 
 ```mermaid
 graph LR
-    PS["📤 静态部分\n系统提示 · 工具定义 · 固定规则\n缓存: 只在变化时重新发送"]
-    PD["🔄 动态部分\n用户输入 · 对话历史 · 执行结果\n每轮都变化"]
+    PS["📤 静态部分<br/>系统提示 · 工具定义 · 固定规则<br/>缓存: 只在变化时重新发送"]
+    PD["🔄 动态部分<br/>用户输入 · 对话历史 · 执行结果<br/>每轮都变化"]
     API["🤖 Claude API"]
 
     PS -->|"缓存命中节省~50% token"| API

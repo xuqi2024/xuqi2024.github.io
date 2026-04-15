@@ -102,9 +102,13 @@ comments:
     pageSize: 10
     reaction: true 
 
+# Custom file paths for overriding theme styles
+custom_file_path:
+  style: source/_data/styles.styl
+
 # Mermaid 图表
 mermaid:
   enable: true
   theme:
-    light: default
+    light: neutral
     dark: dark

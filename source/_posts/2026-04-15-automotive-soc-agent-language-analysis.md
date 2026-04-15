@@ -30,9 +30,9 @@ tags: [汽车电子, SOC, Agent开发, 编程语言, Rust, C++]
 
 ```mermaid
 graph LR
-    SF["🔍 感知融合\nSensor Fusion\nC / C++ / Rust\n实时处理"]
-    PP["🧠 决策规划\nPlanning & Agent\nPython / AI\nML推理"]
-    CA["⚙️ 控制执行\nControl & Actuate\nC / Rust\nISO 26262 功能安全"]
+    SF["🔍 感知融合<br/>Sensor Fusion<br/>C / C++ / Rust<br/>实时处理"]
+    PP["🧠 决策规划<br/>Planning & Agent<br/>Python / AI<br/>ML推理"]
+    CA["⚙️ 控制执行<br/>Control & Actuate<br/>C / Rust<br/>ISO 26262 功能安全"]
 
     SF -->|"传感器数据流"| PP
     PP -->|"决策指令"| CA
@@ -134,9 +134,9 @@ graph LR
 
 ```mermaid
 graph TB
-    L3["☁️ Layer 3: 云端Agent层 Cloud Agent\n语言: Python / JavaScript\n功能: OTA升级 · 大模型推理 · 数据分析 · 车队管理\n特点: 不受资源限制，追求开发效率"]
-    L2["🚗 Layer 2: 车载AI推理层 On-board AI\n语言: C++ / Python / Rust\n功能: 感知融合 · 行为决策 · 场景理解 · Agent推理\n特点: 异构计算 GPU/NPU，性能敏感"]
-    L1["🔒 Layer 1: 功能安全层 Safety Critical\n语言: C dominant / Rust emerging\n功能: 车辆控制 · 动力管理 · 故障响应 · 实时监控\n特点: ISO 26262 ASIL-D，硬实时"]
+    L3["☁️ Layer 3: 云端Agent层 Cloud Agent<br/>语言: Python / JavaScript<br/>功能: OTA升级 · 大模型推理 · 数据分析 · 车队管理<br/>特点: 不受资源限制，追求开发效率"]
+    L2["🚗 Layer 2: 车载AI推理层 On-board AI<br/>语言: C++ / Python / Rust<br/>功能: 感知融合 · 行为决策 · 场景理解 · Agent推理<br/>特点: 异构计算 GPU/NPU，性能敏感"]
+    L1["🔒 Layer 1: 功能安全层 Safety Critical<br/>语言: C dominant / Rust emerging<br/>功能: 车辆控制 · 动力管理 · 故障响应 · 实时监控<br/>特点: ISO 26262 ASIL-D，硬实时"]
 
     L3 --> L2 --> L1
 
