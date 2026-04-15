@@ -29,17 +29,21 @@ tags: [汽车电子, SOC, Agent开发, 编程语言, Rust, C++]
 ### 1.2 汽车SoC Agent开发的特点
 
 ```mermaid
-graph LR
-    SF["🔍 感知融合<br/>Sensor Fusion<br/>C / C++ / Rust<br/>实时处理"]
-    PP["🧠 决策规划<br/>Planning & Agent<br/>Python / AI<br/>ML推理"]
-    CA["⚙️ 控制执行<br/>Control & Actuate<br/>C / Rust<br/>ISO 26262 功能安全"]
-
-    SF -->|"传感器数据流"| PP
-    PP -->|"决策指令"| CA
-
-    style SF fill:#AED9E0,color:#1A3A4A,stroke:#48B2C8,stroke-width:2px
-    style PP fill:#B5EAD7,color:#1B4332,stroke:#52B788,stroke-width:2px
-    style CA fill:#FFCDD2,color:#4A1942,stroke:#E57373,stroke-width:2px
+graph TB
+    SOC["🚗 汽车SOC Agent"]
+    
+    SOC --> PF["感知融合<br/>Sensor Fusion"]
+    SOC --> PL["决策规划<br/>Planning & Agent"]
+    SOC --> CA["控制执行<br/>Control Actuate"]
+    
+    PF --> PF_Tech["C/C++/Rust<br/>实时处理"]
+    PL --> PL_Tech["Python/AI<br/>ML推理"]
+    CA --> CA_Tech["C/Rust<br/>ISO26262功能安全"]
+    
+    style SOC fill:#FFB6C1,stroke:#FF69B4
+    style PF fill:#87CEEB,stroke:#4169E1
+    style PL fill:#98FB98,stroke:#228B22
+    style CA fill:#FFA500,stroke:#FF4500
 ```
 
 ## 二、编程语言深度对比
@@ -134,15 +138,22 @@ graph LR
 
 ```mermaid
 graph TB
-    L3["☁️ Layer 3: 云端Agent层 Cloud Agent<br/>语言: Python / JavaScript<br/>功能: OTA升级 · 大模型推理 · 数据分析 · 车队管理<br/>特点: 不受资源限制，追求开发效率"]
-    L2["🚗 Layer 2: 车载AI推理层 On-board AI<br/>语言: C++ / Python / Rust<br/>功能: 感知融合 · 行为决策 · 场景理解 · Agent推理<br/>特点: 异构计算 GPU/NPU，性能敏感"]
-    L1["🔒 Layer 1: 功能安全层 Safety Critical<br/>语言: C dominant / Rust emerging<br/>功能: 车辆控制 · 动力管理 · 故障响应 · 实时监控<br/>特点: ISO 26262 ASIL-D，硬实时"]
-
-    L3 --> L2 --> L1
-
-    style L3 fill:#AED9E0,color:#1A3A4A,stroke:#48B2C8,stroke-width:2px
-    style L2 fill:#B5EAD7,color:#1B4332,stroke:#52B788,stroke-width:2px
-    style L1 fill:#FFCDD2,color:#4A1942,stroke:#E57373,stroke-width:2px
+    L3["Layer 3: 云端Agent层<br/>Cloud Agent"]
+    L2["Layer 2: 车载AI推理层<br/>On-board AI"]
+    L1["Layer 1: 功能安全层<br/>Safety Critical"]
+    
+    L3 --> L3_Lang["Python / JavaScript"]
+    L3 --> L3_Feat["OTA升级, 大模型推理<br/>数据分析, 车队管理"]
+    
+    L2 --> L2_Lang["C++ / Python / Rust"]
+    L2 --> L2_Feat["感知融合, 行为决策<br/>场景理解, Agent推理"]
+    
+    L1 --> L1_Lang["C / Rust"]
+    L1 --> L1_Feat["车辆控制, 动力管理<br/>故障响应, 实时监控"]
+    
+    style L3 fill:#DDA0DD,stroke:#9370DB
+    style L2 fill:#87CEEB,stroke:#4169E1
+    style L1 fill:#FFA07A,stroke:#FF6347
 ```
 
 ### 3.2 Agent开发语言推荐
@@ -162,11 +173,12 @@ graph TB
 ### 4.1 行业采用数据
 
 ```mermaid
-xychart-beta
-    title "编程语言在汽车行业采用趋势 (2025)"
-    x-axis ["C语言 (下降)", "C++ (稳定)", "Python (快速上升)", "Rust (爆发增长)"]
-    y-axis "采用率 (%)" 0 --> 100
-    bar [80, 65, 35, 15]
+pie title 汽车行业编程语言采用趋势 (2025)
+    "C语言 (80%)" : 80
+    "C++ (65%)" : 65
+    "Python (35%)" : 35
+    "Rust (15%)" : 15
+    "其他 (10%)" : 10
 ```
 
 **来源**: Embedded Markets Study 2025, automotive survey (n=450)
@@ -216,13 +228,13 @@ xychart-beta
 
 ```mermaid
 timeline
-    title 汽车SoC编程语言演进路线图
-    2025-2026 : Rust在汽车领域规模应用元年
-              : 预计20%新项目采用Rust安全关键语言
+    title 汽车软件技术演进路线图
+    2025-2026 : Rust规模应用元年
+             : 预计20%新项目采用Rust
     2027-2028 : AI Native汽车软件开发
-              : Python+C++混合架构向Rust统一演进
+             : Python+C++混合 → Rust统一
     2029-2030 : 下一代计算平台
-              : Rust+形式化验证成为功能安全新标准
+             : Rust+形式化验证成为新标准
 ```
 
 ## 参考资料
