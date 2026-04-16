@@ -2,12 +2,13 @@
 title: AI Agent 原理与实战：从概念到落地的完整指南
 date: 2026-04-14 10:30:00
 categories:
-- AI
+- 技术科普
 tags:
 - AI Agent
 - LLM
 - ReAct
 - AutoGPT
+- Agent实战
 description: "本文涵盖 Agent 核心架构、主流实现原理、技术优势对比，以及可直接运行的完整代码。"
 ---
 
@@ -54,10 +55,10 @@ graph LR
     AC -->|"获取结果"| RF
     RF -->|"更新认知"| OB
 
-    style OB fill:#AED9E0,color:#1A3A4A,stroke:#48B2C8,stroke-width:2px
-    style PL fill:#B5EAD7,color:#1B4332,stroke:#52B788,stroke-width:2px
-    style AC fill:#FFDAB9,color:#4A2200,stroke:#E8956D,stroke-width:2px
-    style RF fill:#D4C5F9,color:#3D2B4F,stroke:#9B72CF,stroke-width:2px
+    style OB fill:#C7CEEA,color:#333,stroke:#9FA8DA,stroke-width:2px
+    style PL fill:#B5EAD7,color:#333,stroke:#80CBC4,stroke-width:2px
+    style AC fill:#FFDAB9,color:#333,stroke:#FFAB76,stroke-width:2px
+    style RF fill:#E8D5F5,color:#333,stroke:#CE93D8,stroke-width:2px
 ```
 
 ### 2.1 感知（Observe）
@@ -105,10 +106,10 @@ graph LR
     M --> P --> T --> A
     A -->|"反馈循环"| M
 
-    style M fill:#AED9E0,color:#1A3A4A
-    style P fill:#B5EAD7,color:#1B4332
-    style T fill:#FFDAB9,color:#4A2200
-    style A fill:#D4C5F9,color:#3D2B4F
+    style M fill:#C7CEEA,color:#333
+    style P fill:#B5EAD7,color:#333
+    style T fill:#FFDAB9,color:#333
+    style A fill:#E8D5F5,color:#333
 ```
 
 ### 3.1 记忆模块（Memory）
@@ -350,9 +351,9 @@ graph TD
         EX --> SUM["汇总:<br/>基于所有Observation给出答案"]
     end
 
-    style PL fill:#AED9E0,color:#1A3A4A
-    style EX fill:#B5EAD7,color:#1B4332
-    style SUM fill:#D4C5F9,color:#3D2B4F
+    style PL fill:#C7CEEA,color:#333
+    style EX fill:#B5EAD7,color:#333
+    style SUM fill:#E8D5F5,color:#333
 ```
 
 **代码实现**：
@@ -829,9 +830,9 @@ graph TD
     AR --> AL
     AL --> ST
 
-    style CR fill:#AED9E0,color:#1A3A4A
-    style AR fill:#B5EAD7,color:#1B4332
-    style SL fill:#FFDAB9,color:#4A2200
+    style CR fill:#C7CEEA,color:#333
+    style AR fill:#B5EAD7,color:#333
+    style SL fill:#FFDAB9,color:#333
 ```
 
 #### OpenClaw 的多 Agent 路由
@@ -1142,10 +1143,10 @@ graph LR
     MH <-->|"MCP协议"| MS
     MS -->|"调用"| LR
 
-    style AI fill:#AED9E0,color:#1A3A4A
-    style MH fill:#B5EAD7,color:#1B4332
-    style MS fill:#FFDAB9,color:#4A2200
-    style LR fill:#D4C5F9,color:#3D2B4F
+    style AI fill:#C7CEEA,color:#333
+    style MH fill:#B5EAD7,color:#333
+    style MS fill:#FFDAB9,color:#333
+    style LR fill:#E8D5F5,color:#333
 ```
 
 #### MCP Server 示例

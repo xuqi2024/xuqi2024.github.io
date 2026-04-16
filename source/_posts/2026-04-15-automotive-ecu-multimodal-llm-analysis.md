@@ -1,8 +1,14 @@
 ---
 title: 汽车ECU本地多模态大模型深度分析：边缘AI是智能汽车的必选项还是可选项？
 date: 2026-04-15 21:43:00
-categories: 技术洞察
-tags: [汽车ECU, 多模态大模型, 边缘AI, 端侧推理, 智能座舱, 自动驾驶, 云端一体]
+categories:
+- 技术报告
+tags:
+- 汽车AI
+- 多模态大模型
+- 边缘AI
+- 智能座舱
+- 端侧推理
 description: "是把AI推理全部交给云端，还是在车载ECU（Electronic Control Unit）上部署本地大模型？"
 ---
 

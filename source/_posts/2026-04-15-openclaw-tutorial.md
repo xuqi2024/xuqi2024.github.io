@@ -1,9 +1,15 @@
 ---
 title: OpenClaw完全入门指南：一文读懂节点、会话、心跳与配置项
 date: 2026-04-15 22:56:00
-categories: 教程
-tags: [OpenClaw, AI助手, 节点, 会话管理, 心跳, 配置教程, 多渠道]
-description: "⚠️ 关于'梦境'：在OpenClaw的标准文档中，'梦境'（Dream）并非内置概念。可能你是在某处看到了这个词——它可能是某个插件或社区扩展的功能，而非OpenClaw原生概念。本文将介绍OpenClaw所有核心概念，如有需要可进一步说明你看到的'梦境'具体指什么。"
+categories:
+- 技术科普
+tags:
+- OpenClaw
+- AI助手
+- 会话管理
+- 心跳机制
+- 配置教程
+description: OpenClaw完全入门指南：手把手讲清楚节点、会话、心跳三大核心概念，以及所有配置项的含义与使用方法。适合初次接触OpenClaw的用户从零快速上手。
 ---
 
 # OpenClaw完全入门指南：一文读懂节点、会话、心跳与配置项

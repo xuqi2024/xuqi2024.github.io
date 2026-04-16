@@ -1,8 +1,14 @@
 ---
 title: AI Agent + Memory：2026 年最值得学习的开源项目深度解析
-date: 2026-04-16
-tags: [AI Agent, LLM, Memory, RAG, 开源, Dify, Mem0, CrewAI]
-categories: AI Engineering
+date: 2026-04-16 16:00:00
+tags:
+- AI Agent
+- 记忆系统
+- RAG
+- 开源项目
+- LLM
+categories:
+- 技术报告
 description: 深入解析当前最火热的 AI Agent 与 Memory 相关开源项目，从架构设计到实现原理，探讨它们的差异与趋势。
 ---
 

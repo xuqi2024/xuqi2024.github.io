@@ -8,6 +8,7 @@ tags:
   - 装载
   - 库
   - 计算机系统
+description: Linux共享库的版本管理规则：SO名、真实名、链接名三者关系，以及ldconfig、LD_LIBRARY_PATH的工作机制。
 ---
 
 # 第八章：Linux共享库的组织

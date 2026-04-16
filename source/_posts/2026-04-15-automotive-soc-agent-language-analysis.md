@@ -1,8 +1,14 @@
 ---
 title: 汽车SOC Agent开发最佳编程语言深度分析
 date: 2026-04-15 09:30:00
-categories: 技术调研
-tags: [汽车电子, SOC, Agent开发, 编程语言, Rust, C++]
+categories:
+- 技术报告
+tags:
+- 汽车AI
+- Agent开发
+- 编程语言
+- Rust
+- C++
 description: "从技术、安全、生态三个维度，深度分析汽车SOC Agent开发的主流编程语言，给出有理有据的结论与建议。"
 ---
 
