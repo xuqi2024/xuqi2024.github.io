@@ -73,6 +73,9 @@ post:
 highlight_theme: normal
 codeblock:
   highlight_shrink: true
+  theme:
+    light: tomorrow-night-eighties
+    dark: tomorrow-night-eighties
   copy_button:
     enable: true
     show_result: true
