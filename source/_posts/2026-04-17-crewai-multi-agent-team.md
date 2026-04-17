@@ -11,6 +11,9 @@ tags:
 - 团队协作
 ---
 
+> 📚 **AI Agent 开源框架实战系列**（3/6） | ⬅️ 上一篇：[LangGraph：用状态图构建有记忆的 AI 工作流](/2026/04/17/langgraph-stateful-workflow/) | ➡️ 下一篇：[AutoGen：让多个 AI Agent 对话协作](/2026/04/17/autogen-multi-agent-conversation/) | 🔗 [配套代码仓库](https://github.com/xuqi2024/ai-agent-tutorials)
+
+
 ## 开篇钩子：一个 AI 不够用，我需要一个 AI "团队"
 
 你有没有遇到过这种情况：让 AI 帮你写一篇深度行业报告，它洋洒洒写了 3000 字，引用了十几个"权威数据"——结果你一查，**至少一半数据是凭空编造的**。

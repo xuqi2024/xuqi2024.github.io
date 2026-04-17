@@ -11,6 +11,9 @@ tags:
 - 大语言模型
 ---
 
+> 📚 **AI Agent 开源框架实战系列**（1/6） | ➡️ 下一篇：[LangGraph：用状态图构建有记忆的 AI 工作流](/2026/04/17/langgraph-stateful-workflow/) | 🔗 [配套代码仓库](https://github.com/xuqi2024/ai-agent-tutorials)
+
+
 ## 你以为 AI 聊天很简单？直到你需要它查数据、跑代码……
 
 你打开 ChatGPT，输入"帮我查一下今天上海的天气，然后告诉我适不适合跑步"。

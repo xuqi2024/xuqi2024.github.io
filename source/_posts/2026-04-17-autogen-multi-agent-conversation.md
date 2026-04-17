@@ -11,6 +11,9 @@ tags:
 - 代码生成
 ---
 
+> 📚 **AI Agent 开源框架实战系列**（4/6） | ⬅️ 上一篇：[CrewAI：用角色扮演构建多 Agent 团队](/2026/04/17/crewai-multi-agent-team/) | ➡️ 下一篇：[Agno：极简主义的 AI Agent 框架](/2026/04/17/agno-minimalist-agent-framework/) | 🔗 [配套代码仓库](https://github.com/xuqi2024/ai-agent-tutorials)
+
+
 ## 你有没有想过，让两个 AI 互相"卷"一下？
 
 一个 AI 写代码，另一个 AI 专门挑毛病——这不是科幻，而是微软研究院正在运行的真实系统。

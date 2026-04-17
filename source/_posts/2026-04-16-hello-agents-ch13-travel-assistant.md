@@ -1,9 +1,10 @@
 ---
 title: 【第13章】用Agent规划日本5日游，2分钟搞定2小时的活
-date: 2026-04-16 13:00:00
+date: 2026-04-16 21:00:00
 categories:
 - 技术科普
 tags:
+- hello-agents
 - AI Agent
 - 实战案例
 - 旅行助手

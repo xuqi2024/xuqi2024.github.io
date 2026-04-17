@@ -11,6 +11,9 @@ tags:
 - 极简框架
 ---
 
+> 📚 **AI Agent 开源框架实战系列**（5/6） | ⬅️ 上一篇：[AutoGen：让多个 AI Agent 对话协作](/2026/04/17/autogen-multi-agent-conversation/) | ➡️ 下一篇：[Smolagents：HuggingFace 的轻量级 Agent 框架](/2026/04/17/smolagents-huggingface-lightweight-agent/) | 🔗 [配套代码仓库](https://github.com/xuqi2024/ai-agent-tutorials)
+
+
 ## 开篇钩子：如果 AI Agent 框架只需要 5 行代码，你信吗？
 
 大多数 AI Agent 教程的第一步，是让你安装十几个包，然后写几十行样板代码——光是配置日志和初始化客户端就能耗掉你半个小时。

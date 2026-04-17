@@ -11,6 +11,9 @@ tags:
 - CodeAgent
 ---
 
+> 📚 **AI Agent 开源框架实战系列**（6/6） | ⬅️ 上一篇：[Agno：极简主义的 AI Agent 框架](/2026/04/17/agno-minimalist-agent-framework/) | 🔗 [配套代码仓库](https://github.com/xuqi2024/ai-agent-tutorials)
+
+
 ## 如果 AI 不是"说"要调用工具，而是直接"写代码"执行，会发生什么？
 
 大多数 AI Agent 框架是这样工作的：LLM 输出一段 JSON，告诉系统"我要调用 search 工具，参数是'北京天气'"，框架解析这个 JSON，再去调用工具，拿到结果，再交回 LLM 继续推理……如此循环。

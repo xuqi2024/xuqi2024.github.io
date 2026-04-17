@@ -1,9 +1,10 @@
 ---
 title: 【第10章】AI Agent如何与世界"对话"：MCP、A2A、ANP协议全解析
-date: 2026-04-16 10:00:00
+date: 2026-04-16 18:00:00
 categories:
 - 技术科普
 tags:
+- hello-agents
 - AI Agent
 - MCP
 - A2A协议

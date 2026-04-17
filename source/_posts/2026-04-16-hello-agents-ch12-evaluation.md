@@ -1,9 +1,10 @@
 ---
 title: 【第12章】你的Agent真的好用吗？智能体评估体系完全指南
-date: 2026-04-16 12:00:00
+date: 2026-04-16 20:00:00
 categories:
 - 技术科普
 tags:
+- hello-agents
 - AI Agent
 - 性能评估
 - Benchmark

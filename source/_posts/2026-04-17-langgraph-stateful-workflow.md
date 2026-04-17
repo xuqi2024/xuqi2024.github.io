@@ -11,6 +11,9 @@ tags:
 - 状态机
 ---
 
+> 📚 **AI Agent 开源框架实战系列**（2/6） | ⬅️ 上一篇：[LangChain：从零构建你的第一个 AI Agent](/2026/04/17/langchain-agent-from-zero/) | ➡️ 下一篇：[CrewAI：用角色扮演构建多 Agent 团队](/2026/04/17/crewai-multi-agent-team/) | 🔗 [配套代码仓库](https://github.com/xuqi2024/ai-agent-tutorials)
+
+
 > 你以为一次 LLM 调用就能搞定复杂任务？错了——真正的 AI Agent 需要"反复思考、按条件走、带着记忆"。
 
 ---

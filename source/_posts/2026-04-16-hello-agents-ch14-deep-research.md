@@ -1,9 +1,10 @@
 ---
 title: 【第14章】自动写研究报告的Agent：比ChatGPT深，但有盲点
-date: 2026-04-16 14:00:00
+date: 2026-04-16 22:00:00
 categories:
 - 技术科普
 tags:
+- hello-agents
 - AI Agent
 - Deep Research
 - 自动化研究

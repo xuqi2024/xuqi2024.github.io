@@ -64,20 +64,20 @@ graph TB
     end
 
     subgraph "交互层"
-        CLI["⌨️ pi CLI\n终端交互模式"]
-        WEB["🌐 Web UI\n浏览器界面"]
-        MOM["🤖 pi-mom\nSlack Bot"]
-        SDK["📦 SDK 模式\n嵌入自己的应用"]
+        CLI["⌨️ pi CLI 终端交互"]
+        WEB["🌐 Web UI 浏览器界面"]
+        MOM["🤖 pi-mom Slack Bot"]
+        SDK["📦 SDK 模式 嵌入应用"]
     end
 
     subgraph "Agent 核心层"
-        CORE["⚙️ pi-agent-core\nAgent运行时 + 工具调用"]
-        TOOLS["🔧 4个核心工具\nread / write / edit / bash"]
-        SESSION["💾 会话管理\n分支 / 压缩 / 历史"]
+        CORE["⚙️ pi-agent-core Agent运行时"]
+        TOOLS["🔧 4个核心工具 read/write/edit/bash"]
+        SESSION["💾 会话管理 分支/压缩/历史"]
     end
 
     subgraph "AI 接入层"
-        AI["🔌 pi-ai\n统一LLM API"]
+        AI["🔌 pi-ai 统一LLM API"]
         P1["Anthropic Claude"]
         P2["OpenAI GPT"]
         P3["Google Gemini"]
@@ -85,9 +85,9 @@ graph TB
     end
 
     subgraph "扩展层"
-        EXT["🧩 Extensions\n自定义工具/命令"]
-        SKILLS["⚡ Skills\n可插拔技能包"]
-        PKG["📦 Pi Packages\nnpm/git 分发"]
+        EXT["🧩 Extensions 自定义工具"]
+        SKILLS["⚡ Skills 可插拔技能包"]
+        PKG["📦 Pi Packages npm/git分发"]
     end
 
     U --> CLI
@@ -168,11 +168,11 @@ pi
 ```mermaid
 flowchart LR
     START(["🚀 终端输入 pi"]) --> CHAT{"对话或命令"}
-    CHAT -->|"自然语言"| AGENT["🤖 Agent 执行\n调用工具完成任务"]
+    CHAT -->|"自然语言"| AGENT["🤖 Agent 执行任务"]
     CHAT -->|"/model"| MODEL["切换AI模型"]
     CHAT -->|"/resume"| SESSION["恢复历史会话"]
-    CHAT -->|"@文件名"| REF["引用项目文件\n进入上下文"]
-    CHAT -->|"!shell命令"| BASH["执行Shell\n结果发送给AI"]
+    CHAT -->|"@文件名"| REF["引用项目文件"]
+    CHAT -->|"!shell命令"| BASH["执行Shell命令"]
     AGENT --> RESULT["✅ 任务完成"]
 
     style START fill:#C7CEEA,stroke:#9FA8DA,color:#333
