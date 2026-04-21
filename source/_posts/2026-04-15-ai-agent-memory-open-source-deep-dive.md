@@ -2,13 +2,16 @@
 title: AI Agent 与 Memory 系统架构深度解析：Khoj、GPT Researcher、agentUniverse、MemMachine 对比
 date: 2026-04-15 23:00:00
 categories:
-- 技术报告
+  - AI Agent
+  - LLM
+  - 开源
 tags:
-- AI Agent
-- 记忆系统
-- RAG
-- 向量数据库
-- 开源项目
+  - AI Agent
+  - Memory
+  - RAG
+  - Multi-Agent
+  - LLM
+  - 向量数据库
 description: 深入对比分析四个主流开源 AI Agent + Memory 项目的核心架构、决策机制、记忆存储方案，以及它们在设计思路上的本质差异。
 ---
 
@@ -17,9 +20,6 @@ description: 深入对比分析四个主流开源 AI Agent + Memory 项目的核
 > 为什么你的 AI 助手总是"记不住"上一次的对话？本文从源码和架构层面，深度解析四个主流开源项目如何解决 Agent 的"记忆"难题，以及多 Agent 协作的核心设计思路。
 
 ---
-
-<!-- more -->
-
 
 ## 引子：为什么 Agent + Memory 是下一代 AI 的关键
 

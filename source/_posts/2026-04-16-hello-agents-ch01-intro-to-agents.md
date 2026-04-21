@@ -1,5 +1,5 @@
 ---
-title: 【第1章】初识智能体：LLM会聊天，Agent能办事
+title: 初识智能体：LLM会聊天，Agent能办事
 date: 2026-04-16 09:00:00
 categories:
 - 技术科普
@@ -8,17 +8,11 @@ tags:
 - 智能体入门
 - LLM
 - hello-agents
-description: "一句话结论：大语言模型（LLM）是一个博学多才的顾问，而智能体（Agent）是一个能帮你把事情办完的助理——这两者之间，隔着一道关键的鸿沟。"
-
 ---
-
 
 > **一句话结论：大语言模型（LLM）是一个博学多才的顾问，而智能体（Agent）是一个能帮你把事情办完的助理——这两者之间，隔着一道关键的鸿沟。**
 
 ---
-
-<!-- more -->
-
 
 ## 为什么你应该关心智能体？
 
@@ -89,13 +83,13 @@ Agent的核心，是一个**"感知→推理→行动→观察"**的持续循环
 
 ```mermaid
 graph TD
-    USER["👤 用户<br/>输入任务"]
-    PERCEIVE["🔵 感知层<br/>解析意图 & 收集信息"]
-    REASON["🟣 推理层<br/>LLM制定计划<br/>决定下一步行动"]
-    ACT["🟢 行动层<br/>调用工具执行<br/>搜索/写文件/调API"]
-    OBSERVE["🟡 观察层<br/>收集执行结果"]
-    MEMORY["🔴 记忆模块<br/>存储中间状态"]
-    DONE{"🏁 任务<br/>完成了吗？"}
+    USER["👤 用户\n输入任务"]
+    PERCEIVE["🔵 感知层\n解析意图 & 收集信息"]
+    REASON["🟣 推理层\nLLM制定计划\n决定下一步行动"]
+    ACT["🟢 行动层\n调用工具执行\n搜索/写文件/调API"]
+    OBSERVE["🟡 观察层\n收集执行结果"]
+    MEMORY["🔴 记忆模块\n存储中间状态"]
+    DONE{"🏁 任务\n完成了吗？"}
     ANSWER["✅ 输出最终答案"]
 
     USER --> PERCEIVE --> REASON --> ACT --> OBSERVE
@@ -301,28 +295,3 @@ Agent在**明确目标 + 工具齐备**的场景下表现优秀，但面对**模
 ---
 
 > 📚 本文参考：[datawhalechina/hello-agents](https://github.com/datawhalechina/hello-agents) 第一章
-
----
-## 📚 Hello Agents 系列导航
-
-> 本文是《Hello Agents》入门系列第 **1** 章，共 16 章。
-
-| 章节 | 标题 | 状态 |
-|:---:|---|:---:|
-| **第1章** | **[初识智能体：LLM会聊天，Agent能办事](/2026/04/16/2026-04-16-hello-agents-ch01-intro-to-agents/)** | 👉 当前 |
-| 第2章 | [智能体60年：从会下棋到能打工](/2026/04/16/2026-04-16-hello-agents-ch02-agent-history/) | ✅ |
-| 第3章 | [LLM原理：它不理解语言，却比你更会用语言](/2026/04/16/2026-04-16-hello-agents-ch03-llm-basics/) | ✅ |
-| 第4章 | [Agent思考三剑客：ReAct、Plan-and-Solve与Reflection](/2026/04/16/2026-04-16-hello-agents-ch04-classic-paradigms/) | ✅ |
-| 第5章 | [不会写代码也能搭AI Agent？低代码平台实战指南](/2026/04/16/2026-04-16-hello-agents-ch05-low-code-platforms/) | ✅ |
-| 第6章 | [当一个Agent不够用时：三大框架多智能体实战](/2026/04/16/2026-04-16-hello-agents-ch06-framework-practice/) | ✅ |
-| 第7章 | [为什么要造轮子？200行Python手写Agent框架](/2026/04/16/2026-04-16-hello-agents-ch07-build-your-framework/) | ✅ |
-| 第8章 | [Agent为何失忆？RAG与记忆系统深度解析](/2026/04/16/2026-04-16-hello-agents-ch08-memory-retrieval/) | ✅ |
-| 第9章 | [Context Engineering：让Agent真正聪明的隐秘武器](/2026/04/16/2026-04-16-hello-agents-ch09-context-engineering/) | ✅ |
-| 第10章 | [AI Agent如何与世界对话：MCP、A2A、ANP协议全解析](/2026/04/16/2026-04-16-hello-agents-ch10-agent-protocols/) | ✅ |
-| 第11章 | [用强化学习驯服AI Agent：GRPO与Agentic RL全解析](/2026/04/16/2026-04-16-hello-agents-ch11-agentic-rl/) | ✅ |
-| 第12章 | [你的Agent真的好用吗？智能体评估体系完全指南](/2026/04/16/2026-04-16-hello-agents-ch12-evaluation/) | ✅ |
-| 第13章 | [用Agent规划日本5日游，2分钟搞定2小时的活](/2026/04/16/2026-04-16-hello-agents-ch13-travel-assistant/) | ✅ |
-| 第14章 | [自动写研究报告的Agent：比ChatGPT深，但有盲点](/2026/04/16/2026-04-16-hello-agents-ch14-deep-research/) | ✅ |
-| 第15章 | [赛博小镇：25个AI角色自主生活，涌现了什么？](/2026/04/16/2026-04-16-hello-agents-ch15-cyber-town/) | ✅ |
-| 第16章 | [学完16章，现在从0构建你自己的Agent](/2026/04/16/2026-04-16-hello-agents-ch16-graduation/) | ✅ |
-

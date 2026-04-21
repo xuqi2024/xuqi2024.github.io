@@ -8,15 +8,11 @@ tags:
 - LLM
 - ReAct
 - AutoGPT
-- Agent实战
-description: "本文涵盖 Agent 核心架构、主流实现原理、技术优势对比，以及可直接运行的完整代码。"
 ---
 
 # AI Agent 原理与实战：从概念到落地的完整指南
 
 > 本文涵盖 Agent 核心架构、主流实现原理、技术优势对比，以及可直接运行的完整代码。
-
-> 📚 **系列推荐**：如果你想从零开始系统学习 AI Agent，推荐阅读 [Hello Agents 系列教程](/tags/hello-agents/)（共 16 章），从基础概念到实战项目全覆盖。本文侧重**原理总览与快速上手**，Hello Agents 侧重**循序渐进的深度学习路径**，两者互为补充。
 
 ---
 
@@ -47,20 +43,20 @@ Agent 的工作方式遵循一个闭环：
 
 ```mermaid
 graph LR
-    OB["👁️ 感知<br/>Observe<br/>接收输入 · 读取状态"]
-    PL["🧠 规划<br/>Plan<br/>任务拆解 · 路径选择"]
-    AC["⚡ 行动<br/>Act<br/>调用工具 · 执行操作"]
-    RF["🔍 观察<br/>Reflect<br/>检查结果 · 自我修正"]
+    OB["👁️ 感知\nObserve\n接收输入 · 读取状态"]
+    PL["🧠 规划\nPlan\n任务拆解 · 路径选择"]
+    AC["⚡ 行动\nAct\n调用工具 · 执行操作"]
+    RF["🔍 观察\nReflect\n检查结果 · 自我修正"]
 
     OB -->|"理解环境"| PL
     PL -->|"选择行动"| AC
     AC -->|"获取结果"| RF
     RF -->|"更新认知"| OB
 
-    style OB fill:#C7CEEA,color:#333,stroke:#9FA8DA,stroke-width:2px
-    style PL fill:#B5EAD7,color:#333,stroke:#80CBC4,stroke-width:2px
-    style AC fill:#FFDAB9,color:#333,stroke:#FFAB76,stroke-width:2px
-    style RF fill:#E8D5F5,color:#333,stroke:#CE93D8,stroke-width:2px
+    style OB fill:#C7CEEA,stroke:#9FA8DA,color:#333,stroke-width:2px
+    style PL fill:#B5EAD7,stroke:#80CBC4,color:#333,stroke-width:2px
+    style AC fill:#FFDAB9,stroke:#FFAB76,color:#333,stroke-width:2px
+    style RF fill:#E8D5F5,stroke:#CE93D8,color:#333,stroke-width:2px
 ```
 
 ### 2.1 感知（Observe）
@@ -99,19 +95,19 @@ graph LR
 ```mermaid
 graph LR
     subgraph Agent["🤖 AI Agent 核心架构"]
-        M["🗄️ 记忆<br/>Memory<br/>短期/长期记忆<br/>向量数据库"]
-        P["🎯 规划<br/>Planner<br/>任务拆解<br/>优先级排序"]
-        T["🔧 工具<br/>Tools<br/>代码执行<br/>API调用"]
-        A["⚡ 行动<br/>Action<br/>结果输出<br/>环境交互"]
+        M["🗄️ 记忆\nMemory\n短期/长期记忆\n向量数据库"]
+        P["🎯 规划\nPlanner\n任务拆解\n优先级排序"]
+        T["🔧 工具\nTools\n代码执行\nAPI调用"]
+        A["⚡ 行动\nAction\n结果输出\n环境交互"]
     end
 
     M --> P --> T --> A
     A -->|"反馈循环"| M
 
-    style M fill:#C7CEEA,color:#333
-    style P fill:#B5EAD7,color:#333
-    style T fill:#FFDAB9,color:#333
-    style A fill:#E8D5F5,color:#333
+    style M fill:#C7CEEA,stroke:#9FA8DA,color:#333
+    style P fill:#B5EAD7,stroke:#80CBC4,color:#333
+    style T fill:#FFDAB9,stroke:#FFAB76,color:#333
+    style A fill:#E8D5F5,stroke:#CE93D8,color:#333
 ```
 
 ### 3.1 记忆模块（Memory）
@@ -349,13 +345,13 @@ graph TD
 
     subgraph ReWOO["⚡ ReWOO（规划-执行分离）"]
         direction LR
-        PL["Plan:<br/>Action1, Action2, Action3"] --> EX["并行执行:<br/>Action1 + Action2 + Action3"]
-        EX --> SUM["汇总:<br/>基于所有Observation给出答案"]
+        PL["Plan:\nAction1, Action2, Action3"] --> EX["并行执行:\nAction1 + Action2 + Action3"]
+        EX --> SUM["汇总:\n基于所有Observation给出答案"]
     end
 
-    style PL fill:#C7CEEA,color:#333
-    style EX fill:#B5EAD7,color:#333
-    style SUM fill:#E8D5F5,color:#333
+    style PL fill:#C7CEEA,stroke:#9FA8DA,color:#333
+    style EX fill:#B5EAD7,stroke:#80CBC4,color:#333
+    style SUM fill:#E8D5F5,stroke:#CE93D8,color:#333
 ```
 
 **代码实现**：
@@ -809,9 +805,9 @@ OpenClaw 是一个**生产级别的 Agent 运行框架**，它不仅仅是单个
 ```mermaid
 graph TD
     subgraph GW["🌐 OpenClaw Gateway"]
-        CR["📡 Channel Router<br/>多渠道输入<br/>HTTP · WebSocket · CLI"]
-        AR["⚙️ Agent Runtime<br/>pi-mono 核心"]
-        SL["🔌 Skills Loader<br/>可扩展技能库"]
+        CR["📡 Channel Router\n多渠道输入\nHTTP · WebSocket · CLI"]
+        AR["⚙️ Agent Runtime\npi-mono 核心"]
+        SL["🔌 Skills Loader\n可扩展技能库"]
 
         CR -->|"路由分发"| AR
         AR -->|"加载技能"| SL
@@ -824,17 +820,17 @@ graph TD
     end
 
     subgraph ST["💾 状态管理"]
-        MC["Memory Compaction<br/>记忆压缩"]
-        TR["Tools Registry<br/>工具注册表"]
-        SM["Sessions Manager<br/>会话管理"]
+        MC["Memory Compaction\n记忆压缩"]
+        TR["Tools Registry\n工具注册表"]
+        SM["Sessions Manager\n会话管理"]
     end
 
     AR --> AL
     AL --> ST
 
-    style CR fill:#C7CEEA,color:#333
-    style AR fill:#B5EAD7,color:#333
-    style SL fill:#FFDAB9,color:#333
+    style CR fill:#C7CEEA,stroke:#9FA8DA,color:#333
+    style AR fill:#B5EAD7,stroke:#80CBC4,color:#333
+    style SL fill:#FFDAB9,stroke:#FFAB76,color:#333
 ```
 
 #### OpenClaw 的多 Agent 路由
@@ -1136,19 +1132,19 @@ MCP 是 Anthropic 推出的**标准化的 Agent-工具连接协议**，让 Agent
 
 ```mermaid
 graph LR
-    AI["🤖 AI Model<br/>Claude / GPT"]
-    MH["🖥️ MCP Host<br/>应用层<br/>请求路由 · 权限控制"]
-    MS["🔧 MCP Servers<br/>工具提供者<br/>标准化接口"]
-    LR["📦 本地资源<br/>文件系统 · 数据库<br/>API · 外部服务"]
+    AI["🤖 AI Model\nClaude / GPT"]
+    MH["🖥️ MCP Host\n应用层\n请求路由 · 权限控制"]
+    MS["🔧 MCP Servers\n工具提供者\n标准化接口"]
+    LR["📦 本地资源\n文件系统 · 数据库\nAPI · 外部服务"]
 
     AI <-->|"工具请求 / 结果返回"| MH
     MH <-->|"MCP协议"| MS
     MS -->|"调用"| LR
 
-    style AI fill:#C7CEEA,color:#333
-    style MH fill:#B5EAD7,color:#333
-    style MS fill:#FFDAB9,color:#333
-    style LR fill:#E8D5F5,color:#333
+    style AI fill:#C7CEEA,stroke:#9FA8DA,color:#333
+    style MH fill:#B5EAD7,stroke:#80CBC4,color:#333
+    style MS fill:#FFDAB9,stroke:#FFAB76,color:#333
+    style LR fill:#E8D5F5,stroke:#CE93D8,color:#333
 ```
 
 #### MCP Server 示例

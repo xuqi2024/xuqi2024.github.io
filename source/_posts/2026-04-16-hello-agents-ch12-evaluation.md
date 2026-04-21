@@ -1,18 +1,14 @@
 ---
-title: 【第12章】你的Agent真的好用吗？智能体评估体系完全指南
-date: 2026-04-16 20:00:00
+title: 你的Agent真的好用吗？智能体评估体系完全指南
+date: 2026-04-16 12:00:00
 categories:
 - 技术科普
 tags:
-- hello-agents
 - AI Agent
 - 性能评估
 - Benchmark
 - 测试框架
-description: "没有严格的评估，再好的 Agent 都只是一个感觉良好的黑盒"
-
 ---
-
 
 > **没有严格的评估，再好的 Agent 都只是一个感觉良好的黑盒**——评估是将工程直觉转化为可量化结论的唯一路径。
 
@@ -23,9 +19,6 @@ description: "没有严格的评估，再好的 Agent 都只是一个感觉良�
 本文是 hello-agents 开源项目第 12 章的深度解读，带你从零建立一套完整的智能体（Agent）评估框架。读完你将能够：定义评估维度、选用合适的基准测试（Benchmark）、编写可运行的评估代码，并设计属于自己业务场景的评估集。
 
 ---
-
-<!-- more -->
-
 
 ## 一、为什么 Agent 评估比模型评估难十倍？
 
@@ -63,11 +56,11 @@ description: "没有严格的评估，再好的 Agent 都只是一个感觉良�
 graph TD
     EVAL(["🔍 Agent 评估体系"])
 
-    D1["📌 任务完成率<br/>Task Completion Rate<br/>最终目标是否达成？"]
-    D2["⚡ 效率<br/>Efficiency<br/>步数 / Token / 耗时"]
-    D3["🎯 准确性<br/>Accuracy<br/>输出质量与决策质量"]
-    D4["🛡️ 鲁棒性<br/>Robustness<br/>处理边界情况与错误"]
-    D5["🔒 安全性<br/>Safety<br/>无有害内容，无越权操作"]
+    D1["📌 任务完成率\nTask Completion Rate\n最终目标是否达成？"]
+    D2["⚡ 效率\nEfficiency\n步数 / Token / 耗时"]
+    D3["🎯 准确性\nAccuracy\n输出质量与决策质量"]
+    D4["🛡️ 鲁棒性\nRobustness\n处理边界情况与错误"]
+    D5["🔒 安全性\nSafety\n无有害内容，无越权操作"]
 
     EVAL --> D1
     EVAL --> D2
@@ -571,28 +564,3 @@ if __name__ == "__main__":
 - [WebArena](https://webarena.dev/)
 - [AgentBench（清华大学）](https://github.com/THUDM/AgentBench)
 - [hello-agents 开源项目 Chapter 12](https://github.com/hello-agents/hello-agents)
-
----
-## 📚 Hello Agents 系列导航
-
-> 本文是《Hello Agents》入门系列第 **12** 章，共 16 章。
-
-| 章节 | 标题 | 状态 |
-|:---:|---|:---:|
-| 第1章 | [初识智能体：LLM会聊天，Agent能办事](/2026/04/16/2026-04-16-hello-agents-ch01-intro-to-agents/) | ✅ |
-| 第2章 | [智能体60年：从会下棋到能打工](/2026/04/16/2026-04-16-hello-agents-ch02-agent-history/) | ✅ |
-| 第3章 | [LLM原理：它不理解语言，却比你更会用语言](/2026/04/16/2026-04-16-hello-agents-ch03-llm-basics/) | ✅ |
-| 第4章 | [Agent思考三剑客：ReAct、Plan-and-Solve与Reflection](/2026/04/16/2026-04-16-hello-agents-ch04-classic-paradigms/) | ✅ |
-| 第5章 | [不会写代码也能搭AI Agent？低代码平台实战指南](/2026/04/16/2026-04-16-hello-agents-ch05-low-code-platforms/) | ✅ |
-| 第6章 | [当一个Agent不够用时：三大框架多智能体实战](/2026/04/16/2026-04-16-hello-agents-ch06-framework-practice/) | ✅ |
-| 第7章 | [为什么要造轮子？200行Python手写Agent框架](/2026/04/16/2026-04-16-hello-agents-ch07-build-your-framework/) | ✅ |
-| 第8章 | [Agent为何失忆？RAG与记忆系统深度解析](/2026/04/16/2026-04-16-hello-agents-ch08-memory-retrieval/) | ✅ |
-| 第9章 | [Context Engineering：让Agent真正聪明的隐秘武器](/2026/04/16/2026-04-16-hello-agents-ch09-context-engineering/) | ✅ |
-| 第10章 | [AI Agent如何与世界对话：MCP、A2A、ANP协议全解析](/2026/04/16/2026-04-16-hello-agents-ch10-agent-protocols/) | ✅ |
-| 第11章 | [用强化学习驯服AI Agent：GRPO与Agentic RL全解析](/2026/04/16/2026-04-16-hello-agents-ch11-agentic-rl/) | ✅ |
-| **第12章** | **[你的Agent真的好用吗？智能体评估体系完全指南](/2026/04/16/2026-04-16-hello-agents-ch12-evaluation/)** | 👉 当前 |
-| 第13章 | [用Agent规划日本5日游，2分钟搞定2小时的活](/2026/04/16/2026-04-16-hello-agents-ch13-travel-assistant/) | ✅ |
-| 第14章 | [自动写研究报告的Agent：比ChatGPT深，但有盲点](/2026/04/16/2026-04-16-hello-agents-ch14-deep-research/) | ✅ |
-| 第15章 | [赛博小镇：25个AI角色自主生活，涌现了什么？](/2026/04/16/2026-04-16-hello-agents-ch15-cyber-town/) | ✅ |
-| 第16章 | [学完16章，现在从0构建你自己的Agent](/2026/04/16/2026-04-16-hello-agents-ch16-graduation/) | ✅ |
-

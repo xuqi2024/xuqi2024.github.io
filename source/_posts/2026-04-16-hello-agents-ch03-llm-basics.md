@@ -1,5 +1,5 @@
 ---
-title: 【第3章】LLM原理：它不理解语言，却比你更会用语言
+title: LLM原理：它不理解语言，却比你更会用语言
 date: 2026-04-16 11:00:00
 categories:
 - 技术科普
@@ -8,17 +8,11 @@ tags:
 - Transformer
 - 提示工程
 - hello-agents
-description: "GPT不是一个搜索引擎，也不是一个数据库——它是一个语言概率机器。理解LLM如何预测下一个词，是理解Agent能力边界的起点。理解语言——它是一个极其精密的概率机器，通过预测下一个词是什么来完成几乎一切语言任务。但正是这个不理解，让它比任何理解的系统都更强大。"
-
 ---
-
 
 > **一句话结论：GPT不"理解"语言——它是一个极其精密的概率机器，通过预测"下一个词是什么"来完成几乎一切语言任务。但正是这个"不理解"，让它比任何"理解"的系统都更强大。**
 
 ---
-
-<!-- more -->
-
 
 ## 为什么GPT能"读懂"你的问题？
 
@@ -82,9 +76,9 @@ graph LR
         W3["🟢 河边"]
     end
     
-    ATT["⚙️ Self-Attention<br/>计算每对词的相关度"]
+    ATT["⚙️ Self-Attention\n计算每对词的相关度"]
     
-    OUT1["🔵 银行<br/>（更靠近'河'，<br/>理解为河岸）"]
+    OUT1["🔵 银行\n（更靠近'河'，\n理解为河岸）"]
     OUT2["🟡 在"]
     OUT3["🟢 河边"]
 
@@ -428,28 +422,3 @@ GPT-4的参数量是GPT-3.5的数倍，但在很多**特定场景**下，经过�
 ---
 
 > 📚 本文参考：[datawhalechina/hello-agents](https://github.com/datawhalechina/hello-agents) 第三章
-
----
-## 📚 Hello Agents 系列导航
-
-> 本文是《Hello Agents》入门系列第 **3** 章，共 16 章。
-
-| 章节 | 标题 | 状态 |
-|:---:|---|:---:|
-| 第1章 | [初识智能体：LLM会聊天，Agent能办事](/2026/04/16/2026-04-16-hello-agents-ch01-intro-to-agents/) | ✅ |
-| 第2章 | [智能体60年：从会下棋到能打工](/2026/04/16/2026-04-16-hello-agents-ch02-agent-history/) | ✅ |
-| **第3章** | **[LLM原理：它不理解语言，却比你更会用语言](/2026/04/16/2026-04-16-hello-agents-ch03-llm-basics/)** | 👉 当前 |
-| 第4章 | [Agent思考三剑客：ReAct、Plan-and-Solve与Reflection](/2026/04/16/2026-04-16-hello-agents-ch04-classic-paradigms/) | ✅ |
-| 第5章 | [不会写代码也能搭AI Agent？低代码平台实战指南](/2026/04/16/2026-04-16-hello-agents-ch05-low-code-platforms/) | ✅ |
-| 第6章 | [当一个Agent不够用时：三大框架多智能体实战](/2026/04/16/2026-04-16-hello-agents-ch06-framework-practice/) | ✅ |
-| 第7章 | [为什么要造轮子？200行Python手写Agent框架](/2026/04/16/2026-04-16-hello-agents-ch07-build-your-framework/) | ✅ |
-| 第8章 | [Agent为何失忆？RAG与记忆系统深度解析](/2026/04/16/2026-04-16-hello-agents-ch08-memory-retrieval/) | ✅ |
-| 第9章 | [Context Engineering：让Agent真正聪明的隐秘武器](/2026/04/16/2026-04-16-hello-agents-ch09-context-engineering/) | ✅ |
-| 第10章 | [AI Agent如何与世界对话：MCP、A2A、ANP协议全解析](/2026/04/16/2026-04-16-hello-agents-ch10-agent-protocols/) | ✅ |
-| 第11章 | [用强化学习驯服AI Agent：GRPO与Agentic RL全解析](/2026/04/16/2026-04-16-hello-agents-ch11-agentic-rl/) | ✅ |
-| 第12章 | [你的Agent真的好用吗？智能体评估体系完全指南](/2026/04/16/2026-04-16-hello-agents-ch12-evaluation/) | ✅ |
-| 第13章 | [用Agent规划日本5日游，2分钟搞定2小时的活](/2026/04/16/2026-04-16-hello-agents-ch13-travel-assistant/) | ✅ |
-| 第14章 | [自动写研究报告的Agent：比ChatGPT深，但有盲点](/2026/04/16/2026-04-16-hello-agents-ch14-deep-research/) | ✅ |
-| 第15章 | [赛博小镇：25个AI角色自主生活，涌现了什么？](/2026/04/16/2026-04-16-hello-agents-ch15-cyber-town/) | ✅ |
-| 第16章 | [学完16章，现在从0构建你自己的Agent](/2026/04/16/2026-04-16-hello-agents-ch16-graduation/) | ✅ |
-

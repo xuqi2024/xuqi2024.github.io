@@ -1,26 +1,19 @@
 ---
-title: 【第7章】为什么要造轮子？200行Python手写Agent框架
+title: 为什么要造轮子？200行Python手写Agent框架
 date: 2026-04-16 15:00:00
 categories:
 - 技术科普
 tags:
-- hello-agents
 - AI Agent
 - 自建框架
 - Agent架构
 - Python
 - 工具系统
-description: "用了各种Agent框架之后，你有没有想过：这些框架到底做了什么？自己手写一个Agent框架，才能真正理解其背后的原理。不需要，直接用现成的就好。"
-
 ---
-
 
 > 当你用LangGraph写了第三个Agent之后，你会开始思考：这些框架到底帮我做了什么？自己造一个轮子，是搞懂框架本质最快的方式——没有之一。
 
 ---
-
-<!-- more -->
-
 
 ## 为什么在LangGraph已存在的情况下，还要自己写框架？
 
@@ -46,10 +39,10 @@ description: "用了各种Agent框架之后，你有没有想过：这些框架�
 ```mermaid
 graph TB
     subgraph "Agent框架核心"
-        A["🎯 Router<br/>路由决策器<br/>决定下一步做什么"]
-        B["🔧 Tool Registry<br/>工具注册表<br/>管理所有可用工具"]
-        C["🧠 Memory<br/>记忆管理<br/>维护对话上下文"]
-        D["🔄 Message Loop<br/>消息循环<br/>驱动整体运行"]
+        A["🎯 Router\n路由决策器\n决定下一步做什么"]
+        B["🔧 Tool Registry\n工具注册表\n管理所有可用工具"]
+        C["🧠 Memory\n记忆管理\n维护对话上下文"]
+        D["🔄 Message Loop\n消息循环\n驱动整体运行"]
     end
 
     INPUT["📥 用户输入"] --> D
@@ -89,10 +82,10 @@ graph TB
 graph LR
     subgraph "MiniAgent 架构"
         direction TB
-        REG["🔧 ToolRegistry<br/>@tool装饰器注册<br/>tool_map字典存储"]
-        MEM["🧠 Memory<br/>messages列表<br/>滑动窗口截断"]
-        LOOP["🔄 AgentLoop<br/>ReAct循环驱动"]
-        ROUTER["🎯 Router<br/>LLM function_call<br/>决定行动"]
+        REG["🔧 ToolRegistry\n@tool装饰器注册\ntool_map字典存储"]
+        MEM["🧠 Memory\nmessages列表\n滑动窗口截断"]
+        LOOP["🔄 AgentLoop\nReAct循环驱动"]
+        ROUTER["🎯 Router\nLLM function_call\n决定行动"]
     end
 
     USER["👤 用户"] -->|"query"| LOOP
@@ -422,12 +415,12 @@ if __name__ == "__main__":
 ```mermaid
 graph TD
     Q1{"目的是什么？"} 
-    Q1 -->|"学习/理解"| SELF["✅ 自建<br/>最好的老师"]
+    Q1 -->|"学习/理解"| SELF["✅ 自建\n最好的老师"]
     Q1 -->|"快速上线"| Q2{"需要深度定制？"}
-    Q2 -->|"否"| EXISTING["✅ 现有框架<br/>省时省力"]
+    Q2 -->|"否"| EXISTING["✅ 现有框架\n省时省力"]
     Q2 -->|"是"| Q3{"框架能魔改吗？"}
-    Q3 -->|"能"| FORK["⚠️ Fork框架<br/>在基础上改"]
-    Q3 -->|"不能"| SELF2["✅ 自建<br/>从头控制"]
+    Q3 -->|"能"| FORK["⚠️ Fork框架\n在基础上改"]
+    Q3 -->|"不能"| SELF2["✅ 自建\n从头控制"]
 
     style Q1 fill:#FFF9C4,stroke:#F9A825,color:#333
     style Q2 fill:#FFF9C4,stroke:#F9A825,color:#333
@@ -450,9 +443,9 @@ graph TD
 
 ```mermaid
 graph LR
-    MINI["🚀 MiniAgent<br/>（本章）"] --> RAG["📚 + RAG记忆<br/>（第8章）"]
-    RAG --> MULTI["🤝 + 多Agent<br/>（自行扩展）"]
-    MULTI --> PROD["🏭 生产级框架<br/>（你自己的版本）"]
+    MINI["🚀 MiniAgent\n（本章）"] --> RAG["📚 + RAG记忆\n（第8章）"]
+    RAG --> MULTI["🤝 + 多Agent\n（自行扩展）"]
+    MULTI --> PROD["🏭 生产级框架\n（你自己的版本）"]
 
     style MINI fill:#C7CEEA,stroke:#9FA8DA,color:#333
     style RAG fill:#B5EAD7,stroke:#80CBC4,color:#333
@@ -461,28 +454,3 @@ graph LR
 ```
 
 > 当你能从零写出一个Agent框架，再去看LangGraph的源码，会发现它和你写的东西本质上一模一样——只不过它处理了更多边界情况，有更好的可观测性。这才是真正的"知其所以然"。
-
----
-## 📚 Hello Agents 系列导航
-
-> 本文是《Hello Agents》入门系列第 **7** 章，共 16 章。
-
-| 章节 | 标题 | 状态 |
-|:---:|---|:---:|
-| 第1章 | [初识智能体：LLM会聊天，Agent能办事](/2026/04/16/2026-04-16-hello-agents-ch01-intro-to-agents/) | ✅ |
-| 第2章 | [智能体60年：从会下棋到能打工](/2026/04/16/2026-04-16-hello-agents-ch02-agent-history/) | ✅ |
-| 第3章 | [LLM原理：它不理解语言，却比你更会用语言](/2026/04/16/2026-04-16-hello-agents-ch03-llm-basics/) | ✅ |
-| 第4章 | [Agent思考三剑客：ReAct、Plan-and-Solve与Reflection](/2026/04/16/2026-04-16-hello-agents-ch04-classic-paradigms/) | ✅ |
-| 第5章 | [不会写代码也能搭AI Agent？低代码平台实战指南](/2026/04/16/2026-04-16-hello-agents-ch05-low-code-platforms/) | ✅ |
-| 第6章 | [当一个Agent不够用时：三大框架多智能体实战](/2026/04/16/2026-04-16-hello-agents-ch06-framework-practice/) | ✅ |
-| **第7章** | **[为什么要造轮子？200行Python手写Agent框架](/2026/04/16/2026-04-16-hello-agents-ch07-build-your-framework/)** | 👉 当前 |
-| 第8章 | [Agent为何失忆？RAG与记忆系统深度解析](/2026/04/16/2026-04-16-hello-agents-ch08-memory-retrieval/) | ✅ |
-| 第9章 | [Context Engineering：让Agent真正聪明的隐秘武器](/2026/04/16/2026-04-16-hello-agents-ch09-context-engineering/) | ✅ |
-| 第10章 | [AI Agent如何与世界对话：MCP、A2A、ANP协议全解析](/2026/04/16/2026-04-16-hello-agents-ch10-agent-protocols/) | ✅ |
-| 第11章 | [用强化学习驯服AI Agent：GRPO与Agentic RL全解析](/2026/04/16/2026-04-16-hello-agents-ch11-agentic-rl/) | ✅ |
-| 第12章 | [你的Agent真的好用吗？智能体评估体系完全指南](/2026/04/16/2026-04-16-hello-agents-ch12-evaluation/) | ✅ |
-| 第13章 | [用Agent规划日本5日游，2分钟搞定2小时的活](/2026/04/16/2026-04-16-hello-agents-ch13-travel-assistant/) | ✅ |
-| 第14章 | [自动写研究报告的Agent：比ChatGPT深，但有盲点](/2026/04/16/2026-04-16-hello-agents-ch14-deep-research/) | ✅ |
-| 第15章 | [赛博小镇：25个AI角色自主生活，涌现了什么？](/2026/04/16/2026-04-16-hello-agents-ch15-cyber-town/) | ✅ |
-| 第16章 | [学完16章，现在从0构建你自己的Agent](/2026/04/16/2026-04-16-hello-agents-ch16-graduation/) | ✅ |
-

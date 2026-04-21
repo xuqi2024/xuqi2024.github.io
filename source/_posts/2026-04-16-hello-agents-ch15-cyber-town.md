@@ -1,26 +1,19 @@
 ---
-title: 【第15章】赛博小镇：25个AI角色自主生活，涌现了什么？
-date: 2026-04-16 23:00:00
+title: 赛博小镇：25个AI角色自主生活，涌现了什么？
+date: 2026-04-16 15:00:00
 categories:
 - 技术科普
 tags:
-- hello-agents
 - AI Agent
 - 多智能体
 - 社会模拟
 - Generative Agents
 - 记忆系统
-description: "25个AI角色在赛博小镇自主生活、社交、甚至爆发冲突——多智能体模拟系统如何产生涌现行为？完整复现斯坦福小镇实验。"
-
 ---
-
 
 > **核心结论**：Stanford Generative Agents实验（2023）最惊人的发现不是AI能模拟人类行为，而是**当每个Agent只遵循简单规则时，整个群体会涌现出没有人编程过的社会行为**——比如自发组织聚会、传播八卦、形成友谊圈。
 
 ---
-
-<!-- more -->
-
 
 2023年4月，Stanford和Google的研究者发布了一篇论文，让AI社区沸腾了整整两周。
 
@@ -39,14 +32,14 @@ description: "25个AI角色在赛博小镇自主生活、社交、甚至爆发�
 ```mermaid
 graph TB
     subgraph "每个Agent的认知架构"
-        M["🗄️ 记忆流<br/>Memory Stream<br/>所有经历的时间序列记录"]
-        R["💭 反思<br/>Reflection<br/>从记忆中提取高层洞察"]
-        P["📅 计划<br/>Planning<br/>基于反思制定行动计划"]
+        M["🗄️ 记忆流\nMemory Stream\n所有经历的时间序列记录"]
+        R["💭 反思\nReflection\n从记忆中提取高层洞察"]
+        P["📅 计划\nPlanning\n基于反思制定行动计划"]
     end
     
-    M -->|"重要性评分<br/>= 近期度+重要性+相关性"| R
+    M -->|"重要性评分\n= 近期度+重要性+相关性"| R
     R --> P
-    P --> ACT["🎭 行动<br/>与环境和其他Agent互动"]
+    P --> ACT["🎭 行动\n与环境和其他Agent互动"]
     ACT -->|"新记忆"| M
 
     style M fill:#C7CEEA,stroke:#9FA8DA,color:#333
@@ -84,14 +77,14 @@ graph TB
     end
     
     subgraph "智能体层：HelloAgents"
-        NPC1["🧑‍💻 张三<br/>Python工程师<br/>SimpleAgent实例"]
-        NPC2["👔 李四<br/>产品经理<br/>SimpleAgent实例"]
-        NPC3["🎨 王五<br/>UI设计师<br/>SimpleAgent实例"]
+        NPC1["🧑‍💻 张三\nPython工程师\nSimpleAgent实例"]
+        NPC2["👔 李四\n产品经理\nSimpleAgent实例"]
+        NPC3["🎨 王五\nUI设计师\nSimpleAgent实例"]
     end
     
     subgraph "记忆层"
-        WM["⚡ 工作记忆<br/>WorkingMemory<br/>最近10条对话"]
-        EM["📚 情节记忆<br/>EpisodicMemory<br/>SQLite+向量数据库"]
+        WM["⚡ 工作记忆\nWorkingMemory\n最近10条对话"]
+        EM["📚 情节记忆\nEpisodicMemory\nSQLite+向量数据库"]
     end
 
     G --> API
@@ -449,9 +442,9 @@ NPC是否"真正有智慧"，95%取决于记忆检索的质量。
 
 ```mermaid
 flowchart LR
-    Q["当前对话<br/>（查询向量）"] --> VS["向量数据库<br/>（所有历史记忆）"]
-    VS -->|"Top-K相似记忆"| FILTER["重要性加权过滤<br/>近期度 + 重要性 + 相关性"]
-    FILTER --> PROMPT["注入Prompt<br/>的上下文记忆"]
+    Q["当前对话\n（查询向量）"] --> VS["向量数据库\n（所有历史记忆）"]
+    VS -->|"Top-K相似记忆"| FILTER["重要性加权过滤\n近期度 + 重要性 + 相关性"]
+    FILTER --> PROMPT["注入Prompt\n的上下文记忆"]
 
     style Q fill:#C7CEEA,stroke:#9FA8DA,color:#333
     style VS fill:#E8D5F5,stroke:#CE93D8,color:#333
@@ -500,28 +493,3 @@ Stanford Generative Agents论文给了我们三个核心启发：
 **涌现行为不需要复杂编程**。给每个Agent简单的规则，让他们相互交互，复杂行为自然涌现。这是多Agent系统最迷人的地方，也是研究者最难预测的地方。
 
 > **一个思想实验**：如果让100个有记忆、有性格、能互相交流的AI Agent在虚拟城市里生活30天，它们会形成什么样的"文化"？会有"社会规范"吗？会有"偏见"和"歧视"吗？这个问题目前没有定论，但值得我们认真思考AI社会的可能性与风险。
-
----
-## 📚 Hello Agents 系列导航
-
-> 本文是《Hello Agents》入门系列第 **15** 章，共 16 章。
-
-| 章节 | 标题 | 状态 |
-|:---:|---|:---:|
-| 第1章 | [初识智能体：LLM会聊天，Agent能办事](/2026/04/16/2026-04-16-hello-agents-ch01-intro-to-agents/) | ✅ |
-| 第2章 | [智能体60年：从会下棋到能打工](/2026/04/16/2026-04-16-hello-agents-ch02-agent-history/) | ✅ |
-| 第3章 | [LLM原理：它不理解语言，却比你更会用语言](/2026/04/16/2026-04-16-hello-agents-ch03-llm-basics/) | ✅ |
-| 第4章 | [Agent思考三剑客：ReAct、Plan-and-Solve与Reflection](/2026/04/16/2026-04-16-hello-agents-ch04-classic-paradigms/) | ✅ |
-| 第5章 | [不会写代码也能搭AI Agent？低代码平台实战指南](/2026/04/16/2026-04-16-hello-agents-ch05-low-code-platforms/) | ✅ |
-| 第6章 | [当一个Agent不够用时：三大框架多智能体实战](/2026/04/16/2026-04-16-hello-agents-ch06-framework-practice/) | ✅ |
-| 第7章 | [为什么要造轮子？200行Python手写Agent框架](/2026/04/16/2026-04-16-hello-agents-ch07-build-your-framework/) | ✅ |
-| 第8章 | [Agent为何失忆？RAG与记忆系统深度解析](/2026/04/16/2026-04-16-hello-agents-ch08-memory-retrieval/) | ✅ |
-| 第9章 | [Context Engineering：让Agent真正聪明的隐秘武器](/2026/04/16/2026-04-16-hello-agents-ch09-context-engineering/) | ✅ |
-| 第10章 | [AI Agent如何与世界对话：MCP、A2A、ANP协议全解析](/2026/04/16/2026-04-16-hello-agents-ch10-agent-protocols/) | ✅ |
-| 第11章 | [用强化学习驯服AI Agent：GRPO与Agentic RL全解析](/2026/04/16/2026-04-16-hello-agents-ch11-agentic-rl/) | ✅ |
-| 第12章 | [你的Agent真的好用吗？智能体评估体系完全指南](/2026/04/16/2026-04-16-hello-agents-ch12-evaluation/) | ✅ |
-| 第13章 | [用Agent规划日本5日游，2分钟搞定2小时的活](/2026/04/16/2026-04-16-hello-agents-ch13-travel-assistant/) | ✅ |
-| 第14章 | [自动写研究报告的Agent：比ChatGPT深，但有盲点](/2026/04/16/2026-04-16-hello-agents-ch14-deep-research/) | ✅ |
-| **第15章** | **[赛博小镇：25个AI角色自主生活，涌现了什么？](/2026/04/16/2026-04-16-hello-agents-ch15-cyber-town/)** | 👉 当前 |
-| 第16章 | [学完16章，现在从0构建你自己的Agent](/2026/04/16/2026-04-16-hello-agents-ch16-graduation/) | ✅ |
-

@@ -1,26 +1,19 @@
 ---
-title: 【第8章】Agent为何失忆？RAG与记忆系统深度解析
+title: Agent为何失忆？RAG与记忆系统深度解析
 date: 2026-04-16 16:00:00
 categories:
 - 技术科普
 tags:
-- hello-agents
 - AI Agent
 - RAG
 - 向量数据库
 - 记忆系统
 - FAISS
-description: "你跟GPT聊了一个小时的项目规划，上下文里有详细的背景信息。结果过了几轮对话之后，它突然开始给出和之前矛盾的建议，或者说我不记得您提到过……"
-
 ---
-
 
 > Agent"失忆"不是Bug，是Context Window的物理硬限制。RAG（检索增强生成）不是让模型变聪明，而是给它配了一个能"随时翻书"的外挂记忆系统。
 
 ---
-
-<!-- more -->
-
 
 ## 为什么你的Agent总是"忘事"？
 
@@ -48,10 +41,10 @@ GPT-4o的上下文窗口是128K tokens，约等于一本100页的书。听起来
 ```mermaid
 graph TB
     subgraph "Agent 记忆系统全景"
-        A["⚡ 短期记忆<br/>In-Context Memory<br/>当前对话消息列表"]
-        B["💾 长期记忆<br/>External Storage<br/>向量数据库/KV存储"]
-        C["📋 工作记忆<br/>Working Memory<br/>任务中间状态"]
-        D["🔨 程序性记忆<br/>Procedural Memory<br/>工具/技能知识"]
+        A["⚡ 短期记忆\nIn-Context Memory\n当前对话消息列表"]
+        B["💾 长期记忆\nExternal Storage\n向量数据库/KV存储"]
+        C["📋 工作记忆\nWorking Memory\n任务中间状态"]
+        D["🔨 程序性记忆\nProcedural Memory\n工具/技能知识"]
     end
 
     USER["👤 用户"] --> A
@@ -97,14 +90,14 @@ graph TB
 ```mermaid
 graph LR
     subgraph "没有RAG"
-        U1["👤 用户提问"] --> L1["🤖 LLM<br/>只凭训练知识回答"]
+        U1["👤 用户提问"] --> L1["🤖 LLM\n只凭训练知识回答"]
         L1 --> R1["📤 可能过时/不准确的回答"]
     end
 
     subgraph "有RAG"
-        U2["👤 用户提问"] --> RET["🔍 检索器<br/>从知识库找相关片段"]
-        RET --> AUG["📎 增强Prompt<br/>问题 + 检索到的上下文"]
-        AUG --> L2["🤖 LLM<br/>基于上下文生成回答"]
+        U2["👤 用户提问"] --> RET["🔍 检索器\n从知识库找相关片段"]
+        RET --> AUG["📎 增强Prompt\n问题 + 检索到的上下文"]
+        AUG --> L2["🤖 LLM\n基于上下文生成回答"]
         L2 --> R2["📤 准确、有据可查的回答"]
     end
 
@@ -138,11 +131,11 @@ graph LR
 ```mermaid
 graph TB
     subgraph "向量空间（简化为2D示意）"
-        P1["🍣 寿司<br/>(0.1, 0.9)"]
-        P2["🍜 拉面<br/>(0.3, 0.7)"]
-        P3["🌶️ 水煮鱼<br/>(0.8, 0.2)"]
-        P4["🔥 麻婆豆腐<br/>(0.85, 0.15)"]
-        QUERY["❓ 我想吃辣的<br/>(0.75, 0.25)"]
+        P1["🍣 寿司\n(0.1, 0.9)"]
+        P2["🍜 拉面\n(0.3, 0.7)"]
+        P3["🌶️ 水煮鱼\n(0.8, 0.2)"]
+        P4["🔥 麻婆豆腐\n(0.85, 0.15)"]
+        QUERY["❓ 我想吃辣的\n(0.75, 0.25)"]
     end
 
     QUERY -.->|"距离近 ✅"| P3
@@ -164,18 +157,18 @@ graph TB
 ```mermaid
 graph TB
     subgraph "离线阶段（建库）"
-        D["📄 原始文档<br/>PDF/网页/数据库"]
-        D --> CHUNK["✂️ 分块处理<br/>每块500-1000字"]
-        CHUNK --> EMBED["🔢 Embedding<br/>每块→1536维向量"]
-        EMBED --> VDB["🗄️ 向量数据库<br/>FAISS/Chroma/Pinecone"]
+        D["📄 原始文档\nPDF/网页/数据库"]
+        D --> CHUNK["✂️ 分块处理\n每块500-1000字"]
+        CHUNK --> EMBED["🔢 Embedding\n每块→1536维向量"]
+        EMBED --> VDB["🗄️ 向量数据库\nFAISS/Chroma/Pinecone"]
     end
 
     subgraph "在线阶段（检索）"
-        Q["❓ 用户问题"] --> QEMBED["🔢 问题Embedding<br/>问题→向量"]
-        QEMBED --> SEARCH["🔍 相似度搜索<br/>Top-K最相似块"]
+        Q["❓ 用户问题"] --> QEMBED["🔢 问题Embedding\n问题→向量"]
+        QEMBED --> SEARCH["🔍 相似度搜索\nTop-K最相似块"]
         VDB --> SEARCH
-        SEARCH --> CTX["📎 构建上下文<br/>问题 + 相关片段"]
-        CTX --> LLM["🤖 LLM生成<br/>基于上下文回答"]
+        SEARCH --> CTX["📎 构建上下文\n问题 + 相关片段"]
+        CTX --> LLM["🤖 LLM生成\n基于上下文回答"]
         LLM --> ANS["✅ 最终答案"]
     end
 
@@ -408,9 +401,9 @@ RAG最常见的失败原因不是模型问题，而是**文档分块太粗糙**�
 
 ```mermaid
 graph LR
-    Q["❓ 用户查询"] --> VS["🔢 向量检索<br/>语义相似"]
-    Q --> KW["🔤 BM25检索<br/>关键词匹配"]
-    VS --> RR["🎯 重排序<br/>Re-Ranking"]
+    Q["❓ 用户查询"] --> VS["🔢 向量检索\n语义相似"]
+    Q --> KW["🔤 BM25检索\n关键词匹配"]
+    VS --> RR["🎯 重排序\nRe-Ranking"]
     KW --> RR
     RR --> TOP["📋 Top-K结果"]
 
@@ -449,10 +442,10 @@ graph LR
 
 ```mermaid
 graph LR
-    A["🚀 入门<br/>本文FAISS实现"] --> B["⚡ 进阶<br/>LangChain RAG链"]
-    B --> C["🔧 工程化<br/>Chroma/Pinecone云服务"]
-    C --> D["🎯 高级<br/>混合检索+重排序"]
-    D --> E["🏭 生产<br/>GraphRAG/Agentic RAG"]
+    A["🚀 入门\n本文FAISS实现"] --> B["⚡ 进阶\nLangChain RAG链"]
+    B --> C["🔧 工程化\nChroma/Pinecone云服务"]
+    C --> D["🎯 高级\n混合检索+重排序"]
+    D --> E["🏭 生产\nGraphRAG/Agentic RAG"]
 
     style A fill:#C7CEEA,stroke:#9FA8DA,color:#333
     style B fill:#B5EAD7,stroke:#80CBC4,color:#333
@@ -471,28 +464,3 @@ graph LR
 **一个行动建议**：今天就把本文的代码跑起来，换成你自己的PDF文档（用 `pypdf` 提取文字），问几个只有文档里才有答案的问题。当你第一次看到Agent准确引用文档内容回答时，你会真正理解RAG的价值所在。
 
 > 记忆系统的本质，是解决"信息的时间性"问题：让Agent记住重要的事，忘掉不重要的事，在需要的时候找到相关的事。这和人类管理注意力的方式，其实并无二致。
-
----
-## 📚 Hello Agents 系列导航
-
-> 本文是《Hello Agents》入门系列第 **8** 章，共 16 章。
-
-| 章节 | 标题 | 状态 |
-|:---:|---|:---:|
-| 第1章 | [初识智能体：LLM会聊天，Agent能办事](/2026/04/16/2026-04-16-hello-agents-ch01-intro-to-agents/) | ✅ |
-| 第2章 | [智能体60年：从会下棋到能打工](/2026/04/16/2026-04-16-hello-agents-ch02-agent-history/) | ✅ |
-| 第3章 | [LLM原理：它不理解语言，却比你更会用语言](/2026/04/16/2026-04-16-hello-agents-ch03-llm-basics/) | ✅ |
-| 第4章 | [Agent思考三剑客：ReAct、Plan-and-Solve与Reflection](/2026/04/16/2026-04-16-hello-agents-ch04-classic-paradigms/) | ✅ |
-| 第5章 | [不会写代码也能搭AI Agent？低代码平台实战指南](/2026/04/16/2026-04-16-hello-agents-ch05-low-code-platforms/) | ✅ |
-| 第6章 | [当一个Agent不够用时：三大框架多智能体实战](/2026/04/16/2026-04-16-hello-agents-ch06-framework-practice/) | ✅ |
-| 第7章 | [为什么要造轮子？200行Python手写Agent框架](/2026/04/16/2026-04-16-hello-agents-ch07-build-your-framework/) | ✅ |
-| **第8章** | **[Agent为何失忆？RAG与记忆系统深度解析](/2026/04/16/2026-04-16-hello-agents-ch08-memory-retrieval/)** | 👉 当前 |
-| 第9章 | [Context Engineering：让Agent真正聪明的隐秘武器](/2026/04/16/2026-04-16-hello-agents-ch09-context-engineering/) | ✅ |
-| 第10章 | [AI Agent如何与世界对话：MCP、A2A、ANP协议全解析](/2026/04/16/2026-04-16-hello-agents-ch10-agent-protocols/) | ✅ |
-| 第11章 | [用强化学习驯服AI Agent：GRPO与Agentic RL全解析](/2026/04/16/2026-04-16-hello-agents-ch11-agentic-rl/) | ✅ |
-| 第12章 | [你的Agent真的好用吗？智能体评估体系完全指南](/2026/04/16/2026-04-16-hello-agents-ch12-evaluation/) | ✅ |
-| 第13章 | [用Agent规划日本5日游，2分钟搞定2小时的活](/2026/04/16/2026-04-16-hello-agents-ch13-travel-assistant/) | ✅ |
-| 第14章 | [自动写研究报告的Agent：比ChatGPT深，但有盲点](/2026/04/16/2026-04-16-hello-agents-ch14-deep-research/) | ✅ |
-| 第15章 | [赛博小镇：25个AI角色自主生活，涌现了什么？](/2026/04/16/2026-04-16-hello-agents-ch15-cyber-town/) | ✅ |
-| 第16章 | [学完16章，现在从0构建你自己的Agent](/2026/04/16/2026-04-16-hello-agents-ch16-graduation/) | ✅ |
-

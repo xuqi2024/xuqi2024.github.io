@@ -1,26 +1,19 @@
 ---
-title: 【第16章】学完16章，现在从0构建你自己的Agent
-date: 2026-04-17 00:00:00
+title: 学完16章，现在从0构建你自己的Agent
+date: 2026-04-16 16:00:00
 categories:
 - 技术科普
 tags:
-- hello-agents
 - AI Agent
 - 综合实战
 - 项目设计
 - AI工程
 - 学习路径
-description: "学完16章Hello Agents，你已经掌握了Agent的核心原理、主流框架、实战项目。现在，从0开始构建属于你自己的Agent吧。"
-
 ---
-
 
 > **核心结论**：学完教程只是开始，真正的能力来自"把自己的问题变成Agent的问题"——这需要的不是更多技术知识，而是工程判断力：什么时候用Agent，用哪种Agent，怎么评估它够不够好。
 
 ---
-
-<!-- more -->
-
 
 恭喜你走到了这里。
 
@@ -39,7 +32,7 @@ description: "学完16章Hello Agents，你已经掌握了Agent的核心原理�
 
 ```mermaid
 mindmap
-  root(("🤖 Hello-Agents<br/>知识体系"))
+  root(("🤖 Hello-Agents\n知识体系"))
     基础概念
       什么是Agent
       Thought-Action-Observation
@@ -88,10 +81,10 @@ mindmap
 
 ```mermaid
 flowchart TD
-    S1["🎯 Step 1: 需求分析<br/>我的Agent要解决什么问题？<br/>用户是谁？痛点在哪？"] 
-    S2["🔧 Step 2: 工具选型<br/>需要哪些外部能力？<br/>用什么框架？"]
-    S3["🏗️ Step 3: 架构设计<br/>单Agent还是多Agent？<br/>需要记忆吗？需要什么工具？"]
-    S4["📊 Step 4: 评估标准<br/>怎么知道做好了？<br/>成功的指标是什么？"]
+    S1["🎯 Step 1: 需求分析\n我的Agent要解决什么问题？\n用户是谁？痛点在哪？"] 
+    S2["🔧 Step 2: 工具选型\n需要哪些外部能力？\n用什么框架？"]
+    S3["🏗️ Step 3: 架构设计\n单Agent还是多Agent？\n需要记忆吗？需要什么工具？"]
+    S4["📊 Step 4: 评估标准\n怎么知道做好了？\n成功的指标是什么？"]
     
     S1 --> S2 --> S3 --> S4
     S4 -->|"不满足目标，重新设计"| S3
@@ -588,13 +581,13 @@ def review_code(code: str, language: str = "python") -> str:
 
 ```mermaid
 graph TB
-    USER["👤 用户需求"] --> ORC["🎯 协调器Agent<br/>Orchestrator<br/>分解任务，分配工作"]
+    USER["👤 用户需求"] --> ORC["🎯 协调器Agent\nOrchestrator\n分解任务，分配工作"]
     
-    ORC --> W1["🔍 研究Agent<br/>搜索信息"]
-    ORC --> W2["📊 分析Agent<br/>数据分析"]
-    ORC --> W3["✍️ 写作Agent<br/>生成报告"]
+    ORC --> W1["🔍 研究Agent\n搜索信息"]
+    ORC --> W2["📊 分析Agent\n数据分析"]
+    ORC --> W3["✍️ 写作Agent\n生成报告"]
     
-    W1 --> AGG["📦 结果聚合器<br/>Aggregator"]
+    W1 --> AGG["📦 结果聚合器\nAggregator"]
     W2 --> AGG
     W3 --> AGG
     
@@ -691,28 +684,3 @@ git push origin feature/你的项目名称
 不用完美。不用完整。先跑起来，能回答一个真实的问题，就是成功。
 
 > **最后一个挑战**：把你用hello-agents学到的最大收获，写成一篇博客发布出来。教别人是检验自己理解深度最好的方式。也许下一个系列教程，就是你写的。
-
----
-## 📚 Hello Agents 系列导航
-
-> 本文是《Hello Agents》入门系列第 **16** 章，共 16 章。
-
-| 章节 | 标题 | 状态 |
-|:---:|---|:---:|
-| 第1章 | [初识智能体：LLM会聊天，Agent能办事](/2026/04/16/2026-04-16-hello-agents-ch01-intro-to-agents/) | ✅ |
-| 第2章 | [智能体60年：从会下棋到能打工](/2026/04/16/2026-04-16-hello-agents-ch02-agent-history/) | ✅ |
-| 第3章 | [LLM原理：它不理解语言，却比你更会用语言](/2026/04/16/2026-04-16-hello-agents-ch03-llm-basics/) | ✅ |
-| 第4章 | [Agent思考三剑客：ReAct、Plan-and-Solve与Reflection](/2026/04/16/2026-04-16-hello-agents-ch04-classic-paradigms/) | ✅ |
-| 第5章 | [不会写代码也能搭AI Agent？低代码平台实战指南](/2026/04/16/2026-04-16-hello-agents-ch05-low-code-platforms/) | ✅ |
-| 第6章 | [当一个Agent不够用时：三大框架多智能体实战](/2026/04/16/2026-04-16-hello-agents-ch06-framework-practice/) | ✅ |
-| 第7章 | [为什么要造轮子？200行Python手写Agent框架](/2026/04/16/2026-04-16-hello-agents-ch07-build-your-framework/) | ✅ |
-| 第8章 | [Agent为何失忆？RAG与记忆系统深度解析](/2026/04/16/2026-04-16-hello-agents-ch08-memory-retrieval/) | ✅ |
-| 第9章 | [Context Engineering：让Agent真正聪明的隐秘武器](/2026/04/16/2026-04-16-hello-agents-ch09-context-engineering/) | ✅ |
-| 第10章 | [AI Agent如何与世界对话：MCP、A2A、ANP协议全解析](/2026/04/16/2026-04-16-hello-agents-ch10-agent-protocols/) | ✅ |
-| 第11章 | [用强化学习驯服AI Agent：GRPO与Agentic RL全解析](/2026/04/16/2026-04-16-hello-agents-ch11-agentic-rl/) | ✅ |
-| 第12章 | [你的Agent真的好用吗？智能体评估体系完全指南](/2026/04/16/2026-04-16-hello-agents-ch12-evaluation/) | ✅ |
-| 第13章 | [用Agent规划日本5日游，2分钟搞定2小时的活](/2026/04/16/2026-04-16-hello-agents-ch13-travel-assistant/) | ✅ |
-| 第14章 | [自动写研究报告的Agent：比ChatGPT深，但有盲点](/2026/04/16/2026-04-16-hello-agents-ch14-deep-research/) | ✅ |
-| 第15章 | [赛博小镇：25个AI角色自主生活，涌现了什么？](/2026/04/16/2026-04-16-hello-agents-ch15-cyber-town/) | ✅ |
-| **第16章** | **[学完16章，现在从0构建你自己的Agent](/2026/04/16/2026-04-16-hello-agents-ch16-graduation/)** | 👉 当前 |
-
