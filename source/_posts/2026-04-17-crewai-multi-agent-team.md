@@ -1,5 +1,5 @@
 ---
-title: 让 AI 组团干活：CrewAI 多角色协作框架入门
+title: 【CrewAI】让AI组团干活：多角色协作框架入门
 date: 2026-04-17 11:00:00
 categories:
 - 技术科普

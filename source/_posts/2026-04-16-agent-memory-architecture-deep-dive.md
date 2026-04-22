@@ -1,5 +1,5 @@
 ---
-title: Agent + Memory 架构深度解析：DeerFlow、mem0 与 Dify 技术对比
+title: 【DeerFlow】Agent + Memory 架构深度解析：DeerFlow、mem0与Dify技术对比
 date: 2026-04-16 08:28:00
 categories:
 - 技术深度

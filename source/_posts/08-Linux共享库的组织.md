@@ -1,5 +1,5 @@
 ---
-title: 第八章：Linux共享库的组织
+title: 【程序员自我修养】第八章：Linux共享库的组织
 date: 2024-03-21 08:00:00
 categories: 
   - 程序员的自我修养

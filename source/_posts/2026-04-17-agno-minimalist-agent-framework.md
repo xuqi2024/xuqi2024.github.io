@@ -1,5 +1,5 @@
 ---
-title: 极简主义的 AI Agent：Agno 框架深度体验
+title: 【Agno】极简主义的AI Agent框架深度体验
 date: 2026-04-17 13:00:00
 categories:
 - 技术科普

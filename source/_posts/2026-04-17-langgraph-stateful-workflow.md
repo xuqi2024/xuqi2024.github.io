@@ -1,5 +1,5 @@
 ---
-title: 用流程图编排 AI：LangGraph 从入门到实战
+title: 【LangGraph】用流程图编排AI：从入门到实战
 date: 2026-04-17 10:00:00
 categories:
 - 技术科普

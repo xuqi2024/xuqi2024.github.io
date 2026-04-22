@@ -1,5 +1,5 @@
 ---
-title: 「Hello Agents 第03章」LLM原理：它不理解语言，却比你更会用语言
+title: 【Hello Agents】LLM原理：它不理解语言，却比你更会用语言
 date: 2026-04-16 11:00:00
 categories:
 - 技术科普

@@ -1,5 +1,5 @@
 ---
-title: 「Hello Agents 第02章」智能体60年：从会下棋到能打工
+title: 【Hello Agents】智能体60年：从会下棋到能打工
 date: 2026-04-16 10:00:00
 categories:
 - 技术科普

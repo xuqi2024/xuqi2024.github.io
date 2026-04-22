@@ -1,5 +1,5 @@
 ---
-title: 「Hello Agents 第06章」当一个Agent不够用时：三大框架多智能体实战
+title: 【Hello Agents】当一个Agent不够用时：三大框架多智能体实战
 date: 2026-04-16 14:00:00
 categories:
 - 技术科普

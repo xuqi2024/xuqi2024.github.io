@@ -1,5 +1,5 @@
 ---
-title: 斯坦福小镇(Generative Agents)开源项目深度调研报告
+title: 【Generative Agents】斯坦福小镇开源项目深度调研报告
 date: 2026-04-15 18:25:00
 categories:
 - 技术报告

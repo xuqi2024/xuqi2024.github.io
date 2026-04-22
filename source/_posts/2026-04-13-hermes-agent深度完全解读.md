@@ -1,5 +1,5 @@
 ---
-title: 【深度长文】Hermes Agent 完全解读 — FTS5、Honcho与自我进化智能体架构内幕
+title: 【Hermes Agent】完全解读：FTS5、Honcho与自我进化智能体架构内幕
 date: 2026-04-13 12:00:00 +0800
 categories:
 - 技术分析

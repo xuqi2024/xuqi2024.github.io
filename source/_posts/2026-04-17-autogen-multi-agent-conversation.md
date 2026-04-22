@@ -1,5 +1,5 @@
 ---
-title: 两个 AI 聊出好代码：AutoGen 多智能体对话实战
+title: 【AutoGen】两个AI聊出好代码：多智能体对话实战
 date: 2026-04-17 12:00:00
 categories:
 - 技术科普

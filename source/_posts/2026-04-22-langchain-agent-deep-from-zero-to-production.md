@@ -1,5 +1,5 @@
 ---
-title: "LangChain Agent 深度实战：从 ReAct 核心原理到生产级多 Agent 架构"
+title: 【LangChain】Agent深度实战：从ReAct核心原理到生产级多Agent架构
 date: 2026-04-22 03:00:00
 tags:
   - LangChain

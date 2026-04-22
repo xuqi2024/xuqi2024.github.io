@@ -1,5 +1,5 @@
 ---
-title: Quickwit全文索引加速原理：为什么它比ES快10倍
+title: 【Quickwit】全文索引加速原理：为什么它比ES快10倍
 date: 2026-04-16 20:00:00
 categories:
 - 技术分析

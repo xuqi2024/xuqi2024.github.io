@@ -1,5 +1,5 @@
 ---
-title: 「Hello Agents 第15章」赛博小镇：25个AI角色自主生活，涌现了什么？
+title: 【Hello Agents】赛博小镇：25个AI角色自主生活，涌现了什么？
 date: 2026-04-16 15:00:00
 categories:
 - 技术科普

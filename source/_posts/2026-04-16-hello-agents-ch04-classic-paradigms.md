@@ -1,5 +1,5 @@
 ---
-title: 「Hello Agents 第04章」Agent思考三剑客：ReAct、Plan-and-Solve与Reflection
+title: 【Hello Agents】Agent思考三剑客：ReAct、Plan-and-Solve与Reflection
 date: 2026-04-16 12:00:00
 categories:
 - 技术科普

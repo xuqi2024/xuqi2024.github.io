@@ -1,5 +1,5 @@
 ---
-title: Flowise 入门指南：可视化构建 LLM 应用与 Multi-Agent 协作
+title: 【Flowise】可视化构建LLM应用与Multi-Agent协作入门指南
 date: 2026-04-22 01:30:00
 tags:
   - AI Agent

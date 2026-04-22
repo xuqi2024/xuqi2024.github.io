@@ -1,5 +1,5 @@
 ---
-title: CLI-Anything深度解析：重新定义AI Agent与软件的关系
+title: 【CLI-Anything】深度解析：重新定义AI Agent与软件的关系
 date: 2026-04-15 21:12:00
 categories:
 - 技术分析
