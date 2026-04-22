@@ -1,5 +1,5 @@
 ---
-title: 初识智能体：LLM会聊天，Agent能办事
+title: 「Hello Agents 第01章」初识智能体：LLM会聊天，Agent能办事
 date: 2026-04-16 09:00:00
 categories:
 - 技术科普

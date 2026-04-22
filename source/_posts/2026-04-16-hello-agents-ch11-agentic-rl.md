@@ -1,5 +1,5 @@
 ---
-title: 用强化学习"驯服"AI Agent：GRPO与Agentic RL全解析
+title: 「Hello Agents 第11章」用强化学习"驯服"AI Agent：GRPO与Agentic RL全解析
 date: 2026-04-16 11:00:00
 categories:
 - 技术科普
