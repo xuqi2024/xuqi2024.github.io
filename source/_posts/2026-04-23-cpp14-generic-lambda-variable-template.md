@@ -1,5 +1,5 @@
 ---
-title: 【C++14】Generic Lambda 与 Variable Template：现代C++的起点
+title: 【C++14】（一）Generic Lambda 与 Variable Template：现代C++的起点
 date: 2026-04-23 12:00:00
 categories: [C++新特性]
 tags: [C++14, Lambda, Template, Modern-C++]

@@ -1,5 +1,5 @@
 ---
-title: 【C++17】Structured Bindings：彻底告别临时变量
+title: 【C++17】（一）Structured Bindings：彻底告别临时变量
 date: 2026-04-23 09:00:00
 categories: [C++新特性]
 tags: [C++17, Structured Bindings, Modern-C++]

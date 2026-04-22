@@ -1,5 +1,5 @@
 ---
-title: 【mem0】AI Agent每次都从零开始？mem0三层记忆重塑长期记忆
+title: 【AI Agent】（六）mem0三层记忆：重塑长期记忆系统
 date: 2026-04-16 23:30:00
 categories:
 - 技术分析

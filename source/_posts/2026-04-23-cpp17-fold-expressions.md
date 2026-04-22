@@ -1,5 +1,5 @@
 ---
-title: 【C++17】Fold Expressions：变参模板的救星
+title: 【C++17】（四）Fold Expressions：变参模板的救星
 date: 2026-04-23 12:00:00
 categories: [C++新特性]
 tags: [C++17, Template, Variadic]

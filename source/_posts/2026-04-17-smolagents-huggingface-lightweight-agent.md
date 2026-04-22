@@ -1,5 +1,5 @@
 ---
-title: 【Smolagents】HuggingFace小而美：轻量Agent框架入门
+title: 【AI Agent】（五）HuggingFace小而美：Smolagents 轻量Agent框架入门
 date: 2026-04-17 14:00:00
 categories:
 - 技术科普

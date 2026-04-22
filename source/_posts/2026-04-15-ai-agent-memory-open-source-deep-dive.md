@@ -1,5 +1,5 @@
 ---
-title: 【AI Agent】Memory系统架构深度解析：Khoj、GPT Researcher、agentUniverse、MemMachine对比
+title: 【AI Agent】（二）Memory系统架构深度解析：Khoj、GPT Researcher、agentUniverse、MemMachine对比
 date: 2026-04-15 23:00:00
 categories:
   - AI Agent

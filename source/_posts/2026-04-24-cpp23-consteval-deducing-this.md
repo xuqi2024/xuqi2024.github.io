@@ -1,5 +1,5 @@
 ---
-title: 【C++23】if consteval 与 Deducing this：更多编译期能力
+title: 【C++23】（二）if consteval 与 Deducing this：更多编译期能力
 date: 2026-04-24 09:53:00
 categories:
 - C++新特性

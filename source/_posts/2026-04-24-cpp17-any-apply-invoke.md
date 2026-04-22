@@ -1,5 +1,5 @@
 ---
-title: 【C++17】std::apply / std::invoke：函数调用工具箱
+title: 【C++17】（六）std::apply / std::invoke：函数调用工具箱
 date: 2026-04-24 10:00:00
 categories:
 - C++新特性

@@ -1,5 +1,5 @@
 ---
-title: 【C++23】std::expected：错误处理的新范式
+title: 【C++23】（一）std::expected：错误处理的新范式
 date: 2026-04-24 09:53:00
 categories:
 - C++新特性

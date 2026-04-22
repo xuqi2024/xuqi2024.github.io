@@ -1,5 +1,5 @@
 ---
-title: 【Hello Agents】用Agent规划日本5日游，2分钟搞定2小时的活
+title: 「Hello Agents 第13章」用Agent规划日本5日游，2分钟搞定2小时的活
 date: 2026-04-16 13:00:00
 categories:
 - 技术科普

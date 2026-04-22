@@ -1,5 +1,5 @@
 ---
-title: 【LangChain】从零构建你的第一个AI Agent：完全入门
+title: 【AI Agent】（三）从零构建你的第一个AI Agent：LangChain 完全入门
 date: 2026-04-17 09:00:00
 categories:
 - 技术科普

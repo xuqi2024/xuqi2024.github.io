@@ -1,5 +1,5 @@
 ---
-title: 【C++17】Attribute 新增与代码意图显式化：让编译器读懂你的设计
+title: 【C++17】（八）Attribute 新增与代码意图显式化：让编译器读懂你的设计
 date: 2026-04-24 09:00:00
 categories:
   - C++新特性

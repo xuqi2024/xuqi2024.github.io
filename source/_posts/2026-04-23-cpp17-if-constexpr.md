@@ -1,5 +1,5 @@
 ---
-title: 【C++17】if constexpr：编译期分支的终极武器
+title: 【C++17】（二）if constexpr：编译期分支的终极武器
 date: 2026-04-23 10:00:00
 categories: [C++新特性]
 tags: [C++17, Template, Compile-time]

@@ -1,5 +1,5 @@
 ---
-title: 【C++20】Three-Way Comparison：比较运算符的终极形态
+title: 【C++20】（三）Three-Way Comparison (Spaceship Operator)：比较运算符的终极形态
 date: 2026-04-24 11:00:00
 categories:
 - C++新特性

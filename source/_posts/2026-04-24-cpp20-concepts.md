@@ -1,5 +1,5 @@
 ---
-title: 【C++20】Concepts：约束模板的革命性突破
+title: 【C++20】（一）Concepts：约束模板的革命性突破
 date: 2026-04-24 10:00:00
 categories:
 - C++新特性

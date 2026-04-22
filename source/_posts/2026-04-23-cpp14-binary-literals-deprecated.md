@@ -1,5 +1,5 @@
 ---
-title: 【C++14】Binary Literals、Digit Separators 与 Deprecated：编译器辅助编程
+title: 【C++14】（二）Binary Literals、Digit Separators 与 Deprecated：编译器辅助编程
 date: 2026-04-23 12:00:00
 categories: [C++新特性]
 tags: [C++14, Literals, Attribute]

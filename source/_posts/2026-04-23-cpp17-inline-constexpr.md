@@ -1,5 +1,5 @@
 ---
-title: 【C++17】Inline Variables 与 constexpr 加强：性能与表达力的双重飞跃
+title: 【C++17】（三）Inline Variables 与 constexpr 加强：性能与表达力的双重飞跃
 date: 2026-04-23 11:00:00
 categories: [C++新特性]
 tags: [C++17, inline, constexpr]
