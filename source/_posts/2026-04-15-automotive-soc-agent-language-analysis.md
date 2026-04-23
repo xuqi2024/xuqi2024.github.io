@@ -6,7 +6,6 @@ categories:
 tags:
 - 汽车AI
 - C++
-- Rust
 ---
 
 # 汽车SOC Agent开发最佳编程语言深度分析

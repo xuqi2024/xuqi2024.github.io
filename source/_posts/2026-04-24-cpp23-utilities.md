@@ -208,3 +208,23 @@ found
 ---
 
 > **总结**：C++23 的这些工具函数虽然不如 `std::expected`、`co_await` 那样重磅，但它们直接提升了日常编码体验。`std::print` 让输出代码从 3 行变 1 行，`contains()` 让布尔表达式更符合自然语言习惯，`to_underlying` 让类型转换意图更清晰。这些改进值得你在下一个项目中也用起来。
+---
+
+## 📚 C++23 新特性 系列导航
+
+> 本文是《C++23 新特性》系列第 **3/4** 篇。
+
+| 方向 | 章节 |
+|:--|:--|
+| ◀ 上一篇 | [（二）if consteval 与 Deducing this](/2026/04/23/2026-04-24-cpp23-consteval-deducing-this/) |
+| 下一篇 ▶ | [（四）Ranges 增强](/2026/04/23/2026-04-24-cpp23-ranges-enhancement/) |
+
+<details>
+<summary>📖 全部 4 篇目录（点击展开）</summary>
+
+1. [（一）std::expected](/2026/04/23/2026-04-24-cpp23-expected/)
+2. [（二）if consteval 与 Deducing this](/2026/04/23/2026-04-24-cpp23-consteval-deducing-this/)
+3. [（三）std::print / to_underlying](/2026/04/23/2026-04-24-cpp23-utilities/) **← 当前**
+4. [（四）Ranges 增强](/2026/04/23/2026-04-24-cpp23-ranges-enhancement/)
+
+</details>

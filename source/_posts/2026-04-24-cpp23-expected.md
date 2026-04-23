@@ -186,3 +186,22 @@ auto result = parse_int(user_input)
 ---
 
 > **总结**：`std::expected` 是 C++ 错误处理的"最优解"——它兼具错误码的零开销和异常的表达力，同时支持优雅的链式调用。如果你还在用 `std::optional` + 错误码组合，或者过度使用异常，建议逐步迁移到 `std::expected`。
+---
+
+## 📚 C++23 新特性 系列导航
+
+> 本文是《C++23 新特性》系列第 **1/4** 篇。
+
+| 方向 | 章节 |
+|:--|:--|
+| 下一篇 ▶ | [（二）if consteval 与 Deducing this](/2026/04/23/2026-04-24-cpp23-consteval-deducing-this/) |
+
+<details>
+<summary>📖 全部 4 篇目录（点击展开）</summary>
+
+1. [（一）std::expected](/2026/04/23/2026-04-24-cpp23-expected/) **← 当前**
+2. [（二）if consteval 与 Deducing this](/2026/04/23/2026-04-24-cpp23-consteval-deducing-this/)
+3. [（三）std::print / to_underlying](/2026/04/23/2026-04-24-cpp23-utilities/)
+4. [（四）Ranges 增强](/2026/04/23/2026-04-24-cpp23-ranges-enhancement/)
+
+</details>

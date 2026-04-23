@@ -295,3 +295,20 @@ g++ -std=c++14 -o demo demo.cpp && ./demo
 | index_sequence | 参数包展开工具 | Tuple/ParameterPack 处理 |
 
 > **行动建议**：从今天开始，写代码时优先使用 `std::make_unique` 替代 `new/delete`；需要泛型 Lambda 时，直接用 `auto` 参数，无需显式声明模板。
+---
+
+## 📚 C++14 新特性 系列导航
+
+> 本文是《C++14 新特性》系列第 **1/2** 篇。
+
+| 方向 | 章节 |
+|:--|:--|
+| 下一篇 ▶ | [（二）Binary Literals 与 Deprecated](/2026/04/23/2026-04-23-cpp14-binary-literals-deprecated/) |
+
+<details>
+<summary>📖 全部 2 篇目录（点击展开）</summary>
+
+1. [（一）Generic Lambda 与 Variable Template](/2026/04/23/2026-04-23-cpp14-generic-lambda-variable-template/) **← 当前**
+2. [（二）Binary Literals 与 Deprecated](/2026/04/23/2026-04-23-cpp14-binary-literals-deprecated/)
+
+</details>

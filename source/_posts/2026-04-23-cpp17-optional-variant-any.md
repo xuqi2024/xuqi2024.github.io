@@ -305,3 +305,27 @@ g++ -std=c++17 -o demo demo.cpp && ./demo
 | `std::any` | 类型完全不确定 | **type erasure container** — 运行时类型安全 |
 
 > **行动建议**：在 C++ 代码中，**优先用 `optional` 替代 `nullptr`**、用 **variant 替代 union**，只有在真正需要"任意类型"时才用 `any`。这三个工具让 C++ 的类型系统更加严密，bug 更难藏身。
+---
+
+## 📚 C++17 新特性 系列导航
+
+> 本文是《C++17 新特性》系列第 **5/8** 篇。
+
+| 方向 | 章节 |
+|:--|:--|
+| ◀ 上一篇 | [（四）Fold Expressions](/2026/04/23/2026-04-23-cpp17-fold-expressions/) |
+| 下一篇 ▶ | [（六）std::apply / std::invoke](/2026/04/23/2026-04-24-cpp17-any-apply-invoke/) |
+
+<details>
+<summary>📖 全部 8 篇目录（点击展开）</summary>
+
+1. [（一）Structured Bindings](/2026/04/23/2026-04-23-cpp17-structured-bindings/)
+2. [（二）if constexpr](/2026/04/23/2026-04-23-cpp17-if-constexpr/)
+3. [（三）Inline Variables 与 constexpr 加强](/2026/04/23/2026-04-23-cpp17-inline-constexpr/)
+4. [（四）Fold Expressions](/2026/04/23/2026-04-23-cpp17-fold-expressions/)
+5. [（五）std::optional / variant / any](/2026/04/23/2026-04-23-cpp17-optional-variant-any/) **← 当前**
+6. [（六）std::apply / std::invoke](/2026/04/23/2026-04-24-cpp17-any-apply-invoke/)
+7. [（七）Filesystem 大全](/2026/04/23/2026-04-24-cpp17-filesystem/)
+8. [（八）Attribute 新增](/2026/04/23/2026-04-24-cpp17-attributes/)
+
+</details>

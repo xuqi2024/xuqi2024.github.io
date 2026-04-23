@@ -182,3 +182,20 @@ g++ -std=c++14 -o demo demo.cpp 2>&1 | head -20
 | Deprecated Attribute | API 迁移引导 | `[[deprecated("Use X")]]` |
 
 > 这些特性看似"小"，但在**代码可维护性**上迈出了一大步——编译器成了你的助手，而不是只报错不管事的"黑盒"。
+---
+
+## 📚 C++14 新特性 系列导航
+
+> 本文是《C++14 新特性》系列第 **2/2** 篇。
+
+| 方向 | 章节 |
+|:--|:--|
+| ◀ 上一篇 | [（一）Generic Lambda 与 Variable Template](/2026/04/23/2026-04-23-cpp14-generic-lambda-variable-template/) |
+
+<details>
+<summary>📖 全部 2 篇目录（点击展开）</summary>
+
+1. [（一）Generic Lambda 与 Variable Template](/2026/04/23/2026-04-23-cpp14-generic-lambda-variable-template/)
+2. [（二）Binary Literals 与 Deprecated](/2026/04/23/2026-04-23-cpp14-binary-literals-deprecated/) **← 当前**
+
+</details>

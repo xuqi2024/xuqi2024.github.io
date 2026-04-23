@@ -246,3 +246,26 @@ if (ok) {
 > 结构绑定让代码**表意更清晰**，变量声明和使用自然地融为一体。忘掉 `std::tie` 吧，`auto [a, b, c]` 才是现代 C++ 该有的样子。
 
 **下一篇**：【C++17】if constexpr：编译期分支的终极武器 — 看看 C++17 如何用 `if constexpr` 淘汰 SFINAE。
+---
+
+## 📚 C++17 新特性 系列导航
+
+> 本文是《C++17 新特性》系列第 **1/8** 篇。
+
+| 方向 | 章节 |
+|:--|:--|
+| 下一篇 ▶ | [（二）if constexpr](/2026/04/23/2026-04-23-cpp17-if-constexpr/) |
+
+<details>
+<summary>📖 全部 8 篇目录（点击展开）</summary>
+
+1. [（一）Structured Bindings](/2026/04/23/2026-04-23-cpp17-structured-bindings/) **← 当前**
+2. [（二）if constexpr](/2026/04/23/2026-04-23-cpp17-if-constexpr/)
+3. [（三）Inline Variables 与 constexpr 加强](/2026/04/23/2026-04-23-cpp17-inline-constexpr/)
+4. [（四）Fold Expressions](/2026/04/23/2026-04-23-cpp17-fold-expressions/)
+5. [（五）std::optional / variant / any](/2026/04/23/2026-04-23-cpp17-optional-variant-any/)
+6. [（六）std::apply / std::invoke](/2026/04/23/2026-04-24-cpp17-any-apply-invoke/)
+7. [（七）Filesystem 大全](/2026/04/23/2026-04-24-cpp17-filesystem/)
+8. [（八）Attribute 新增](/2026/04/23/2026-04-24-cpp17-attributes/)
+
+</details>

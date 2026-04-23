@@ -293,3 +293,27 @@ int main() {
 > C++17 的 inline 变量解决了 C++ 程序员 decades 的痛点，而 constexpr 的全面进化让编译期计算更加强大。**头文件定义常量不再需要 extern + cpp 的曲线救国，lambda 也能参与编译期计算** — 现代 C++ 的工程实践因此优雅太多了。
 
 **下一篇**：【C++17】Fold Expressions：变参模板的救星 — 看看 C++17 如何用折叠表达式让变参模板告别递归噩梦。
+---
+
+## 📚 C++17 新特性 系列导航
+
+> 本文是《C++17 新特性》系列第 **3/8** 篇。
+
+| 方向 | 章节 |
+|:--|:--|
+| ◀ 上一篇 | [（二）if constexpr](/2026/04/23/2026-04-23-cpp17-if-constexpr/) |
+| 下一篇 ▶ | [（四）Fold Expressions](/2026/04/23/2026-04-23-cpp17-fold-expressions/) |
+
+<details>
+<summary>📖 全部 8 篇目录（点击展开）</summary>
+
+1. [（一）Structured Bindings](/2026/04/23/2026-04-23-cpp17-structured-bindings/)
+2. [（二）if constexpr](/2026/04/23/2026-04-23-cpp17-if-constexpr/)
+3. [（三）Inline Variables 与 constexpr 加强](/2026/04/23/2026-04-23-cpp17-inline-constexpr/) **← 当前**
+4. [（四）Fold Expressions](/2026/04/23/2026-04-23-cpp17-fold-expressions/)
+5. [（五）std::optional / variant / any](/2026/04/23/2026-04-23-cpp17-optional-variant-any/)
+6. [（六）std::apply / std::invoke](/2026/04/23/2026-04-24-cpp17-any-apply-invoke/)
+7. [（七）Filesystem 大全](/2026/04/23/2026-04-24-cpp17-filesystem/)
+8. [（八）Attribute 新增](/2026/04/23/2026-04-24-cpp17-attributes/)
+
+</details>

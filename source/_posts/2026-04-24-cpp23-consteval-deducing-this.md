@@ -244,3 +244,23 @@ struct Data {
 ---
 
 > **总结**：`if consteval` 和 `deducing this` 是 C++23 最重要的两大手册（handbook）改进。前者让编译期分支判断成为标准语法，后者让成员函数摆脱了"只能被单一类型调用"的束缚。如果你写过模板元编程或处理过复杂的继承关系，你会立即爱上这两个特性。
+---
+
+## 📚 C++23 新特性 系列导航
+
+> 本文是《C++23 新特性》系列第 **2/4** 篇。
+
+| 方向 | 章节 |
+|:--|:--|
+| ◀ 上一篇 | [（一）std::expected](/2026/04/23/2026-04-24-cpp23-expected/) |
+| 下一篇 ▶ | [（三）std::print / to_underlying](/2026/04/23/2026-04-24-cpp23-utilities/) |
+
+<details>
+<summary>📖 全部 4 篇目录（点击展开）</summary>
+
+1. [（一）std::expected](/2026/04/23/2026-04-24-cpp23-expected/)
+2. [（二）if consteval 与 Deducing this](/2026/04/23/2026-04-24-cpp23-consteval-deducing-this/) **← 当前**
+3. [（三）std::print / to_underlying](/2026/04/23/2026-04-24-cpp23-utilities/)
+4. [（四）Ranges 增强](/2026/04/23/2026-04-24-cpp23-ranges-enhancement/)
+
+</details>

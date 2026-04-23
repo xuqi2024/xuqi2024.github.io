@@ -463,3 +463,26 @@ struct Item {
 | `partial_ordering` | 部分顺序，有无序值（浮点数 NaN） |
 
 > **记住**：`<=>` 不是用来替代 `==` 的，而是用来**统一实现**比较运算的。一行 `= default`，六种比较能力，何乐而不为？
+---
+
+## 📚 C++20 新特性 系列导航
+
+> 本文是《C++20 新特性》系列第 **3/7** 篇。
+
+| 方向 | 章节 |
+|:--|:--|
+| ◀ 上一篇 | [（二）requires 表达式](/2026/04/23/2026-04-24-cpp20-requires/) |
+| 下一篇 ▶ | [（四）Lambda 加强](/2026/04/23/2026-04-24-cpp20-lambda/) |
+
+<details>
+<summary>📖 全部 7 篇目录（点击展开）</summary>
+
+1. [（一）Concepts](/2026/04/23/2026-04-24-cpp20-concepts/)
+2. [（二）requires 表达式](/2026/04/23/2026-04-24-cpp20-requires/)
+3. [（三）Spaceship Operator](/2026/04/23/2026-04-24-cpp20-spaceship-operator/) **← 当前**
+4. [（四）Lambda 加强](/2026/04/23/2026-04-24-cpp20-lambda/)
+5. [（五）consteval 与 constinit](/2026/04/23/2026-04-24-cpp20-consteval-constinit/)
+6. [（六）Coroutine 协程](/2026/04/23/2026-04-24-cpp20-coroutine/)
+7. [（七）Ranges 库](/2026/04/23/2026-04-24-cpp20-ranges/)
+
+</details>

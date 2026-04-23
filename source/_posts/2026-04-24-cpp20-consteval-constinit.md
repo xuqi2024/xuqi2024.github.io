@@ -192,3 +192,26 @@ int main() {
 如果你写元库（template library），需要强制用户传递常量，`consteval` 是你的武器。如果你要避免静态初始化顺序灾难，`constinit` 是你的盾牌。
 
 **下一步**：结合 `std::array` 和 `std::tuple` 的编译期操作，以及 C++23 的 `constexpr std::vector` 进展。
+---
+
+## 📚 C++20 新特性 系列导航
+
+> 本文是《C++20 新特性》系列第 **5/7** 篇。
+
+| 方向 | 章节 |
+|:--|:--|
+| ◀ 上一篇 | [（四）Lambda 加强](/2026/04/23/2026-04-24-cpp20-lambda/) |
+| 下一篇 ▶ | [（六）Coroutine 协程](/2026/04/23/2026-04-24-cpp20-coroutine/) |
+
+<details>
+<summary>📖 全部 7 篇目录（点击展开）</summary>
+
+1. [（一）Concepts](/2026/04/23/2026-04-24-cpp20-concepts/)
+2. [（二）requires 表达式](/2026/04/23/2026-04-24-cpp20-requires/)
+3. [（三）Spaceship Operator](/2026/04/23/2026-04-24-cpp20-spaceship-operator/)
+4. [（四）Lambda 加强](/2026/04/23/2026-04-24-cpp20-lambda/)
+5. [（五）consteval 与 constinit](/2026/04/23/2026-04-24-cpp20-consteval-constinit/) **← 当前**
+6. [（六）Coroutine 协程](/2026/04/23/2026-04-24-cpp20-coroutine/)
+7. [（七）Ranges 库](/2026/04/23/2026-04-24-cpp20-ranges/)
+
+</details>

@@ -333,3 +333,22 @@ int main() {
 ---
 
 > **行动建议**：从今天起，遇到「分组」「索引」「两两运算」的场景，试试这些 C++23 Ranges 工具——你会发现数据处理代码可以如此简洁优雅。
+---
+
+## 📚 C++23 新特性 系列导航
+
+> 本文是《C++23 新特性》系列第 **4/4** 篇。
+
+| 方向 | 章节 |
+|:--|:--|
+| ◀ 上一篇 | [（三）std::print / to_underlying](/2026/04/23/2026-04-24-cpp23-utilities/) |
+
+<details>
+<summary>📖 全部 4 篇目录（点击展开）</summary>
+
+1. [（一）std::expected](/2026/04/23/2026-04-24-cpp23-expected/)
+2. [（二）if consteval 与 Deducing this](/2026/04/23/2026-04-24-cpp23-consteval-deducing-this/)
+3. [（三）std::print / to_underlying](/2026/04/23/2026-04-24-cpp23-utilities/)
+4. [（四）Ranges 增强](/2026/04/23/2026-04-24-cpp23-ranges-enhancement/) **← 当前**
+
+</details>

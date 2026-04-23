@@ -5,7 +5,6 @@ categories:
 - 技术分析
 tags:
 - Python
-- 类型系统
 ---
 
 > "如果它走路像鸭子，叫声像鸭子，那它就是鸭子。"——这就是结构化子类型。Python 3.8+ 用 Protocol 把它带入了类型系统。
@@ -227,3 +226,33 @@ Mock response to: What is 2+2?
 Protocol 让"鸭子类型"在静态类型检查时代依然焕发活力。它不需要侵入性的继承，却提供了强大的类型约束能力。在 AI Agent 开发中，合理使用 Protocol 可以让我们轻松支持多种 LLM 和工具实现，同时保持静态类型检查的能力。
 
 > 下一步：尝试用 Protocol 定义你 Agent 系统的核心接口，然后分别实现 OpenAI 版本和 Anthropic 版本，验证它们可以互换使用。
+---
+
+## 📚 Python AI教程 系列导航
+
+> 本文是《Python AI教程》系列第 **11/14** 篇。
+
+| 方向 | 章节 |
+|:--|:--|
+| ◀ 上一篇 | [（十）元类](/2026/04/23/2026-04-26-python-10-metaclasses/) |
+| 下一篇 ▶ | [（十二）异常链与日志](/2026/04/23/2026-04-27-python-12-exceptions-logging/) |
+
+<details>
+<summary>📖 全部 14 篇目录（点击展开）</summary>
+
+1. [（一）闭包与装饰器](/2026/04/23/2026-04-25-python-01-closures-decorators/)
+2. [（二）上下文管理器](/2026/04/23/2026-04-25-python-02-context-managers/)
+3. [（三）生成器与迭代器](/2026/04/23/2026-04-25-python-03-generators-iterators/)
+4. [（四）类型提示](/2026/04/23/2026-04-25-python-04-type-hints/)
+5. [（五）Dataclass 与 attrs](/2026/04/23/2026-04-25-python-05-dataclass-attrs/)
+6. [（六）async/await](/2026/04/23/2026-04-26-python-06-async-await/)
+7. [（七）Threading 与 Multiprocessing](/2026/04/23/2026-04-26-python-07-threading-multiprocessing/)
+8. [（八）函数式编程](/2026/04/23/2026-04-26-python-08-functional-programming/)
+9. [（九）描述符协议](/2026/04/23/2026-04-26-python-09-descriptors/)
+10. [（十）元类](/2026/04/23/2026-04-26-python-10-metaclasses/)
+11. [（十一）Protocol与结构化类型](/2026/04/23/2026-04-26-python-11-protocol-typing/) **← 当前**
+12. [（十二）异常链与日志](/2026/04/23/2026-04-27-python-12-exceptions-logging/)
+13. [（十三）缓存艺术](/2026/04/23/2026-04-27-python-13-caching/)
+14. [（十四）组合模式实战](/2026/04/23/2026-04-27-python-14-composite-ai-agent/)
+
+</details>

@@ -340,3 +340,25 @@ int main() {
 ---
 
 > **记住**：Concepts 不仅仅是一个新语法，它是 C++ 模板编程思维的根本转变——从"隐式排除"到"显式声明"，从"运行时才发现问题"到"编译期就确保正确"。
+---
+
+## 📚 C++20 新特性 系列导航
+
+> 本文是《C++20 新特性》系列第 **1/7** 篇。
+
+| 方向 | 章节 |
+|:--|:--|
+| 下一篇 ▶ | [（二）requires 表达式](/2026/04/23/2026-04-24-cpp20-requires/) |
+
+<details>
+<summary>📖 全部 7 篇目录（点击展开）</summary>
+
+1. [（一）Concepts](/2026/04/23/2026-04-24-cpp20-concepts/) **← 当前**
+2. [（二）requires 表达式](/2026/04/23/2026-04-24-cpp20-requires/)
+3. [（三）Spaceship Operator](/2026/04/23/2026-04-24-cpp20-spaceship-operator/)
+4. [（四）Lambda 加强](/2026/04/23/2026-04-24-cpp20-lambda/)
+5. [（五）consteval 与 constinit](/2026/04/23/2026-04-24-cpp20-consteval-constinit/)
+6. [（六）Coroutine 协程](/2026/04/23/2026-04-24-cpp20-coroutine/)
+7. [（七）Ranges 库](/2026/04/23/2026-04-24-cpp20-ranges/)
+
+</details>

@@ -437,3 +437,26 @@ floating: 3.14
 | 组合 | `&&` `\|\|` | `&&` `\|\|` |
 
 > **记住**：`requires` 表达式是 C++20 约束系统的"显微镜"——它让你在编译期观察类型的每一个"能力"，并据此做出精确的分派决策。
+---
+
+## 📚 C++20 新特性 系列导航
+
+> 本文是《C++20 新特性》系列第 **2/7** 篇。
+
+| 方向 | 章节 |
+|:--|:--|
+| ◀ 上一篇 | [（一）Concepts](/2026/04/23/2026-04-24-cpp20-concepts/) |
+| 下一篇 ▶ | [（三）Spaceship Operator](/2026/04/23/2026-04-24-cpp20-spaceship-operator/) |
+
+<details>
+<summary>📖 全部 7 篇目录（点击展开）</summary>
+
+1. [（一）Concepts](/2026/04/23/2026-04-24-cpp20-concepts/)
+2. [（二）requires 表达式](/2026/04/23/2026-04-24-cpp20-requires/) **← 当前**
+3. [（三）Spaceship Operator](/2026/04/23/2026-04-24-cpp20-spaceship-operator/)
+4. [（四）Lambda 加强](/2026/04/23/2026-04-24-cpp20-lambda/)
+5. [（五）consteval 与 constinit](/2026/04/23/2026-04-24-cpp20-consteval-constinit/)
+6. [（六）Coroutine 协程](/2026/04/23/2026-04-24-cpp20-coroutine/)
+7. [（七）Ranges 库](/2026/04/23/2026-04-24-cpp20-ranges/)
+
+</details>

@@ -247,3 +247,26 @@ flowchart LR
 > **记住**：协程是**协作式**的多任务，不是操作系统的抢占式调度。协程本身不提供并行，需要配合其他机制（线程池、io_uring）才能充分利用多核。
 
 **下一步**：学习 C++ 生态中的协程库（如 libunifex、cppcoro），以及 `std::jthread` 与协程的结合使用。
+---
+
+## 📚 C++20 新特性 系列导航
+
+> 本文是《C++20 新特性》系列第 **6/7** 篇。
+
+| 方向 | 章节 |
+|:--|:--|
+| ◀ 上一篇 | [（五）consteval 与 constinit](/2026/04/23/2026-04-24-cpp20-consteval-constinit/) |
+| 下一篇 ▶ | [（七）Ranges 库](/2026/04/23/2026-04-24-cpp20-ranges/) |
+
+<details>
+<summary>📖 全部 7 篇目录（点击展开）</summary>
+
+1. [（一）Concepts](/2026/04/23/2026-04-24-cpp20-concepts/)
+2. [（二）requires 表达式](/2026/04/23/2026-04-24-cpp20-requires/)
+3. [（三）Spaceship Operator](/2026/04/23/2026-04-24-cpp20-spaceship-operator/)
+4. [（四）Lambda 加强](/2026/04/23/2026-04-24-cpp20-lambda/)
+5. [（五）consteval 与 constinit](/2026/04/23/2026-04-24-cpp20-consteval-constinit/)
+6. [（六）Coroutine 协程](/2026/04/23/2026-04-24-cpp20-coroutine/) **← 当前**
+7. [（七）Ranges 库](/2026/04/23/2026-04-24-cpp20-ranges/)
+
+</details>

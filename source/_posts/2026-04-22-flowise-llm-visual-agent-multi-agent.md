@@ -1,12 +1,13 @@
 ---
 title: 【Flowise】可视化构建LLM应用与Multi-Agent协作入门指南
 date: 2026-04-22 01:30:00
-tags:
-- AI Agent
-- 低代码
-- RAG
 categories:
   - AI
+tags:
+- AI Agent
+- Agent框架
+- RAG
+
 ---
 
 ## 引子

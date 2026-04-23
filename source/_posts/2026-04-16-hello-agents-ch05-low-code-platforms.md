@@ -3,10 +3,12 @@ title: 「Hello Agents 第05章」不会写代码也能搭AI Agent？低代码�
 date: 2026-04-16 13:00:00
 categories:
 - 技术科普
+- hello-agents
 tags:
 - AI Agent
-- 低代码
+- Agent框架
 - hello-agents
+
 ---
 
 > 低代码平台不是"玩具"，而是让80%的Agent需求在不写一行代码的情况下落地的生产力工具——剩下20%的复杂需求，才是真正需要开发框架的地方。

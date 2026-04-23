@@ -3,11 +3,12 @@ title: 「Hello Agents 第15章」赛博小镇：25个AI角色自主生活，涌
 date: 2026-04-16 15:00:00
 categories:
 - 技术科普
+- hello-agents
 tags:
 - AI Agent
 - 多智能体
-- Generative Agents
 - hello-agents
+
 ---
 
 > **核心结论**：Stanford Generative Agents实验（2023）最惊人的发现不是AI能模拟人类行为，而是**当每个Agent只遵循简单规则时，整个群体会涌现出没有人编程过的社会行为**——比如自发组织聚会、传播八卦、形成友谊圈。

@@ -396,3 +396,33 @@ for key, group in itertools.groupby(sorted(data), key=lambda x: x[0]):
 ---
 
 *原创于 2026-04-25 | 所属系列：【Python AI教程】*
+---
+
+## 📚 Python AI教程 系列导航
+
+> 本文是《Python AI教程》系列第 **3/14** 篇。
+
+| 方向 | 章节 |
+|:--|:--|
+| ◀ 上一篇 | [（二）上下文管理器](/2026/04/23/2026-04-25-python-02-context-managers/) |
+| 下一篇 ▶ | [（四）类型提示](/2026/04/23/2026-04-25-python-04-type-hints/) |
+
+<details>
+<summary>📖 全部 14 篇目录（点击展开）</summary>
+
+1. [（一）闭包与装饰器](/2026/04/23/2026-04-25-python-01-closures-decorators/)
+2. [（二）上下文管理器](/2026/04/23/2026-04-25-python-02-context-managers/)
+3. [（三）生成器与迭代器](/2026/04/23/2026-04-25-python-03-generators-iterators/) **← 当前**
+4. [（四）类型提示](/2026/04/23/2026-04-25-python-04-type-hints/)
+5. [（五）Dataclass 与 attrs](/2026/04/23/2026-04-25-python-05-dataclass-attrs/)
+6. [（六）async/await](/2026/04/23/2026-04-26-python-06-async-await/)
+7. [（七）Threading 与 Multiprocessing](/2026/04/23/2026-04-26-python-07-threading-multiprocessing/)
+8. [（八）函数式编程](/2026/04/23/2026-04-26-python-08-functional-programming/)
+9. [（九）描述符协议](/2026/04/23/2026-04-26-python-09-descriptors/)
+10. [（十）元类](/2026/04/23/2026-04-26-python-10-metaclasses/)
+11. [（十一）Protocol与结构化类型](/2026/04/23/2026-04-26-python-11-protocol-typing/)
+12. [（十二）异常链与日志](/2026/04/23/2026-04-27-python-12-exceptions-logging/)
+13. [（十三）缓存艺术](/2026/04/23/2026-04-27-python-13-caching/)
+14. [（十四）组合模式实战](/2026/04/23/2026-04-27-python-14-composite-ai-agent/)
+
+</details>
