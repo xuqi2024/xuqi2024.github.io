@@ -36,10 +36,10 @@ tags:
 
 ```mermaid
 graph LR
-    A["🏛️ 符号主义时代\n1950s-1980s\n规则 & 逻辑"]
-    B["🤝 多智能体时代\n1980s-2000s\n分布式 & 协作"]
-    C["🧠 学习驱动时代\n2000s-2020s\n机器学习 & 深度学习"]
-    D["🚀 LLM智能体时代\n2020s至今\n推理 & 工具 & 自主"]
+    A["🏛️ 符号主义时代<br/>1950s-1980s<br/>规则 & 逻辑"]
+    B["🤝 多智能体时代<br/>1980s-2000s<br/>分布式 & 协作"]
+    C["🧠 学习驱动时代<br/>2000s-2020s<br/>机器学习 & 深度学习"]
+    D["🚀 LLM智能体时代<br/>2020s至今<br/>推理 & 工具 & 自主"]
 
     A -->|"规则不够用了"| B
     B -->|"分布式也不够"| C
@@ -131,15 +131,15 @@ AutoGPT是第一个大规模流行的"全自主"Agent项目。给它一个目标
 ```mermaid
 graph TB
     subgraph "能力层 🧠"
-        M["💡 模型能力\n推理/规划/代码/多语言"]
+        M["💡 模型能力<br/>推理/规划/代码/多语言"]
     end
     subgraph "工具层 🔧"
-        T["🛠️ 工具生态\nAPI/搜索/代码执行/浏览器"]
+        T["🛠️ 工具生态<br/>API/搜索/代码执行/浏览器"]
     end
     subgraph "应用层 🌏"
-        A["📱 应用场景\n编程/办公/数据分析/客服"]
+        A["📱 应用场景<br/>编程/办公/数据分析/客服"]
     end
-    AGENT["🚀 AI Agent\n爆发"]
+    AGENT["🚀 AI Agent<br/>爆发"]
     M --> AGENT
     T --> AGENT
     A --> AGENT
@@ -198,3 +198,36 @@ GPT-4首次在真实考试（律师资格考试、医学执照考试）中超过
 ---
 
 > 📚 本文参考：[datawhalechina/hello-agents](https://github.com/datawhalechina/hello-agents) 第二章
+
+---
+
+## 📚 Hello Agents 系列导航
+
+> 本文是《Hello Agents》开源系列第 **2/16** 章，适合 AI Agent 开发入门到进阶学习。
+
+| 方向 | 章节 |
+|:--|:--|
+| ◀ 上一章 | [第01章：初识智能体：LLM会聊天，Agent能办事](/2026/04/16/2026-04-16-hello-agents-ch01-intro-to-agents/) |
+| 下一章 ▶ | [第03章：LLM原理：它不理解语言，却比你更会用语言](/2026/04/16/2026-04-16-hello-agents-ch03-llm-basics/) |
+
+<details>
+<summary>📖 全部 16 章目录（点击展开）</summary>
+
+1. [初识智能体：LLM会聊天，Agent能办事](/2026/04/16/2026-04-16-hello-agents-ch01-intro-to-agents/)
+2. [智能体60年：从会下棋到能打工](/2026/04/16/2026-04-16-hello-agents-ch02-agent-history/) **← 当前**
+3. [LLM原理：它不理解语言，却比你更会用语言](/2026/04/16/2026-04-16-hello-agents-ch03-llm-basics/)
+4. [Agent思考三剑客：ReAct、Plan-and-Solve与Reflection](/2026/04/16/2026-04-16-hello-agents-ch04-classic-paradigms/)
+5. [不会写代码也能搭AI Agent？低代码平台实战指南](/2026/04/16/2026-04-16-hello-agents-ch05-low-code-platforms/)
+6. [当一个Agent不够用时：三大框架多智能体实战](/2026/04/16/2026-04-16-hello-agents-ch06-framework-practice/)
+7. [为什么要造轮子？200行Python手写Agent框架](/2026/04/16/2026-04-16-hello-agents-ch07-build-your-framework/)
+8. [Agent为何失忆？RAG与记忆系统深度解析](/2026/04/16/2026-04-16-hello-agents-ch08-memory-retrieval/)
+9. [Context Engineering：让Agent真正聪明的隐秘武器](/2026/04/16/2026-04-16-hello-agents-ch09-context-engineering/)
+10. [AI Agent如何与世界对话：MCP、A2A、ANP协议全解析](/2026/04/16/2026-04-16-hello-agents-ch10-agent-protocols/)
+11. [用强化学习驯服AI Agent：GRPO与Agentic RL全解析](/2026/04/16/2026-04-16-hello-agents-ch11-agentic-rl/)
+12. [你的Agent真的好用吗？智能体评估体系完全指南](/2026/04/16/2026-04-16-hello-agents-ch12-evaluation/)
+13. [用Agent规划日本5日游，2分钟搞定2小时的活](/2026/04/16/2026-04-16-hello-agents-ch13-travel-assistant/)
+14. [自动写研究报告的Agent：比ChatGPT深，但有盲点](/2026/04/16/2026-04-16-hello-agents-ch14-deep-research/)
+15. [赛博小镇：25个AI角色自主生活，涌现了什么？](/2026/04/16/2026-04-16-hello-agents-ch15-cyber-town/)
+16. [学完16章，现在从0构建你自己的Agent](/2026/04/16/2026-04-16-hello-agents-ch16-graduation/)
+
+</details>

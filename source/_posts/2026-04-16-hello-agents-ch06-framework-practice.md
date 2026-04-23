@@ -9,6 +9,7 @@ tags:
 - LangGraph
 - AgentScope
 - 多智能体
+- hello-agents
 ---
 
 > 单个Agent就像一个全能但疲惫的员工——什么都会，但什么都不精。多Agent框架让你能组建一支分工明确的AI团队，处理真正复杂的任务。
@@ -39,10 +40,10 @@ tags:
 
 ```mermaid
 graph LR
-    U["👤 用户\nAssistantAgent"] 
-    A["👨‍💼 规划者\nPlannerAgent"] 
-    B["👨‍💻 程序员\nCoderAgent"] 
-    C["🔍 评审者\nCriticAgent"]
+    U["👤 用户<br/>AssistantAgent"] 
+    A["👨‍💼 规划者<br/>PlannerAgent"] 
+    B["👨‍💻 程序员<br/>CoderAgent"] 
+    C["🔍 评审者<br/>CriticAgent"]
 
     U -->|"任务"| A
     A -->|"分配"| B
@@ -72,10 +73,10 @@ graph LR
 
 ```mermaid
 graph TD
-    START(["🚀 START"]) --> PLANNER["📋 规划节点\nLLM生成计划"]
-    PLANNER --> COND{"🔀 条件判断\n需要工具吗？"}
-    COND -->|"需要"| TOOL["🔧 工具节点\n执行工具调用"]
-    COND -->|"不需要"| ANSWER["✅ 回答节点\n生成最终答案"]
+    START(["🚀 START"]) --> PLANNER["📋 规划节点<br/>LLM生成计划"]
+    PLANNER --> COND{"🔀 条件判断<br/>需要工具吗？"}
+    COND -->|"需要"| TOOL["🔧 工具节点<br/>执行工具调用"]
+    COND -->|"不需要"| ANSWER["✅ 回答节点<br/>生成最终答案"]
     TOOL --> PLANNER
     ANSWER --> END(["🏁 END"])
 
@@ -126,9 +127,9 @@ graph TB
     end
 
     subgraph "Graph 执行流"
-        N1["🤖 LLM节点\n读写messages/tool_calls"]
-        N2["⚙️ 工具节点\n读tool_calls,写messages"]
-        N3["📋 路由节点\n读is_complete,决定走向"]
+        N1["🤖 LLM节点<br/>读写messages/tool_calls"]
+        N2["⚙️ 工具节点<br/>读tool_calls,写messages"]
+        N3["📋 路由节点<br/>读is_complete,决定走向"]
     end
 
     S1 --> N1
@@ -298,13 +299,13 @@ if __name__ == "__main__":
 
 ```mermaid
 flowchart TD
-    START(["🤔 选择Agent框架"]) --> Q1{"快速验证\n还是生产部署？"}
-    Q1 -->|"快速验证"| Q2{"需要多Agent\n对话协作？"}
+    START(["🤔 选择Agent框架"]) --> Q1{"快速验证<br/>还是生产部署？"}
+    Q1 -->|"快速验证"| Q2{"需要多Agent<br/>对话协作？"}
     Q1 -->|"生产部署"| Q3{"需要分布式？"}
-    Q2 -->|"是"| AUTOGEN["✅ AutoGen\n对话驱动，快速上手"]
-    Q2 -->|"否，只需单Agent"| LANGGRAPH["✅ LangGraph\n灵活的单Agent"]
-    Q3 -->|"是"| AGENTSCOPE["✅ AgentScope\n生产级分布式"]
-    Q3 -->|"否"| Q4{"需要精细\n流程控制？"}
+    Q2 -->|"是"| AUTOGEN["✅ AutoGen<br/>对话驱动，快速上手"]
+    Q2 -->|"否，只需单Agent"| LANGGRAPH["✅ LangGraph<br/>灵活的单Agent"]
+    Q3 -->|"是"| AGENTSCOPE["✅ AgentScope<br/>生产级分布式"]
+    Q3 -->|"否"| Q4{"需要精细<br/>流程控制？"}
     Q4 -->|"是"| LANGGRAPH
     Q4 -->|"否"| AUTOGEN
 
@@ -335,3 +336,36 @@ flowchart TD
 - **AgentScope 文档**：[agentscope.io](https://agentscope.io)
 
 > 框架只是工具，清晰的任务分解才是多Agent系统的核心。一个设计糟糕的多Agent系统，比一个设计良好的单Agent系统更难调试、更不可靠。先把任务拆清楚，再选框架。
+
+---
+
+## 📚 Hello Agents 系列导航
+
+> 本文是《Hello Agents》开源系列第 **6/16** 章，适合 AI Agent 开发入门到进阶学习。
+
+| 方向 | 章节 |
+|:--|:--|
+| ◀ 上一章 | [第05章：不会写代码也能搭AI Agent？低代码平台实战指南](/2026/04/16/2026-04-16-hello-agents-ch05-low-code-platforms/) |
+| 下一章 ▶ | [第07章：为什么要造轮子？200行Python手写Agent框架](/2026/04/16/2026-04-16-hello-agents-ch07-build-your-framework/) |
+
+<details>
+<summary>📖 全部 16 章目录（点击展开）</summary>
+
+1. [初识智能体：LLM会聊天，Agent能办事](/2026/04/16/2026-04-16-hello-agents-ch01-intro-to-agents/)
+2. [智能体60年：从会下棋到能打工](/2026/04/16/2026-04-16-hello-agents-ch02-agent-history/)
+3. [LLM原理：它不理解语言，却比你更会用语言](/2026/04/16/2026-04-16-hello-agents-ch03-llm-basics/)
+4. [Agent思考三剑客：ReAct、Plan-and-Solve与Reflection](/2026/04/16/2026-04-16-hello-agents-ch04-classic-paradigms/)
+5. [不会写代码也能搭AI Agent？低代码平台实战指南](/2026/04/16/2026-04-16-hello-agents-ch05-low-code-platforms/)
+6. [当一个Agent不够用时：三大框架多智能体实战](/2026/04/16/2026-04-16-hello-agents-ch06-framework-practice/) **← 当前**
+7. [为什么要造轮子？200行Python手写Agent框架](/2026/04/16/2026-04-16-hello-agents-ch07-build-your-framework/)
+8. [Agent为何失忆？RAG与记忆系统深度解析](/2026/04/16/2026-04-16-hello-agents-ch08-memory-retrieval/)
+9. [Context Engineering：让Agent真正聪明的隐秘武器](/2026/04/16/2026-04-16-hello-agents-ch09-context-engineering/)
+10. [AI Agent如何与世界对话：MCP、A2A、ANP协议全解析](/2026/04/16/2026-04-16-hello-agents-ch10-agent-protocols/)
+11. [用强化学习驯服AI Agent：GRPO与Agentic RL全解析](/2026/04/16/2026-04-16-hello-agents-ch11-agentic-rl/)
+12. [你的Agent真的好用吗？智能体评估体系完全指南](/2026/04/16/2026-04-16-hello-agents-ch12-evaluation/)
+13. [用Agent规划日本5日游，2分钟搞定2小时的活](/2026/04/16/2026-04-16-hello-agents-ch13-travel-assistant/)
+14. [自动写研究报告的Agent：比ChatGPT深，但有盲点](/2026/04/16/2026-04-16-hello-agents-ch14-deep-research/)
+15. [赛博小镇：25个AI角色自主生活，涌现了什么？](/2026/04/16/2026-04-16-hello-agents-ch15-cyber-town/)
+16. [学完16章，现在从0构建你自己的Agent](/2026/04/16/2026-04-16-hello-agents-ch16-graduation/)
+
+</details>

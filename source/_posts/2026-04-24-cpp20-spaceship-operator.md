@@ -353,15 +353,15 @@ int main() {
 flowchart TD
     START(["🚀 编译器遇到 a <=> b"]) --> TYPE{"类型推断"}
     
-    TYPE -->|"强顺序\n(strong_ordering)"| A["🔵 值唯一\n必须精确相等"]
-    TYPE -->|"弱顺序\n(weak_ordering)"| B["🟣 值可不等价\n但仍可比"]
-    TYPE -->|"部分顺序\n(partial_ordering)"| C["🟡 存在无序值\n如 NaN"]
+    TYPE -->|"强顺序<br/>(strong_ordering)"| A["🔵 值唯一<br/>必须精确相等"]
+    TYPE -->|"弱顺序<br/>(weak_ordering)"| B["🟣 值可不等价<br/>但仍可比"]
+    TYPE -->|"部分顺序<br/>(partial_ordering)"| C["🟡 存在无序值<br/>如 NaN"]
     
-    A --> RESULT1["返回 strong_ordering:\n• equivalent = (v == 0)\n• less = (v < 0)\n• greater = (v > 0)"]
+    A --> RESULT1["返回 strong_ordering:<br/>• equivalent = (v == 0)<br/>• less = (v < 0)<br/>• greater = (v > 0)"]
     
-    B --> RESULT2["返回 weak_ordering:\n• equivalent = (v == 0)\n• less = (v < 0)\n• greater = (v > 0)"]
+    B --> RESULT2["返回 weak_ordering:<br/>• equivalent = (v == 0)<br/>• less = (v < 0)<br/>• greater = (v > 0)"]
     
-    C --> RESULT3["返回 partial_ordering:\n• equivalent = (v == 0)\n• less = (v < 0)\n• greater = (v > 0)\n• unordered = (v != v)"]
+    C --> RESULT3["返回 partial_ordering:<br/>• equivalent = (v == 0)<br/>• less = (v < 0)<br/>• greater = (v > 0)<br/>• unordered = (v != v)"]
     
     style START fill:#C7CEEA,stroke:#9FA8DA,color:#333
     style A fill:#B5EAD7,stroke:#80CBC4,color:#333

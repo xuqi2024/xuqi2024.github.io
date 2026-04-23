@@ -40,10 +40,10 @@ tags: [C++20, Coroutine, Async]
 ```mermaid
 graph TB
     subgraph "Coroutine Frame（堆上）"
-        P["📦 Promise 对象\n保存协程状态"]
-        L["📍 局部变量\n& 参数"]
-        S["🔢 挂起状态\nsuspend_always / suspend_never"]
-        H["🔗 Coroutine Handle\n控制权句柄"]
+        P["📦 Promise 对象<br/>保存协程状态"]
+        L["📍 局部变量<br/>& 参数"]
+        S["🔢 挂起状态<br/>suspend_always / suspend_never"]
+        H["🔗 Coroutine Handle<br/>控制权句柄"]
     end
     H -.->|"resume()"| P
     H -.->|"destroy()"| P

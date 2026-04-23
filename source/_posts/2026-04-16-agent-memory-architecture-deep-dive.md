@@ -67,9 +67,9 @@ graph TB
     end
 
     subgraph Backend["后端服务"]
-        FE["Frontend\n:3000"]
-        GW["Gateway API\n:8001"]
-        LG["LangGraph Server\n:2024"]
+        FE["Frontend<br/>:3000"]
+        GW["Gateway API<br/>:8001"]
+        LG["LangGraph Server<br/>:2024"]
     end
 
     subgraph Runtime["Agent 运行时"]
@@ -128,14 +128,14 @@ DeerFlow 2.0 最独特的设计之一是 **Middleware Chain**。每一轮 Agent 
 
 ```mermaid
 flowchart LR
-    Input["用户输入"] --> TM["① ThreadData\n初始化工作空间"]
-    TM --> UM["② Uploads\n处理上传文件"]
-    UM --> SM["③ Sandbox\n获取沙箱环境"]
-    SM --> SuM["④ Summarization\n上下文压缩"]
-    SuM --> TiM["⑤ Title\n生成会话标题"]
-    TiM --> ToM["⑥ TodoList\n任务状态跟踪"]
-    ToM --> ViM["⑦ ViewImage\n视觉模型支持"]
-    ViM --> AC["Agent Core\n模型推理"]
+    Input["用户输入"] --> TM["① ThreadData<br/>初始化工作空间"]
+    TM --> UM["② Uploads<br/>处理上传文件"]
+    UM --> SM["③ Sandbox<br/>获取沙箱环境"]
+    SM --> SuM["④ Summarization<br/>上下文压缩"]
+    SuM --> TiM["⑤ Title<br/>生成会话标题"]
+    TiM --> ToM["⑥ TodoList<br/>任务状态跟踪"]
+    ToM --> ViM["⑦ ViewImage<br/>视觉模型支持"]
+    ViM --> AC["Agent Core<br/>模型推理"]
 
     style Input fill:#f5d0c5
     style AC fill:#d5f5e3
@@ -256,13 +256,13 @@ mem0 的记忆检索不走单纯的向量相似度，而是**混合搜索（Hybr
 ```mermaid
 flowchart TD
     Q["用户查询"] --> HQ["Query 预处理"]
-    HQ --> VE["① 向量嵌入\nsemantic similarity"]
-    HQ --> BM["② BM25 关键词匹配\nkeyword matching"]
-    HQ --> NE["③ 命名实体识别\nentity extraction"]
+    HQ --> VE["① 向量嵌入<br/>semantic similarity"]
+    HQ --> BM["② BM25 关键词匹配<br/>keyword matching"]
+    HQ --> NE["③ 命名实体识别<br/>entity extraction"]
     VE --> SCORE1["语义得分"]
     BM --> SCORE2["关键词得分"]
     NE --> SCORE3["实体匹配得分"]
-    SCORE1 --> FUSION["得分融合\n(RRF / 加权求和)"]
+    SCORE1 --> FUSION["得分融合<br/>(RRF / 加权求和)"]
     SCORE2 --> FUSION
     SCORE3 --> FUSION
     FUSION --> TOPK["Top-K 记忆输出"]
@@ -414,13 +414,13 @@ Dify 的 Agent 支持两种推理模式：
 ```mermaid
 flowchart LR
     subgraph FC["Function Calling 模式"]
-        M1["模型直接输出\ntool_call: search_web"]
+        M1["模型直接输出<br/>tool_call: search_web"]
         T1[执行工具]
         M1 --> T1 --> M1b["模型生成回复"]
     end
 
     subgraph ReAct["ReAct 模式"]
-        M2["Thought: 我需要找\n相关信息"]
+        M2["Thought: 我需要找<br/>相关信息"]
         A["Action: web_search"]
         O["Observation: 找到结果"]
         M2 --> A --> O --> M2b["下一轮 Thought"]
@@ -439,11 +439,11 @@ Dify 最强大的功能之一是 **可视化 Workflow 编排**：
 
 ```mermaid
 flowchart LR
-    START([开始]) --> LLM1["LLM 节点\n意图识别"]
-    LLM1 -->|分类=A| TOOL1["工具节点\n文档检索"]
-    LLM1 -->|分类=B| TOOL2["工具节点\n代码执行"]
-    LLM1 -->|分类=C| LLM2["LLM 节点\n直接回复"]
-    TOOL1 --> LLM3["LLM 节点\n总结答案"]
+    START([开始]) --> LLM1["LLM 节点<br/>意图识别"]
+    LLM1 -->|分类=A| TOOL1["工具节点<br/>文档检索"]
+    LLM1 -->|分类=B| TOOL2["工具节点<br/>代码执行"]
+    LLM1 -->|分类=C| LLM2["LLM 节点<br/>直接回复"]
+    TOOL1 --> LLM3["LLM 节点<br/>总结答案"]
     TOOL2 --> LLM3
     LLM3 --> END([结束])
 

@@ -9,6 +9,7 @@ tags:
 - A2A协议
 - 工具调用
 - API
+- hello-agents
 ---
 
 > **通信协议是 AI Agent 能力的天花板**——没有标准化的协议，再强的模型也只是孤岛上的天才。
@@ -58,19 +59,19 @@ tags:
 ```mermaid
 graph TB
     subgraph "🌐 ANP层：去中心化Agent互联网"
-        ANP_A["🤖 Agent Alpha\n身份：DID标识"]
-        ANP_B["🤖 Agent Beta\n身份：DID标识"]
-        ANP_C["🤖 Agent Gamma\n身份：DID标识"]
-        ANP_A <-->|"ANP协议\n跨组织发现"| ANP_B
-        ANP_B <-->|"ANP协议\n去中心化"| ANP_C
+        ANP_A["🤖 Agent Alpha<br/>身份：DID标识"]
+        ANP_B["🤖 Agent Beta<br/>身份：DID标识"]
+        ANP_C["🤖 Agent Gamma<br/>身份：DID标识"]
+        ANP_A <-->|"ANP协议<br/>跨组织发现"| ANP_B
+        ANP_B <-->|"ANP协议<br/>去中心化"| ANP_C
     end
 
     subgraph "🏢 A2A层：Agent间点对点协作"
-        ORC["🎯 编排Agent\nOrchestrator"]
+        ORC["🎯 编排Agent<br/>Orchestrator"]
         SUB1["🔍 搜索专家Agent"]
         SUB2["📊 分析专家Agent"]
-        ORC -->|"A2A协议\n任务委托"| SUB1
-        ORC -->|"A2A协议\n任务委托"| SUB2
+        ORC -->|"A2A协议<br/>任务委托"| SUB1
+        ORC -->|"A2A协议<br/>任务委托"| SUB2
         SUB1 -->|"返回结果"| ORC
         SUB2 -->|"返回结果"| ORC
     end
@@ -80,9 +81,9 @@ graph TB
         T1["🌤️ 天气API"]
         T2["📁 文件系统"]
         T3["🗄️ 数据库"]
-        AGENT -->|"MCP协议\n工具调用"| T1
-        AGENT -->|"MCP协议\n工具调用"| T2
-        AGENT -->|"MCP协议\n工具调用"| T3
+        AGENT -->|"MCP协议<br/>工具调用"| T1
+        AGENT -->|"MCP协议<br/>工具调用"| T2
+        AGENT -->|"MCP协议<br/>工具调用"| T3
     end
 
     style ANP_A fill:#FFB3C6,stroke:#F48FB1,stroke-width:2px,color:#333
@@ -111,10 +112,10 @@ MCP 是 Anthropic 于 2024 年 11 月发布的开放协议，基于 **JSON-RPC 2
 
 ```mermaid
 graph LR
-    LLM["🤖 LLM\nClaude / GPT / Gemini"]
+    LLM["🤖 LLM<br/>Claude / GPT / Gemini"]
     MCP_CLIENT["📡 MCP Client"]
     MCP_SERVER["⚙️ MCP Server"]
-    TOOL["🔧 实际工具\n数据库/API/文件"]
+    TOOL["🔧 实际工具<br/>数据库/API/文件"]
 
     LLM -->|"自然语言意图"| MCP_CLIENT
     MCP_CLIENT -->|"标准化JSON-RPC请求"| MCP_SERVER
@@ -409,11 +410,11 @@ ANP 内置加密机制，Agent 之间的通信默认加密，防止中间人攻�
 
 ```mermaid
 flowchart TD
-    START(["🚀 需要Agent间通信"]) --> Q1{"是否在同一\n组织/平台内？"}
-    Q1 -->|"是"| Q2{"是否需要\n动态发现Agent？"}
-    Q1 -->|"否，跨组织/互联网"| ANP["🌐 使用ANP\n去中心化身份+加密"]
-    Q2 -->|"否，Agent地址已知"| A2A["🤝 使用A2A\n点对点任务委托"]
-    Q2 -->|"是，需要发现"| HYBRID["🔀 ANP发现 + A2A通信\n混合方案"]
+    START(["🚀 需要Agent间通信"]) --> Q1{"是否在同一<br/>组织/平台内？"}
+    Q1 -->|"是"| Q2{"是否需要<br/>动态发现Agent？"}
+    Q1 -->|"否，跨组织/互联网"| ANP["🌐 使用ANP<br/>去中心化身份+加密"]
+    Q2 -->|"否，Agent地址已知"| A2A["🤝 使用A2A<br/>点对点任务委托"]
+    Q2 -->|"是，需要发现"| HYBRID["🔀 ANP发现 + A2A通信<br/>混合方案"]
 
     style START fill:#C7CEEA,stroke:#9FA8DA,stroke-width:2px,color:#333
     style Q1 fill:#FFF9C4,stroke:#F9A825,stroke-width:2px,color:#333
@@ -488,3 +489,36 @@ ANP 目前的成熟度低于 MCP 和 A2A，更多处于标准制定阶段。但*
 ---
 
 *本文基于 hello-agents 开源项目第10章。项目地址：[hello-agents on GitHub](https://github.com/datawhalechina/hello-agents)*
+
+---
+
+## 📚 Hello Agents 系列导航
+
+> 本文是《Hello Agents》开源系列第 **10/16** 章，适合 AI Agent 开发入门到进阶学习。
+
+| 方向 | 章节 |
+|:--|:--|
+| ◀ 上一章 | [第09章：Context Engineering：让Agent真正聪明的隐秘武器](/2026/04/16/2026-04-16-hello-agents-ch09-context-engineering/) |
+| 下一章 ▶ | [第11章：用强化学习驯服AI Agent：GRPO与Agentic RL全解析](/2026/04/16/2026-04-16-hello-agents-ch11-agentic-rl/) |
+
+<details>
+<summary>📖 全部 16 章目录（点击展开）</summary>
+
+1. [初识智能体：LLM会聊天，Agent能办事](/2026/04/16/2026-04-16-hello-agents-ch01-intro-to-agents/)
+2. [智能体60年：从会下棋到能打工](/2026/04/16/2026-04-16-hello-agents-ch02-agent-history/)
+3. [LLM原理：它不理解语言，却比你更会用语言](/2026/04/16/2026-04-16-hello-agents-ch03-llm-basics/)
+4. [Agent思考三剑客：ReAct、Plan-and-Solve与Reflection](/2026/04/16/2026-04-16-hello-agents-ch04-classic-paradigms/)
+5. [不会写代码也能搭AI Agent？低代码平台实战指南](/2026/04/16/2026-04-16-hello-agents-ch05-low-code-platforms/)
+6. [当一个Agent不够用时：三大框架多智能体实战](/2026/04/16/2026-04-16-hello-agents-ch06-framework-practice/)
+7. [为什么要造轮子？200行Python手写Agent框架](/2026/04/16/2026-04-16-hello-agents-ch07-build-your-framework/)
+8. [Agent为何失忆？RAG与记忆系统深度解析](/2026/04/16/2026-04-16-hello-agents-ch08-memory-retrieval/)
+9. [Context Engineering：让Agent真正聪明的隐秘武器](/2026/04/16/2026-04-16-hello-agents-ch09-context-engineering/)
+10. [AI Agent如何与世界对话：MCP、A2A、ANP协议全解析](/2026/04/16/2026-04-16-hello-agents-ch10-agent-protocols/) **← 当前**
+11. [用强化学习驯服AI Agent：GRPO与Agentic RL全解析](/2026/04/16/2026-04-16-hello-agents-ch11-agentic-rl/)
+12. [你的Agent真的好用吗？智能体评估体系完全指南](/2026/04/16/2026-04-16-hello-agents-ch12-evaluation/)
+13. [用Agent规划日本5日游，2分钟搞定2小时的活](/2026/04/16/2026-04-16-hello-agents-ch13-travel-assistant/)
+14. [自动写研究报告的Agent：比ChatGPT深，但有盲点](/2026/04/16/2026-04-16-hello-agents-ch14-deep-research/)
+15. [赛博小镇：25个AI角色自主生活，涌现了什么？](/2026/04/16/2026-04-16-hello-agents-ch15-cyber-town/)
+16. [学完16章，现在从0构建你自己的Agent](/2026/04/16/2026-04-16-hello-agents-ch16-graduation/)
+
+</details>

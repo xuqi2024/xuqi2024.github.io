@@ -58,31 +58,31 @@ DeerFlow 不是又一个"Agent 框架"，而是一个**基于 LangGraph 和 Lang
 ```mermaid
 graph TB
     subgraph "入口层"
-        Nginx["🟦 Nginx\n:2026 统一入口"]
-        Frontend["🟪 Frontend\nNext.js :3000"]
+        Nginx["🟦 Nginx<br/>:2026 统一入口"]
+        Frontend["🟪 Frontend<br/>Next.js :3000"]
     end
 
     subgraph "应用层 App"
-        Gateway["🟧 Gateway API\nFastAPI :8001"]
-        Channels["🟩 IM Channels\nFeishu/Slack/Telegram/WeChat"]
+        Gateway["🟧 Gateway API<br/>FastAPI :8001"]
+        Channels["🟩 IM Channels<br/>Feishu/Slack/Telegram/WeChat"]
     end
 
     subgraph "运行时层 Runtime"
-        LangGraph["🟥 LangGraph Server\n:2024"]
+        LangGraph["🟥 LangGraph Server<br/>:2024"]
     end
 
     subgraph "核心包 Harness"
-        LeadAgent["🟨 Lead Agent\n主脑 Agent"]
-        SubAgents["🟦 Sub-Agent System\n并发子 Agent"]
-        Memory["🟩 Memory System\n持久化记忆"]
-        Sandbox["🟪 Sandbox\n隔离执行环境"]
-        Tools["🟧 Tools\n内置+MCP+Community"]
-        Skills["🟨 Skills System\nMarkdown 技能包"]
+        LeadAgent["🟨 Lead Agent<br/>主脑 Agent"]
+        SubAgents["🟦 Sub-Agent System<br/>并发子 Agent"]
+        Memory["🟩 Memory System<br/>持久化记忆"]
+        Sandbox["🟪 Sandbox<br/>隔离执行环境"]
+        Tools["🟧 Tools<br/>内置+MCP+Community"]
+        Skills["🟨 Skills System<br/>Markdown 技能包"]
     end
 
     subgraph "基础设施"
-        Config["⚙️ Config System\nconfig.yaml"]
-        MCP["📦 MCP Server\n多协议支持"]
+        Config["⚙️ Config System<br/>config.yaml"]
+        MCP["📦 MCP Server<br/>多协议支持"]
     end
 
     Nginx --> Frontend
@@ -119,19 +119,19 @@ DeerFlow 2.0 引入了独特的**双运行时模式**：
 ```mermaid
 graph LR
     subgraph "标准模式 Standard"
-        G1["🟧 Gateway API\n:8001"]
-        L1["🟥 LangGraph Server\n:2024"]
-        N1["🟦 Nginx\n:2026"]
-        F1["🟪 Frontend\n:3000"]
+        G1["🟧 Gateway API<br/>:8001"]
+        L1["🟥 LangGraph Server<br/>:2024"]
+        N1["🟦 Nginx<br/>:2026"]
+        F1["🟪 Frontend<br/>:3000"]
         N1 --> F1
         N1 --> G1
         G1 --> L1
     end
 
     subgraph "Gateway 模式 Gateway Mode"
-        G2["🟧 Gateway API\n:8001\n(含 Agent Runtime)"]
-        N2["🟦 Nginx\n:2026"]
-        F2["🟪 Frontend\n:3000"]
+        G2["🟧 Gateway API<br/>:8001<br/>(含 Agent Runtime)"]
+        N2["🟦 Nginx<br/>:2026"]
+        F2["🟪 Frontend<br/>:3000"]
         N2 --> F2
         N2 --> G2
     end
@@ -190,24 +190,24 @@ DeerFlow 在 LangGraph 的 Agent Runtime 上叠加了**18 个中间件**，形�
 ```mermaid
 flowchart TD
     Input["🟦 用户输入"]
-    M1["🔧 ThreadDataMiddleware\n创建线程目录"]
-    M2["📎 UploadsMiddleware\n注入上传文件"]
-    M3["🧊 SandboxMiddleware\n获取隔离环境"]
-    M4["🔗 DanglingToolCallMiddleware\n补全中断的工具调用"]
-    M5["⚠️ LLMErrorHandlingMiddleware\nLLM 错误标准化"]
-    M6["🛡️ GuardrailMiddleware\n工具调用授权"]
-    M7["📋 SandboxAuditMiddleware\n沙箱操作审计"]
-    M8["🔧 ToolErrorHandlingMiddleware\n工具异常转错误消息"]
-    M9["📝 SummarizationMiddleware\n上下文压缩"]
-    M10["✅ TodoListMiddleware\n任务清单跟踪"]
-    M11["📊 TokenUsageMiddleware\nToken 计量"]
-    M12["🏷️ TitleMiddleware\n生成线程标题"]
-    M13["🧠 MemoryMiddleware\n异步记忆更新"]
-    M14["🖼️ ViewImageMiddleware\n图像数据注入"]
-    M15["🔍 DeferredToolFilterMiddleware\n隐藏延迟工具"]
-    M16["⚡ SubagentLimitMiddleware\n子 Agent 并发限制"]
-    M17["🔄 LoopDetectionMiddleware\n循环检测"]
-    M18["❓ ClarificationMiddleware\n澄清请求拦截"]
+    M1["🔧 ThreadDataMiddleware<br/>创建线程目录"]
+    M2["📎 UploadsMiddleware<br/>注入上传文件"]
+    M3["🧊 SandboxMiddleware<br/>获取隔离环境"]
+    M4["🔗 DanglingToolCallMiddleware<br/>补全中断的工具调用"]
+    M5["⚠️ LLMErrorHandlingMiddleware<br/>LLM 错误标准化"]
+    M6["🛡️ GuardrailMiddleware<br/>工具调用授权"]
+    M7["📋 SandboxAuditMiddleware<br/>沙箱操作审计"]
+    M8["🔧 ToolErrorHandlingMiddleware<br/>工具异常转错误消息"]
+    M9["📝 SummarizationMiddleware<br/>上下文压缩"]
+    M10["✅ TodoListMiddleware<br/>任务清单跟踪"]
+    M11["📊 TokenUsageMiddleware<br/>Token 计量"]
+    M12["🏷️ TitleMiddleware<br/>生成线程标题"]
+    M13["🧠 MemoryMiddleware<br/>异步记忆更新"]
+    M14["🖼️ ViewImageMiddleware<br/>图像数据注入"]
+    M15["🔍 DeferredToolFilterMiddleware<br/>隐藏延迟工具"]
+    M16["⚡ SubagentLimitMiddleware<br/>子 Agent 并发限制"]
+    M17["🔄 LoopDetectionMiddleware<br/>循环检测"]
+    M18["❓ ClarificationMiddleware<br/>澄清请求拦截"]
     Output["🟧 Agent 输出"]
 
     Input --> M1 --> M2 --> M3 --> M4 --> M5 --> M6 --> M7 --> M8 --> M9 --> M10 --> M11 --> M12 --> M13 --> M14 --> M15 --> M16 --> M17 --> M18 --> Output
@@ -247,13 +247,13 @@ DeerFlow 的 Sub-Agent 不是简单的事件驱动，而是**完整的并发任�
 
 ```mermaid
 flowchart TD
-    Lead["🟨 Lead Agent\n主脑"]
-    TaskTool["🟧 task() 工具\n子 Agent 委托"]
-    SubLimit["🟦 SubagentLimitMiddleware\n并发 ≤ 3"]
-    Executor["🟩 SubagentExecutor\n后台线程池"]
-    ThreadPool["🟪 _scheduler_pool(3)\n_execution_pool(3)"]
-    Builtins["🟦 内置 Agent 类型\ngeneral-purpose / bash"]
-    Result["🟨 结构化结果\n返回给 Lead"]
+    Lead["🟨 Lead Agent<br/>主脑"]
+    TaskTool["🟧 task() 工具<br/>子 Agent 委托"]
+    SubLimit["🟦 SubagentLimitMiddleware<br/>并发 ≤ 3"]
+    Executor["🟩 SubagentExecutor<br/>后台线程池"]
+    ThreadPool["🟪 _scheduler_pool(3)<br/>_execution_pool(3)"]
+    Builtins["🟦 内置 Agent 类型<br/>general-purpose / bash"]
+    Result["🟨 结构化结果<br/>返回给 Lead"]
 
     Lead --> TaskTool --> SubLimit --> Executor --> ThreadPool
     ThreadPool --> Builtins
@@ -282,18 +282,18 @@ DeerFlow 的 Memory 不是 RAG 向量检索，而是一套**分层记忆系统**
 ```mermaid
 flowchart TD
     subgraph "记忆写入"
-        Messages["💬 对话消息\n用户+AI 响应"]
-        MM["🧠 MemoryMiddleware\n过滤+入队"]
-        Queue["📋 DebouncedQueue\n30s 防抖+线程去重"]
-        Updater["⚙️ MemoryUpdater\nLLM 提取事实"]
-        Facts["📝 Facts 去重写入\nconfidence ≥ 0.7"]
-        MemoryFile["💾 memory.json\n原子写入"]
+        Messages["💬 对话消息<br/>用户+AI 响应"]
+        MM["🧠 MemoryMiddleware<br/>过滤+入队"]
+        Queue["📋 DebouncedQueue<br/>30s 防抖+线程去重"]
+        Updater["⚙️ MemoryUpdater<br/>LLM 提取事实"]
+        Facts["📝 Facts 去重写入<br/>confidence ≥ 0.7"]
+        MemoryFile["💾 memory.json<br/>原子写入"]
     end
 
     subgraph "记忆读取"
         Read["📖 下次对话"]
-        Inject["💉 注入 Top 15 Facts\n+ 上下文摘要"]
-        Prompt["🟨 System Prompt\n&lt;memory&gt; 标签"]
+        Inject["💉 注入 Top 15 Facts<br/>+ 上下文摘要"]
+        Prompt["🟨 System Prompt<br/>&lt;memory&gt; 标签"]
     end
 
     Messages --> MM --> Queue --> Updater --> Facts --> MemoryFile

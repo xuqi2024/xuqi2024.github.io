@@ -83,7 +83,7 @@ int c = 42; id(c);           // ❌ ERROR：c 不是常量
 
 ```mermaid
 flowchart TD
-    S["🚀 程序启动"] --> STAT["📦 静态初始化\n（编译期）"]
+    S["🚀 程序启动"] --> STAT["📦 静态初始化<br/>（编译期）"]
     STAT -->|"成功"| READY["✅ 变量就绪"]
     STAT -->|"失败/未定义"| ISSUE["⚠️ 未定义行为"]
     

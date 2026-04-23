@@ -34,9 +34,9 @@ class AgentConfig:
 
 ```mermaid
 graph LR
-    A["读取属性\nobj.attr"] --> B["__get__"]
-    C["赋值属性\nobj.attr = x"] --> D["__set__"]
-    E["删除属性\ndel obj.attr"] --> F["__delete__"]
+    A["读取属性<br/>obj.attr"] --> B["__get__"]
+    C["赋值属性<br/>obj.attr = x"] --> D["__set__"]
+    E["删除属性<br/>del obj.attr"] --> F["__delete__"]
 
     style A fill:#C7CEEA,stroke:#9FA8DA,color:#333
     style C fill:#FFDAB9,stroke:#FFAB76,color:#333

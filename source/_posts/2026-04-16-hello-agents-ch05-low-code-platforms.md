@@ -9,6 +9,7 @@ tags:
 - Dify
 - n8n
 - 低代码
+- hello-agents
 ---
 
 > 低代码平台不是"玩具"，而是让80%的Agent需求在不写一行代码的情况下落地的生产力工具——剩下20%的复杂需求，才是真正需要开发框架的地方。
@@ -44,8 +45,8 @@ AI Agent的崛起本来是一件令人兴奋的事，但很多人打开LangChain
 
 ```mermaid
 graph LR
-    A["👨‍💻 传统代码开发\n写框架+写逻辑+写部署"]
-    B["🎨 低代码平台\n只关注业务逻辑"]
+    A["👨‍💻 传统代码开发<br/>写框架+写逻辑+写部署"]
+    B["🎨 低代码平台<br/>只关注业务逻辑"]
     C["🚀 Agent上线"]
 
     A -->|"周级别"| C
@@ -119,12 +120,12 @@ graph LR
 
 ```mermaid
 graph TD
-    START(["🤔 我要搭建Agent？"]) --> Q1{"需要私有化\n或数据安全？"}
-    Q1 -->|"是"| Q2{"已有大量\n外部系统集成？"}
-    Q1 -->|"否"| Q3{"需要多渠道\n一键发布？"}
-    Q2 -->|"是"| N8N["🔧 选 n8n\n工作流王者"]
-    Q2 -->|"否"| DIFY["⚡ 选 Dify\n开发者首选"]
-    Q3 -->|"是"| COZE["🎯 选 Coze\n最快上手"]
+    START(["🤔 我要搭建Agent？"]) --> Q1{"需要私有化<br/>或数据安全？"}
+    Q1 -->|"是"| Q2{"已有大量<br/>外部系统集成？"}
+    Q1 -->|"否"| Q3{"需要多渠道<br/>一键发布？"}
+    Q2 -->|"是"| N8N["🔧 选 n8n<br/>工作流王者"]
+    Q2 -->|"否"| DIFY["⚡ 选 Dify<br/>开发者首选"]
+    Q3 -->|"是"| COZE["🎯 选 Coze<br/>最快上手"]
     Q3 -->|"否"| Q4{"技术背景强？"}
     Q4 -->|"强"| DIFY
     Q4 -->|"弱"| COZE
@@ -217,11 +218,11 @@ if __name__ == "__main__":
 
 ```mermaid
 graph LR
-    A["📥 用户提问"] --> B["🤖 分类节点\nLLM判断问题类型"]
-    B -->|"技术问题"| C["📚 技术文档\n知识库检索"]
-    B -->|"价格问题"| D["💰 价格手册\n知识库检索"]
-    B -->|"其他"| E["🌐 网络搜索\n工具调用"]
-    C --> F["✍️ 生成回答\nLLM节点"]
+    A["📥 用户提问"] --> B["🤖 分类节点<br/>LLM判断问题类型"]
+    B -->|"技术问题"| C["📚 技术文档<br/>知识库检索"]
+    B -->|"价格问题"| D["💰 价格手册<br/>知识库检索"]
+    B -->|"其他"| E["🌐 网络搜索<br/>工具调用"]
+    C --> F["✍️ 生成回答<br/>LLM节点"]
     D --> F
     E --> F
     F --> G["📤 返回用户"]
@@ -263,9 +264,9 @@ graph LR
 
 ```mermaid
 graph LR
-    A["🎯 入门\nCoze官方教程"] --> B["⚡ 进阶\nDify工作流实战"]
-    B --> C["🔧 专家\nn8n + 代码节点"]
-    C --> D["🚀 突破\n代码框架开发"]
+    A["🎯 入门<br/>Coze官方教程"] --> B["⚡ 进阶<br/>Dify工作流实战"]
+    B --> C["🔧 专家<br/>n8n + 代码节点"]
+    C --> D["🚀 突破<br/>代码框架开发"]
 
     style A fill:#C7CEEA,stroke:#9FA8DA,color:#333
     style B fill:#B5EAD7,stroke:#80CBC4,color:#333
@@ -280,3 +281,36 @@ graph LR
 当你做完3个真实项目之后，你会自然而然地感受到低代码的边界在哪里。那个时候，再去学代码框架，会事半功倍。
 
 > 工具没有高低贵贱，只有合不合适。一个用 Coze 跑通了业务的Bot，比一个用 LangGraph 写了一半的框架，对用户的价值大得多。
+
+---
+
+## 📚 Hello Agents 系列导航
+
+> 本文是《Hello Agents》开源系列第 **5/16** 章，适合 AI Agent 开发入门到进阶学习。
+
+| 方向 | 章节 |
+|:--|:--|
+| ◀ 上一章 | [第04章：Agent思考三剑客：ReAct、Plan-and-Solve与Reflection](/2026/04/16/2026-04-16-hello-agents-ch04-classic-paradigms/) |
+| 下一章 ▶ | [第06章：当一个Agent不够用时：三大框架多智能体实战](/2026/04/16/2026-04-16-hello-agents-ch06-framework-practice/) |
+
+<details>
+<summary>📖 全部 16 章目录（点击展开）</summary>
+
+1. [初识智能体：LLM会聊天，Agent能办事](/2026/04/16/2026-04-16-hello-agents-ch01-intro-to-agents/)
+2. [智能体60年：从会下棋到能打工](/2026/04/16/2026-04-16-hello-agents-ch02-agent-history/)
+3. [LLM原理：它不理解语言，却比你更会用语言](/2026/04/16/2026-04-16-hello-agents-ch03-llm-basics/)
+4. [Agent思考三剑客：ReAct、Plan-and-Solve与Reflection](/2026/04/16/2026-04-16-hello-agents-ch04-classic-paradigms/)
+5. [不会写代码也能搭AI Agent？低代码平台实战指南](/2026/04/16/2026-04-16-hello-agents-ch05-low-code-platforms/) **← 当前**
+6. [当一个Agent不够用时：三大框架多智能体实战](/2026/04/16/2026-04-16-hello-agents-ch06-framework-practice/)
+7. [为什么要造轮子？200行Python手写Agent框架](/2026/04/16/2026-04-16-hello-agents-ch07-build-your-framework/)
+8. [Agent为何失忆？RAG与记忆系统深度解析](/2026/04/16/2026-04-16-hello-agents-ch08-memory-retrieval/)
+9. [Context Engineering：让Agent真正聪明的隐秘武器](/2026/04/16/2026-04-16-hello-agents-ch09-context-engineering/)
+10. [AI Agent如何与世界对话：MCP、A2A、ANP协议全解析](/2026/04/16/2026-04-16-hello-agents-ch10-agent-protocols/)
+11. [用强化学习驯服AI Agent：GRPO与Agentic RL全解析](/2026/04/16/2026-04-16-hello-agents-ch11-agentic-rl/)
+12. [你的Agent真的好用吗？智能体评估体系完全指南](/2026/04/16/2026-04-16-hello-agents-ch12-evaluation/)
+13. [用Agent规划日本5日游，2分钟搞定2小时的活](/2026/04/16/2026-04-16-hello-agents-ch13-travel-assistant/)
+14. [自动写研究报告的Agent：比ChatGPT深，但有盲点](/2026/04/16/2026-04-16-hello-agents-ch14-deep-research/)
+15. [赛博小镇：25个AI角色自主生活，涌现了什么？](/2026/04/16/2026-04-16-hello-agents-ch15-cyber-town/)
+16. [学完16章，现在从0构建你自己的Agent](/2026/04/16/2026-04-16-hello-agents-ch16-graduation/)
+
+</details>

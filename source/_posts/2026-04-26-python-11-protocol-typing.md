@@ -130,7 +130,7 @@ Protocol 可以继承其他 Protocol，形成接口层级：
 
 ```mermaid
 flowchart TB
-    A["LLM Protocol\n- complete()"] --> B["StreamingLLM Protocol\n- stream()\n继承自 LLM"]
+    A["LLM Protocol<br/>- complete()"] --> B["StreamingLLM Protocol<br/>- stream()<br/>继承自 LLM"]
 
     style A fill:#C7CEEA,stroke:#9FA8DA,color:#333
     style B fill:#E8D5F5,stroke:#CE93D8,color:#333

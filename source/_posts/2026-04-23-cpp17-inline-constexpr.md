@@ -46,13 +46,13 @@ struct Config {
 
 ```mermaid
 graph LR
-    A["Config.h 被 #include"] --> B["编译单元1\n生成 Config::version 实例"]
-    A --> C["编译单元2\n生成 Config::version 实例"]
-    A --> D["编译单元3\n生成 Config::version 实例"]
+    A["Config.h 被 #include"] --> B["编译单元1<br/>生成 Config::version 实例"]
+    A --> C["编译单元2<br/>生成 Config::version 实例"]
+    A --> D["编译单元3<br/>生成 Config::version 实例"]
     B --> E["🔗 链接器"]
     C --> E
     D --> E
-    E --> F["✅ 保留一个实例\nODR 问题解决"]
+    E --> F["✅ 保留一个实例<br/>ODR 问题解决"]
 
     style A fill:#C7CEEA,stroke:#9FA8DA,color:#333
     style B fill:#FFDAB9,stroke:#FFAB76,color:#333
@@ -238,7 +238,7 @@ flowchart LR
     end
     
     subgraph "C++17 方案"
-        B1["header.h: inline 变量"] -.->|"直接定义"| B2["每个 TU 可用\n链接器去重"]
+        B1["header.h: inline 变量"] -.->|"直接定义"| B2["每个 TU 可用<br/>链接器去重"]
     end
 
     style A1 fill:#FFDAB9,stroke:#FFAB76

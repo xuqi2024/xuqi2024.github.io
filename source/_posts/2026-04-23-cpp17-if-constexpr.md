@@ -69,7 +69,7 @@ int main() {
 graph TD
     A["if constexpr (cond)"] --> B{"编译期求值"}
     B -->|"true"| C["✅ 编译 if 分支"]
-    B -->|"false"| D["❌ 丢弃 else 分支\n不参与重载决议"]
+    B -->|"false"| D["❌ 丢弃 else 分支<br/>不参与重载决议"]
 
     style A fill:#C7CEEA,stroke:#9FA8DA,color:#333
     style B fill:#FFF9C4,stroke:#F9A825,color:#333

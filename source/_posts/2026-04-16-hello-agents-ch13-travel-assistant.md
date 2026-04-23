@@ -9,6 +9,7 @@ tags:
 - 旅行助手
 - 工具调用
 - ReAct
+- hello-agents
 ---
 
 > **核心结论**：多Agent协作不是让一个LLM变得更聪明，而是让多个专职LLM分工合作——就像雇了一支旅行规划团队，每个人只干自己最擅长的事。
@@ -36,18 +37,18 @@ tags:
 
 ```mermaid
 graph TB
-    U["👤 用户\n输入需求"] --> BE["⚙️ FastAPI后端\n请求调度"]
+    U["👤 用户<br/>输入需求"] --> BE["⚙️ FastAPI后端<br/>请求调度"]
     
-    BE --> A1["🔍 景点搜索Agent\n高德地图API"]
-    BE --> A2["🌤️ 天气查询Agent\n天气API"]
-    BE --> A3["🏨 酒店推荐Agent\n住宿数据"]
-    BE --> A4["📅 行程规划Agent\n整合所有信息"]
+    BE --> A1["🔍 景点搜索Agent<br/>高德地图API"]
+    BE --> A2["🌤️ 天气查询Agent<br/>天气API"]
+    BE --> A3["🏨 酒店推荐Agent<br/>住宿数据"]
+    BE --> A4["📅 行程规划Agent<br/>整合所有信息"]
     
     A1 --> A4
     A2 --> A4
     A3 --> A4
     
-    A4 --> FE["🖥️ Vue3前端\n地图可视化+PDF导出"]
+    A4 --> FE["🖥️ Vue3前端<br/>地图可视化+PDF导出"]
     FE --> U
 
     style U fill:#C7CEEA,stroke:#9FA8DA,color:#333
@@ -116,9 +117,9 @@ class TravelPlan(BaseModel):
 
 ```mermaid
 flowchart LR
-    T["🤔 Thought\n我需要查什么？"] --> A["⚡ Action\n调用工具"]
-    A --> O["👁️ Observation\n工具返回结果"]
-    O --> T2{"判断：\n够了吗？"}
+    T["🤔 Thought<br/>我需要查什么？"] --> A["⚡ Action<br/>调用工具"]
+    A --> O["👁️ Observation<br/>工具返回结果"]
+    O --> T2{"判断：<br/>够了吗？"}
     T2 -->|"不够"| T
     T2 -->|"够了"| R["✅ 最终回答"]
 
@@ -531,9 +532,9 @@ flowchart TD
     OK -->|"✅ 是"| DATA["返回数据"]
     OK -->|"❌ 否"| ERR_TYPE{"错误类型?"}
     
-    ERR_TYPE -->|"网络超时"| RETRY["重试1次\n(最多3次)"]
+    ERR_TYPE -->|"网络超时"| RETRY["重试1次<br/>(最多3次)"]
     ERR_TYPE -->|"API限流"| WAIT["等待1秒后重试"]
-    ERR_TYPE -->|"数据为空"| FALLBACK["使用备用数据源\n或返回默认值"]
+    ERR_TYPE -->|"数据为空"| FALLBACK["使用备用数据源<br/>或返回默认值"]
     
     RETRY --> OK
     WAIT --> OK
@@ -597,3 +598,36 @@ flowchart TD
 旅行助手是一个很好的入门实战项目，因为它的需求真实、工具明确、结果可验证。如果你能把它跑通，恭喜你，你已经掌握了构建实用Agent的核心技能。
 
 > **下一步**：尝试给旅行助手加入"用户历史偏好记忆"功能——它应该记住你不喜欢爬山，下次规划时自动回避体力消耗大的景点。这就引出了Agent记忆系统的话题，正是第14章的主角。
+
+---
+
+## 📚 Hello Agents 系列导航
+
+> 本文是《Hello Agents》开源系列第 **13/16** 章，适合 AI Agent 开发入门到进阶学习。
+
+| 方向 | 章节 |
+|:--|:--|
+| ◀ 上一章 | [第12章：你的Agent真的好用吗？智能体评估体系完全指南](/2026/04/16/2026-04-16-hello-agents-ch12-evaluation/) |
+| 下一章 ▶ | [第14章：自动写研究报告的Agent：比ChatGPT深，但有盲点](/2026/04/16/2026-04-16-hello-agents-ch14-deep-research/) |
+
+<details>
+<summary>📖 全部 16 章目录（点击展开）</summary>
+
+1. [初识智能体：LLM会聊天，Agent能办事](/2026/04/16/2026-04-16-hello-agents-ch01-intro-to-agents/)
+2. [智能体60年：从会下棋到能打工](/2026/04/16/2026-04-16-hello-agents-ch02-agent-history/)
+3. [LLM原理：它不理解语言，却比你更会用语言](/2026/04/16/2026-04-16-hello-agents-ch03-llm-basics/)
+4. [Agent思考三剑客：ReAct、Plan-and-Solve与Reflection](/2026/04/16/2026-04-16-hello-agents-ch04-classic-paradigms/)
+5. [不会写代码也能搭AI Agent？低代码平台实战指南](/2026/04/16/2026-04-16-hello-agents-ch05-low-code-platforms/)
+6. [当一个Agent不够用时：三大框架多智能体实战](/2026/04/16/2026-04-16-hello-agents-ch06-framework-practice/)
+7. [为什么要造轮子？200行Python手写Agent框架](/2026/04/16/2026-04-16-hello-agents-ch07-build-your-framework/)
+8. [Agent为何失忆？RAG与记忆系统深度解析](/2026/04/16/2026-04-16-hello-agents-ch08-memory-retrieval/)
+9. [Context Engineering：让Agent真正聪明的隐秘武器](/2026/04/16/2026-04-16-hello-agents-ch09-context-engineering/)
+10. [AI Agent如何与世界对话：MCP、A2A、ANP协议全解析](/2026/04/16/2026-04-16-hello-agents-ch10-agent-protocols/)
+11. [用强化学习驯服AI Agent：GRPO与Agentic RL全解析](/2026/04/16/2026-04-16-hello-agents-ch11-agentic-rl/)
+12. [你的Agent真的好用吗？智能体评估体系完全指南](/2026/04/16/2026-04-16-hello-agents-ch12-evaluation/)
+13. [用Agent规划日本5日游，2分钟搞定2小时的活](/2026/04/16/2026-04-16-hello-agents-ch13-travel-assistant/) **← 当前**
+14. [自动写研究报告的Agent：比ChatGPT深，但有盲点](/2026/04/16/2026-04-16-hello-agents-ch14-deep-research/)
+15. [赛博小镇：25个AI角色自主生活，涌现了什么？](/2026/04/16/2026-04-16-hello-agents-ch15-cyber-town/)
+16. [学完16章，现在从0构建你自己的Agent](/2026/04/16/2026-04-16-hello-agents-ch16-graduation/)
+
+</details>

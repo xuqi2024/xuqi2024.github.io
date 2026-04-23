@@ -559,25 +559,25 @@ MemMachine 只做记忆，不做 Agent 和规划。这种设计符合软件工�
 
 ```mermaid
 flowchart TB
-    subgraph K["Khoj\n记忆即知识库"]
+    subgraph K["Khoj<br/>记忆即知识库"]
         K1[Embedding存储]
         K2[语义检索]
         K3[Agent增强]
     end
 
-    subgraph G["GPT Researcher\n记忆即流程缓存"]
+    subgraph G["GPT Researcher<br/>记忆即流程缓存"]
         G1[Planner分配任务]
         G2[Agent执行子任务]
         G3[结果汇总]
     end
 
-    subgraph A["agentUniverse\n记忆即协作上下文"]
+    subgraph A["agentUniverse<br/>记忆即协作上下文"]
         A1[Pattern定义协作拓扑]
         A2[多Agent角色分工]
         A3[Memory注入协作上下文]
     end
 
-    subgraph M["MemMachine\n记忆即数据"]
+    subgraph M["MemMachine<br/>记忆即数据"]
         M1[图存储关系]
         M2[SQL存储事实]
         M3[API输出给Agent]

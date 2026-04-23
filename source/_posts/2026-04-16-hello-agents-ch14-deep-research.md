@@ -9,6 +9,7 @@ tags:
 - 自动化研究
 - 网络搜索
 - Plan-Execute
+- hello-agents
 ---
 
 > **核心结论**：深度研究（Deep Research）Agent的本质不是"更聪明的搜索"，而是"会规划任务的研究员"——它先想清楚要查什么，再系统地查，最后把碎片整合成结论。
@@ -31,20 +32,20 @@ Deep Research Agent的创新在于：它把"研究"这件事拆成了**三个角
 
 ```mermaid
 graph LR
-    U["👤 用户\n输入研究主题"] --> P["🗂️ TODO规划器\nTODO Planner"]
+    U["👤 用户<br/>输入研究主题"] --> P["🗂️ TODO规划器<br/>TODO Planner"]
     
-    P -->|"生成3-5个子任务"| T1["📋 任务1\n基本概念"]
-    P --> T2["📋 任务2\n技术现状"]
-    P --> T3["📋 任务3\n实际应用"]
+    P -->|"生成3-5个子任务"| T1["📋 任务1<br/>基本概念"]
+    P --> T2["📋 任务2<br/>技术现状"]
+    P --> T3["📋 任务3<br/>实际应用"]
     
-    T1 --> E["⚙️ 任务执行器\nTask Executor"]
+    T1 --> E["⚙️ 任务执行器<br/>Task Executor"]
     T2 --> E
     T3 --> E
     
-    E -->|"搜索+总结"| N["📝 笔记本\nNoteTool"]
+    E -->|"搜索+总结"| N["📝 笔记本<br/>NoteTool"]
     
-    N --> R["📄 报告生成器\nReport Writer"]
-    R --> OUT["✅ 结构化研究报告\n含来源引用"]
+    N --> R["📄 报告生成器<br/>Report Writer"]
+    R --> OUT["✅ 结构化研究报告<br/>含来源引用"]
 
     style U fill:#C7CEEA,stroke:#9FA8DA,color:#333
     style P fill:#E8D5F5,stroke:#CE93D8,color:#333
@@ -520,3 +521,36 @@ if __name__ == "__main__":
 **SSE流式推送**让长时任务变得可忍受。研究需要时间，但让用户看到进度，焦虑感会大大降低。
 
 > **一个值得思考的问题**：如果Deep Research Agent给了你一份报告，你会直接引用它的结论吗？为什么？答案揭示了你对AI工具的使用态度，也决定了你能从中获得多大价值。
+
+---
+
+## 📚 Hello Agents 系列导航
+
+> 本文是《Hello Agents》开源系列第 **14/16** 章，适合 AI Agent 开发入门到进阶学习。
+
+| 方向 | 章节 |
+|:--|:--|
+| ◀ 上一章 | [第13章：用Agent规划日本5日游，2分钟搞定2小时的活](/2026/04/16/2026-04-16-hello-agents-ch13-travel-assistant/) |
+| 下一章 ▶ | [第15章：赛博小镇：25个AI角色自主生活，涌现了什么？](/2026/04/16/2026-04-16-hello-agents-ch15-cyber-town/) |
+
+<details>
+<summary>📖 全部 16 章目录（点击展开）</summary>
+
+1. [初识智能体：LLM会聊天，Agent能办事](/2026/04/16/2026-04-16-hello-agents-ch01-intro-to-agents/)
+2. [智能体60年：从会下棋到能打工](/2026/04/16/2026-04-16-hello-agents-ch02-agent-history/)
+3. [LLM原理：它不理解语言，却比你更会用语言](/2026/04/16/2026-04-16-hello-agents-ch03-llm-basics/)
+4. [Agent思考三剑客：ReAct、Plan-and-Solve与Reflection](/2026/04/16/2026-04-16-hello-agents-ch04-classic-paradigms/)
+5. [不会写代码也能搭AI Agent？低代码平台实战指南](/2026/04/16/2026-04-16-hello-agents-ch05-low-code-platforms/)
+6. [当一个Agent不够用时：三大框架多智能体实战](/2026/04/16/2026-04-16-hello-agents-ch06-framework-practice/)
+7. [为什么要造轮子？200行Python手写Agent框架](/2026/04/16/2026-04-16-hello-agents-ch07-build-your-framework/)
+8. [Agent为何失忆？RAG与记忆系统深度解析](/2026/04/16/2026-04-16-hello-agents-ch08-memory-retrieval/)
+9. [Context Engineering：让Agent真正聪明的隐秘武器](/2026/04/16/2026-04-16-hello-agents-ch09-context-engineering/)
+10. [AI Agent如何与世界对话：MCP、A2A、ANP协议全解析](/2026/04/16/2026-04-16-hello-agents-ch10-agent-protocols/)
+11. [用强化学习驯服AI Agent：GRPO与Agentic RL全解析](/2026/04/16/2026-04-16-hello-agents-ch11-agentic-rl/)
+12. [你的Agent真的好用吗？智能体评估体系完全指南](/2026/04/16/2026-04-16-hello-agents-ch12-evaluation/)
+13. [用Agent规划日本5日游，2分钟搞定2小时的活](/2026/04/16/2026-04-16-hello-agents-ch13-travel-assistant/)
+14. [自动写研究报告的Agent：比ChatGPT深，但有盲点](/2026/04/16/2026-04-16-hello-agents-ch14-deep-research/) **← 当前**
+15. [赛博小镇：25个AI角色自主生活，涌现了什么？](/2026/04/16/2026-04-16-hello-agents-ch15-cyber-town/)
+16. [学完16章，现在从0构建你自己的Agent](/2026/04/16/2026-04-16-hello-agents-ch16-graduation/)
+
+</details>

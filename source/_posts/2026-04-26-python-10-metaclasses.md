@@ -49,7 +49,7 @@ print(obj.greet())  # Hello, I'm 42
 
 ```mermaid
 flowchart TD
-    A["class MyClass\n(metaclass=Meta)"] --> B["Meta.__new__()"]
+    A["class MyClass<br/>(metaclass=Meta)"] --> B["Meta.__new__()"]
     B --> C["创建类对象"]
     C --> D["Meta.__init__()"]
     D --> E["返回类对象"]
@@ -203,7 +203,7 @@ Tools: ['calculator', 'search']
 
 ```mermaid
 flowchart TB
-    A["class User\n(Model)"] --> B["ORMMeta.__new__()"]
+    A["class User<br/>(Model)"] --> B["ORMMeta.__new__()"]
     B --> C["遍历类属性"]
     C --> D{"是 Field?"}
     D -->|"是"| E["收集到 _fields"]

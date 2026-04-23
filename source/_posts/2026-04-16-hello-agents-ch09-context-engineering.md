@@ -8,6 +8,7 @@ tags:
 - Context Engineering
 - Prompt设计
 - Token优化
+- hello-agents
 ---
 
 > **核心结论：Agent的智商上限，不是模型决定的，而是你塞进上下文窗口的信息质量决定的。**
@@ -74,13 +75,13 @@ tags:
 flowchart TD
     START(["🚀 新一轮对话开始"])
     CHECK{"📏 当前 Token 用量？"}
-    SAFE["✅ 充裕\n直接追加历史"]
+    SAFE["✅ 充裕<br/>直接追加历史"]
     WARN{"⚠️ 接近上限？"}
-    SUM["📝 摘要压缩\nSummarization\n压缩旧对话轮次"]
-    MEM["🧠 记忆检索\nMemory Selection\n从向量库召回相关记忆"]
-    STRUCT["📐 结构化排布\nStructured Format\n按优先级填充窗口"]
-    DYN["🪟 动态窗口\nDynamic Window\n滑动窗口丢弃最旧轮次"]
-    BUILD(["🏗️ 构建最终 Context\n传入模型推理"])
+    SUM["📝 摘要压缩<br/>Summarization<br/>压缩旧对话轮次"]
+    MEM["🧠 记忆检索<br/>Memory Selection<br/>从向量库召回相关记忆"]
+    STRUCT["📐 结构化排布<br/>Structured Format<br/>按优先级填充窗口"]
+    DYN["🪟 动态窗口<br/>Dynamic Window<br/>滑动窗口丢弃最旧轮次"]
+    BUILD(["🏗️ 构建最终 Context<br/>传入模型推理"])
 
     START --> CHECK
     CHECK -->|"< 60%"| SAFE
@@ -349,10 +350,10 @@ if __name__ == "__main__":
 
 ```mermaid
 graph LR
-    A["💡 原始信息\n(海量、冗余)"]
-    B["⚙️ Context Engineering\n四大技术过滤压缩"]
-    C["🎯 高密度上下文\n(有限、精准)"]
-    D["🤖 模型推理\n(效果最大化)"]
+    A["💡 原始信息<br/>(海量、冗余)"]
+    B["⚙️ Context Engineering<br/>四大技术过滤压缩"]
+    C["🎯 高密度上下文<br/>(有限、精准)"]
+    D["🤖 模型推理<br/>(效果最大化)"]
 
     A --> B --> C --> D
 
@@ -375,3 +376,36 @@ graph LR
 ---
 
 *本文基于 [hello-agents](https://github.com/youjingvs/hello-agents) 开源项目第九章内容，安装：`pip install "hello-agents[all]==0.2.8"`*
+
+---
+
+## 📚 Hello Agents 系列导航
+
+> 本文是《Hello Agents》开源系列第 **9/16** 章，适合 AI Agent 开发入门到进阶学习。
+
+| 方向 | 章节 |
+|:--|:--|
+| ◀ 上一章 | [第08章：Agent为何失忆？RAG与记忆系统深度解析](/2026/04/16/2026-04-16-hello-agents-ch08-memory-retrieval/) |
+| 下一章 ▶ | [第10章：AI Agent如何与世界对话：MCP、A2A、ANP协议全解析](/2026/04/16/2026-04-16-hello-agents-ch10-agent-protocols/) |
+
+<details>
+<summary>📖 全部 16 章目录（点击展开）</summary>
+
+1. [初识智能体：LLM会聊天，Agent能办事](/2026/04/16/2026-04-16-hello-agents-ch01-intro-to-agents/)
+2. [智能体60年：从会下棋到能打工](/2026/04/16/2026-04-16-hello-agents-ch02-agent-history/)
+3. [LLM原理：它不理解语言，却比你更会用语言](/2026/04/16/2026-04-16-hello-agents-ch03-llm-basics/)
+4. [Agent思考三剑客：ReAct、Plan-and-Solve与Reflection](/2026/04/16/2026-04-16-hello-agents-ch04-classic-paradigms/)
+5. [不会写代码也能搭AI Agent？低代码平台实战指南](/2026/04/16/2026-04-16-hello-agents-ch05-low-code-platforms/)
+6. [当一个Agent不够用时：三大框架多智能体实战](/2026/04/16/2026-04-16-hello-agents-ch06-framework-practice/)
+7. [为什么要造轮子？200行Python手写Agent框架](/2026/04/16/2026-04-16-hello-agents-ch07-build-your-framework/)
+8. [Agent为何失忆？RAG与记忆系统深度解析](/2026/04/16/2026-04-16-hello-agents-ch08-memory-retrieval/)
+9. [Context Engineering：让Agent真正聪明的隐秘武器](/2026/04/16/2026-04-16-hello-agents-ch09-context-engineering/) **← 当前**
+10. [AI Agent如何与世界对话：MCP、A2A、ANP协议全解析](/2026/04/16/2026-04-16-hello-agents-ch10-agent-protocols/)
+11. [用强化学习驯服AI Agent：GRPO与Agentic RL全解析](/2026/04/16/2026-04-16-hello-agents-ch11-agentic-rl/)
+12. [你的Agent真的好用吗？智能体评估体系完全指南](/2026/04/16/2026-04-16-hello-agents-ch12-evaluation/)
+13. [用Agent规划日本5日游，2分钟搞定2小时的活](/2026/04/16/2026-04-16-hello-agents-ch13-travel-assistant/)
+14. [自动写研究报告的Agent：比ChatGPT深，但有盲点](/2026/04/16/2026-04-16-hello-agents-ch14-deep-research/)
+15. [赛博小镇：25个AI角色自主生活，涌现了什么？](/2026/04/16/2026-04-16-hello-agents-ch15-cyber-town/)
+16. [学完16章，现在从0构建你自己的Agent](/2026/04/16/2026-04-16-hello-agents-ch16-graduation/)
+
+</details>

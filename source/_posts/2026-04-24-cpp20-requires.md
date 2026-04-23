@@ -362,8 +362,8 @@ graph LR
     C --> D["requires 子句"]
     C --> E["requires 表达式"]
     
-    D --> F["template&lt;typename T&gt;\nrequires std::integral&lt;T&gt;"]
-    E --> G["concept Addable =\n  requires(T a, T b)\n  { a + b; };"]
+    D --> F["template&lt;typename T&gt;<br/>requires std::integral&lt;T&gt;"]
+    E --> G["concept Addable =<br/>  requires(T a, T b)<br/>  { a + b; };"]
     
     style A fill:#E8D5F5,stroke:#CE93D8,color:#333
     style B fill:#C7CEEA,stroke:#9FA8DA,color:#333

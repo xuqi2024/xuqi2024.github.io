@@ -30,12 +30,12 @@ tags: [Python, 上下文管理器, 资源管理]
 
 ```mermaid
 graph TB
-    START["🔵 with 语句入口"] --> ENTER["📗 __enter__()\n获取/初始化资源"]
+    START["🔵 with 语句入口"] --> ENTER["📗 __enter__()<br/>获取/初始化资源"]
     ENTER --> BODY["⚙️ 执行 with 块内代码"]
-    BODY --> EXIT["📕 __exit__()\n清理/释放资源"]
+    BODY --> EXIT["📕 __exit__()<br/>清理/释放资源"]
     EXIT --> END["🏁 块外继续执行"]
     
-    BODY -.->|"发生异常"| EXC["📕 __exit__(exc_type,\nexc_val, exc_tb)"]
+    BODY -.->|"发生异常"| EXC["📕 __exit__(exc_type,<br/>exc_val, exc_tb)"]
     EXC -->|返回 True| SUPP["✅ 异常被 suppress"]
     EXC -->|返回 False| RERAISE["❌ 异常向外传播"]
     
@@ -185,11 +185,11 @@ with retry_context(max_retries=3) as attempt:
 
 ```mermaid
 graph TB
-    START["🚀 ExitStack() 创建空栈"] --> PUSH["📥 enter_context()\n动态添加资源"]
-    PUSH --> LOOP{"还有资源\n要添加？"}
+    START["🚀 ExitStack() 创建空栈"] --> PUSH["📥 enter_context()<br/>动态添加资源"]
+    PUSH --> LOOP{"还有资源<br/>要添加？"}
     LOOP -->|"是"| PUSH
     LOOP -->|"否"| EXEC["⚙️ 执行实际逻辑"]
-    EXEC --> CLEANUP["📕 自动调用所有\n__exit__ / finally"]
+    EXEC --> CLEANUP["📕 自动调用所有<br/>__exit__ / finally"]
     CLEANUP --> END["🏁 所有资源已释放"]
     
     style START fill:#C7CEEA,stroke:#9FA8DA,color:#333
@@ -369,17 +369,17 @@ with TokenCounter("gpt-4") as counter:
 
 ```mermaid
 graph LR
-    CM["🔵 上下文管理器\nwith 语句"]
-    PROTO["📗 __enter__/__exit__ 协议\n类实现"]
-    DECO["📗 @contextmanager\n生成器实现"]
-    STACK["📗 ExitStack\n动态资源栈"]
+    CM["🔵 上下文管理器<br/>with 语句"]
+    PROTO["📗 __enter__/__exit__ 协议<br/>类实现"]
+    DECO["📗 @contextmanager<br/>生成器实现"]
+    STACK["📗 ExitStack<br/>动态资源栈"]
     
     CM --> PROTO
     CM --> DECO
     CM --> STACK
     
-    PROTO -->|"AI 场景"| LLM["🤖 LLM Session\nAPI 连接池"]
-    DECO -->|"AI 场景"| RETRY["🔄 Retry Context\n重试机制"]
+    PROTO -->|"AI 场景"| LLM["🤖 LLM Session<br/>API 连接池"]
+    DECO -->|"AI 场景"| RETRY["🔄 Retry Context<br/>重试机制"]
     STACK -->|"AI 场景"| BATCH["📦 批量工具调用"]
     
     style CM fill:#C7CEEA,stroke:#9FA8DA,color:#333
