@@ -2,7 +2,9 @@
 title: 【C++17】（五）std::optional / std::variant / std::any：类型安全编程三剑客
 date: 2026-04-23 12:00:00
 categories: [C++新特性]
-tags: [C++17, std::optional, std::variant, std::any]
+tags:
+- C++
+- C++17
 ---
 
 > C++ 以"类型安全"著称，但在 C++17 之前，**"值可能不存在"** 和 **"类型不确定"** 一直是痛点。std::optional / variant / any 就是答案。

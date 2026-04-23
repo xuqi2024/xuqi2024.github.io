@@ -1,8 +1,9 @@
 ---
 title: 【Python AI教程】（二）上下文管理器：资源管理的艺术
-date: 2026-04-25 10:00:00
+date: 2026-04-23 10:00:00
 categories: [Python AI教程]
-tags: [Python, 上下文管理器, 资源管理]
+tags:
+- Python
 ---
 
 > 一行 `with` 语句，胜过十行 `try...finally`。上下文管理器是 Python 最被低估的特性之一，在 AI 开发中，它是管理 API 会话、LLM 调用、数据库连接的核心利器。

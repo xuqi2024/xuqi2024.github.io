@@ -1,13 +1,11 @@
 ---
 title: 【Python AI教程】（十一）Protocol与结构化类型：duck typing的复兴
-date: 2026-04-26 18:00:00
+date: 2026-04-23 18:00:00
 categories:
 - 技术分析
 tags:
 - Python
-- Protocol
-- typing
-- 结构化类型
+- 类型系统
 ---
 
 > "如果它走路像鸭子，叫声像鸭子，那它就是鸭子。"——这就是结构化子类型。Python 3.8+ 用 Protocol 把它带入了类型系统。

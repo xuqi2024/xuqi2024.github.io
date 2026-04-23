@@ -1,11 +1,11 @@
 ---
 title: 【C++17】（六）std::apply / std::invoke：函数调用工具箱
-date: 2026-04-24 10:00:00
+date: 2026-04-23 10:00:00
 categories:
 - C++新特性
 tags:
+- C++
 - C++17
-- Utilities
 ---
 
 > 为什么调用成员函数要写 `std::mem_fn`？为什么展开 `tuple` 调用函数那么麻烦？C++17 的 `std::apply` 和 `std::invoke` 就是来终结这些历史遗留问题的。

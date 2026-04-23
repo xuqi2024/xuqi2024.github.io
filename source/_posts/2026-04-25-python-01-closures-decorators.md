@@ -1,12 +1,10 @@
 ---
 title: 【Python AI教程】（一）闭包与装饰器：让AI管道更优雅
-date: 2026-04-25 10:30:00
+date: 2026-04-23 10:30:00
 categories:
 - Python AI教程
 tags:
 - Python
-- 装饰器
-- 闭包
 - 进阶
 ---
 

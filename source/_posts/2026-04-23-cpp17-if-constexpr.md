@@ -2,7 +2,9 @@
 title: 【C++17】（二）if constexpr：编译期分支的终极武器
 date: 2026-04-23 10:00:00
 categories: [C++新特性]
-tags: [C++17, Template, Compile-time]
+tags:
+- C++
+- C++17
 ---
 
 > 模板代码中最讨厌的是什么？SFINAE 那种拐弯抹角的控制流！C++17 的 `if constexpr` 让编译期分支变得像普通 if 语句一样直观。

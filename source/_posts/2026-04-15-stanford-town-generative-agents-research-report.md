@@ -5,10 +5,8 @@ categories:
 - 技术报告
 tags:
 - AI Agent
-- Generative Agents
 - 多智能体
-- LLM
-- 模拟世界
+- Generative Agents
 description: "2023年斯坦福小镇论文震撼学术界：25个AI智能体在虚拟小镇自主生活、社交、甚至组织情人节派对。深度解析Generative Agents的实现原理与技术架构。"
 ---
 

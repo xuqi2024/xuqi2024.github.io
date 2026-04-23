@@ -4,11 +4,8 @@ date: 2026-04-21 23:12:00
 categories:
   - AI Agent
 tags:
-  - OpenHands
-  - AI Agent
-  - 软件开发
-  - 开源
-  - LLM
+- AI Agent
+- 开源项目
 ---
 
 # OpenHands 深度完全解读：开源 AI 驱动的软件开发平台

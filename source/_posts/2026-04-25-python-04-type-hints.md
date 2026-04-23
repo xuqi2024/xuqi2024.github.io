@@ -1,14 +1,11 @@
 ---
 title: 【Python AI教程】（四）类型提示：让AI代码更安全
-date: 2026-04-25 09:00:00
+date: 2026-04-23 09:00:00
 categories:
   - Python AI教程
 tags:
-  - Python
-  - TypeHints
-  - typing
-  - Protocol
-  - AI
+- Python
+- 类型系统
 description: Python 类型提示从入门到精通：typing.Optional/Union/Literal/Callable/TypeVar/Generic/Protocol，让 AI 代码像强类型语言一样安全。
 ---
 

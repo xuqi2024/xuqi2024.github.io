@@ -5,13 +5,9 @@ categories:
 - 技术深度
 tags:
 - AI Agent
-- Memory
-- DeerFlow
-- mem0
-- Dify
-- Agent架构
 - RAG
-- 向量数据库
+- 记忆系统
+- Agent框架
 ---
 
 > 大模型本身没有记忆——每次对话都是从零开始。真正让 Agent「变聪明」的，是它背后那套 Memory 系统的设计方式。今天我们深入拆解三个 2025~2026 年最活跃的开源项目，从架构设计到实现原理，一探究竟。

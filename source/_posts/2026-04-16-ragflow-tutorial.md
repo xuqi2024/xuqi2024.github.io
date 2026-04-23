@@ -5,12 +5,8 @@ categories:
 - 教程
 tags:
 - RAG
-- RAGFlow
-- 向量检索
-- 深度文档理解
 - LLM
-- InfiniFlow
-- RAG教程
+- 开源项目
 ---
 
 # RAGFlow开源RAG引擎完整入门教程：从零搭建基于深度文档理解的智能问答系统

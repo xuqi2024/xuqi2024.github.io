@@ -5,10 +5,7 @@ categories:
 - 技术报告
 tags:
 - 汽车AI
-- 多模态大模型
-- 边缘AI
-- 智能座舱
-- 端侧推理
+- LLM
 description: "是把AI推理全部交给云端，还是在车载ECU（Electronic Control Unit）上部署本地大模型？"
 ---
 

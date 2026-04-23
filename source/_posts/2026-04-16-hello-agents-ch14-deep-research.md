@@ -5,10 +5,7 @@ categories:
 - 技术科普
 tags:
 - AI Agent
-- Deep Research
-- 自动化研究
-- 网络搜索
-- Plan-Execute
+- RAG
 - hello-agents
 ---
 

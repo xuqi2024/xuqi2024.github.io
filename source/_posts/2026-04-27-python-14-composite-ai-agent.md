@@ -1,8 +1,10 @@
 ---
 title: 【Python AI教程】（十四）组合模式实战：构建模块化AI Agent
-date: 2026-04-27 12:00:00 +0800
+date: 2026-04-23 12:00:00 +0800
 categories: [Python AI教程]
-tags: [Python, 设计模式, AI Agent, 模块化, 架构]
+tags:
+- Python
+- AI Agent
 ---
 
 # 【Python AI教程】（十四）组合模式实战：构建模块化AI Agent

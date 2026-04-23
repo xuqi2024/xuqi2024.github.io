@@ -1,11 +1,11 @@
 ---
 title: 【C++17】（七）Filesystem 大全：从入门到工程应用
-date: 2026-04-24 10:00:00
+date: 2026-04-23 10:00:00
 categories:
 - C++新特性
 tags:
+- C++
 - C++17
-- Filesystem
 ---
 
 > 还在用 `fopen` / `opendir` / `stat` 这些 C 风格 API 处理文件？C++17 引入的 `std::filesystem` 可能是你见过的最优雅的文件操作方案——一套 API 打天下，跨平台、面向对象、功能齐全。

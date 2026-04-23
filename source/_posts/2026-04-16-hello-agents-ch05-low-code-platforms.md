@@ -5,9 +5,6 @@ categories:
 - 技术科普
 tags:
 - AI Agent
-- Coze
-- Dify
-- n8n
 - 低代码
 - hello-agents
 ---

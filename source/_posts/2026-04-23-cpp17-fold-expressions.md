@@ -2,7 +2,9 @@
 title: 【C++17】（四）Fold Expressions：变参模板的救星
 date: 2026-04-23 12:00:00
 categories: [C++新特性]
-tags: [C++17, Template, Variadic]
+tags:
+- C++
+- C++17
 ---
 
 > C++14 写一个变参 print 函数需要几步？答案是：至少 50 行递归模板代码。C++17 的折叠表达式让这件事变成一行。

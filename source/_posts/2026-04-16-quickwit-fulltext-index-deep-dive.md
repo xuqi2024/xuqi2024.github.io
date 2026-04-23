@@ -4,11 +4,9 @@ date: 2026-04-16 20:00:00
 categories:
 - 技术分析
 tags:
-- Quickwit
-- 全文检索
-- 倒排索引
 - 搜索引擎
 - Rust
+- 开源项目
 description: Quickwit是用Rust编写的云原生搜索引擎，通过列存储、分片并行和ZSTD压缩等机制实现亚秒级全文检索。本文深入剖析其索引加速原理并给出完整上手教程。
 ---
 

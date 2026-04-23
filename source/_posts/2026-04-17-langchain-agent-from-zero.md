@@ -4,11 +4,10 @@ date: 2026-04-17 09:00:00
 categories:
 - 技术科普
 tags:
-- LangChain
 - AI Agent
+- LLM
+- Agent框架
 - Python
-- 入门教程
-- 大语言模型
 ---
 
 > 📚 **AI Agent 开源框架实战系列**（1/6） | ➡️ 下一篇：[LangGraph：用状态图构建有记忆的 AI 工作流](/2026/04/17/langgraph-stateful-workflow/) | 🔗 [配套代码仓库](https://github.com/xuqi2024/ai-agent-tutorials)

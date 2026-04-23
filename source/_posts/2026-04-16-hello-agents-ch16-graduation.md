@@ -5,10 +5,7 @@ categories:
 - 技术科普
 tags:
 - AI Agent
-- 综合实战
-- 项目设计
-- AI工程
-- 学习路径
+- Agent框架
 - hello-agents
 ---
 

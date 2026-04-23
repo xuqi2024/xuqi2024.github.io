@@ -1,8 +1,9 @@
 ---
 title: 【Python AI教程】（十三）缓存艺术：lru_cache/ttl_cache/自定义
-date: 2026-04-27 11:00:00 +0800
+date: 2026-04-23 11:00:00 +0800
 categories: [Python AI教程]
-tags: [Python, 缓存, LRU, AI]
+tags:
+- Python
 ---
 
 # 【Python AI教程】（十三）缓存艺术：lru_cache/ttl_cache/自定义

@@ -2,12 +2,10 @@
 title: 【LangChain】Agent深度实战：从ReAct核心原理到生产级多Agent架构
 date: 2026-04-22 03:00:00
 tags:
-  - LangChain
-  - AI Agent
-  - Python
-  - 多 Agent
-  - ReAct
-  - RAG
+- AI Agent
+- LLM
+- Agent框架
+- Python
 categories:
   - AI
 ---

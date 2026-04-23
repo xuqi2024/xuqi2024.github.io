@@ -1,8 +1,10 @@
 ---
 title: 【Python AI教程】（五）Dataclass 与 attrs：告别重复代码
-date: 2026-04-25 14:00:00
+date: 2026-04-23 14:00:00
 categories: [Python AI教程]
-tags: [Python, Dataclass, attrs, 进阶]
+tags:
+- Python
+- 进阶
 ---
 
 > 写了几百行 `__init__`、`__repr__`、`__eq__`，只为定义一个「数据容器」？Dataclass 让 Python 程序员从重复劳动中解放出来，专注于业务逻辑本身。

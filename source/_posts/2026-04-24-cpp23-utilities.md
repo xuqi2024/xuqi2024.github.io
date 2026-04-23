@@ -1,11 +1,11 @@
 ---
 title: 【C++23】（三）std::print / std::to_underlying / std::embed：工具箱大升级
-date: 2026-04-24 09:53:00
+date: 2026-04-23 09:53:00
 categories:
 - C++新特性
 tags:
+- C++
 - C++23
-- Utilities
 ---
 
 > C++23 不仅带来了 `std::expected`、`if consteval` 这样的"大新闻"，还升级了一系列日常工具函数。`std::print` 让输出更简洁，`std::to_underlying` 让类型转换更清晰，`contains()` 让查找更直观。本文为你盘点这些"小而美"的改进。

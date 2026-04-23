@@ -5,10 +5,8 @@ categories:
 - 技术科普
 tags:
 - AI Agent
-- 自建框架
-- Agent架构
 - Python
-- 工具系统
+- Agent框架
 - hello-agents
 ---
 

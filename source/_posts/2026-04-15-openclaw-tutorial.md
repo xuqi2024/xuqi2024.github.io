@@ -4,11 +4,8 @@ date: 2026-04-15 22:56:00
 categories:
 - 技术科普
 tags:
-- OpenClaw
-- AI助手
-- 会话管理
-- 心跳机制
-- 配置教程
+- AI Agent
+- 开源项目
 description: OpenClaw完全入门指南：手把手讲清楚节点、会话、心跳三大核心概念，以及所有配置项的含义与使用方法。适合初次接触OpenClaw的用户从零快速上手。
 ---
 

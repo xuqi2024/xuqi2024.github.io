@@ -6,9 +6,6 @@ categories:
 tags:
 - AI Agent
 - 强化学习
-- GRPO
-- 模型训练
-- RLHF
 - hello-agents
 ---
 

@@ -1,11 +1,11 @@
 ---
 title: 【C++20】（二）requires 与 requires 表达式：精细化约束的利器
-date: 2026-04-24 10:30:00
+date: 2026-04-23 10:30:00
 categories:
 - C++新特性
 tags:
+- C++
 - C++20
-- requires
 ---
 
 ## 前言：requires 是什么？

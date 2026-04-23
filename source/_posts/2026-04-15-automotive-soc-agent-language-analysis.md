@@ -4,11 +4,9 @@ date: 2026-04-15 09:30:00
 categories:
 - 技术报告
 tags:
-- 汽车电子
-- SOC
-- Agent开发
-- Rust
+- 汽车AI
 - C++
+- Rust
 ---
 
 # 汽车SOC Agent开发最佳编程语言深度分析

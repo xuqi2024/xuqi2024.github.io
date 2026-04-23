@@ -2,7 +2,9 @@
 title: 【C++14】（一）Generic Lambda 与 Variable Template：现代C++的起点
 date: 2026-04-23 12:00:00
 categories: [C++新特性]
-tags: [C++14, Lambda, Template, Modern-C++]
+tags:
+- C++
+- C++14
 ---
 
 > C++14 是现代 C++ 的真正起点——它让模板和 Lambda 不再是"奇技淫巧"，而是日常编程的一部分。

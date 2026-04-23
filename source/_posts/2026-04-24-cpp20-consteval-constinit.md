@@ -1,8 +1,10 @@
 ---
 title: 【C++20】（五）consteval 与 constinit：编译期计算的守护者
-date: 2026-04-24 11:00:00
+date: 2026-04-23 11:00:00
 categories: [C++新特性]
-tags: [C++20, constexpr, consteval, constinit]
+tags:
+- C++
+- C++20
 ---
 
 > **C++14 引入 `constexpr` 函数，C++20 带来 `consteval` 和 `constinit`。这三个关键字守卫着编译期计算的大门，但职责各不相同。**

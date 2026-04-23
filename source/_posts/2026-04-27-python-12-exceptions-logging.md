@@ -1,8 +1,9 @@
 ---
 title: 【Python AI教程】（十二）异常链与日志：AI健壮性保障
-date: 2026-04-27 10:00:00 +0800
+date: 2026-04-23 10:00:00 +0800
 categories: [Python AI教程]
-tags: [Python, 异常, 日志, 健壮性]
+tags:
+- Python
 ---
 
 # 【Python AI教程】（十二）异常链与日志：AI健壮性保障

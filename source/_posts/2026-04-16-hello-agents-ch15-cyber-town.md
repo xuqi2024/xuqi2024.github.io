@@ -6,9 +6,7 @@ categories:
 tags:
 - AI Agent
 - 多智能体
-- 社会模拟
 - Generative Agents
-- 记忆系统
 - hello-agents
 ---
 

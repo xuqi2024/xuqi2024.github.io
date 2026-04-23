@@ -1,7 +1,10 @@
 ---
 title: "MCP 深度完全解读：让 AI 助手真正连接世界"
-date: 2026-04-23 10:00:00
-tags: [MCP, AI, Agent, 工具集成, 协议, JSON-RPC, Anthropic, 大模型, 工具调用]
+date: 2026-04-23 09:00:00
+tags:
+- MCP
+- AI Agent
+- 工具调用
 categories: [AI Agent]
 ---
 

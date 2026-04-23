@@ -1,12 +1,11 @@
 ---
 title: 【C++23】（二）if consteval 与 Deducing this：更多编译期能力
-date: 2026-04-24 09:53:00
+date: 2026-04-23 09:53:00
 categories:
 - C++新特性
 tags:
+- C++
 - C++23
-- consteval
-- Deducing this
 ---
 
 > C++23 让"编译期计算"和"对象方法调用"都变得更强大。`if consteval` 让你在编译期分支判断，而 `deducing this` 则彻底改变了成员函数的设计方式——不再需要模板就能实现"泛型方法"。

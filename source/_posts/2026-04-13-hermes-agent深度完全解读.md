@@ -4,10 +4,8 @@ date: 2026-04-13 12:00:00 +0800
 categories:
 - 技术分析
 tags:
-- Hermes Agent
 - AI Agent
 - 记忆系统
-- 智能体架构
 - 源码分析
 description: "本文约15000字，深入解析 Hermes Agent 的核心技术：FTS5 全文搜索原理与实战、Honcho 用户画像系统架构、Agent 学习闭环机制，以及与 OpenClaw 的全方位深度对比。"
 ---

@@ -1,12 +1,10 @@
 ---
 title: 【Python AI教程】（九）描述符协议：属性的高级玩法
-date: 2026-04-26 10:00:00
+date: 2026-04-23 10:00:00
 categories:
 - 技术分析
 tags:
 - Python
-- 描述符
-- Descriptor
 - 元编程
 ---
 

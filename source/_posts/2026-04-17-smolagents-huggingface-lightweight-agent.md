@@ -4,11 +4,9 @@ date: 2026-04-17 14:00:00
 categories:
 - 技术科普
 tags:
-- Smolagents
-- HuggingFace
 - AI Agent
+- Agent框架
 - Python
-- CodeAgent
 ---
 
 > 📚 **AI Agent 开源框架实战系列**（6/6） | ⬅️ 上一篇：[Agno：极简主义的 AI Agent 框架](/2026/04/17/agno-minimalist-agent-framework/) | 🔗 [配套代码仓库](https://github.com/xuqi2024/ai-agent-tutorials)

@@ -5,7 +5,6 @@ categories:
 - 技术科普
 tags:
 - AI Agent
-- 智能体入门
 - LLM
 - hello-agents
 ---

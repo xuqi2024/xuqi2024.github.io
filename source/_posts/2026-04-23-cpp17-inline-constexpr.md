@@ -2,7 +2,9 @@
 title: 【C++17】（三）Inline Variables 与 constexpr 加强：性能与表达力的双重飞跃
 date: 2026-04-23 11:00:00
 categories: [C++新特性]
-tags: [C++17, inline, constexpr]
+tags:
+- C++
+- C++17
 ---
 
 > 头文件里定义一个 `const` 变量就 ODR violation？模板静态成员变量要初始化还得跑到 .cpp 文件？C++17 的 inline 变量和全面进化的 constexpr 让这些问题统统成为历史。

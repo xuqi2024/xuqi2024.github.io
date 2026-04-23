@@ -5,10 +5,7 @@ categories:
 - 技术科普
 tags:
 - AI Agent
-- 实战案例
-- 旅行助手
 - 工具调用
-- ReAct
 - hello-agents
 ---
 

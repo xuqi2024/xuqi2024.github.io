@@ -6,9 +6,7 @@ categories:
 tags:
 - AI Agent
 - MCP
-- A2A协议
 - 工具调用
-- API
 - hello-agents
 ---
 

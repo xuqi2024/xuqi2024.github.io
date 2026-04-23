@@ -4,9 +4,7 @@ date: 2026-04-16 10:00:00
 categories:
 - 技术科普
 tags:
-- AI历史
-- 智能体
-- 发展趋势
+- AI Agent
 - hello-agents
 ---
 

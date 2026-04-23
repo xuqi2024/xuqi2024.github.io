@@ -2,10 +2,8 @@
 title: 【OpenHands】AI驱动软件开发代理：核心架构与设计原理深度解析
 date: 2026-04-22 03:30:00
 tags:
-  - Agent
-  - OpenHands
-  - 架构分析
-  - AI编程
+- AI Agent
+- 开源项目
 categories:
   - AI
   - 项目评测

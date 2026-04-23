@@ -2,7 +2,10 @@
 title: 【Letta】让大模型拥有"操作系统级"记忆能力深度解析
 date: 2026-04-17 00:15:00
 categories: 技术洞察
-tags: [Letta, MemGPT, AI记忆, Agent, 长期记忆, 向量检索, RAG, 分层记忆]
+tags:
+- AI Agent
+- 记忆系统
+- RAG
 ---
 
 # Letta深度解析：让大模型拥有"操作系统级"记忆能力

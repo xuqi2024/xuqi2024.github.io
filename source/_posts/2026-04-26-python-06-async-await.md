@@ -1,14 +1,11 @@
 ---
 title: 【Python AI教程】（六）async/await：异步编程入门到精通
-date: 2026-04-26 09:00:00
+date: 2026-04-23 09:00:00
 categories:
   - Python AI教程
 tags:
-  - Python
-  - async
-  - asyncio
-  - 异步
-  - AI
+- Python
+- 并发
 description: asyncio 异步编程从入门到精通：事件循环、协程、Task、Future、并发控制，让你的 AI 应用并发处理多个 API 调用。
 ---
 

@@ -5,9 +5,7 @@ categories:
 - 技术科普
 tags:
 - AI Agent
-- 性能评估
-- Benchmark
-- 测试框架
+- 开源项目
 - hello-agents
 ---
 

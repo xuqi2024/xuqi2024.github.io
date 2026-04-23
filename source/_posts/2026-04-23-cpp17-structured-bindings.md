@@ -2,7 +2,9 @@
 title: 【C++17】（一）Structured Bindings：彻底告别临时变量
 date: 2026-04-23 09:00:00
 categories: [C++新特性]
-tags: [C++17, Structured Bindings, Modern-C++]
+tags:
+- C++
+- C++17
 ---
 
 > 一行代码同时声明多个变量并绑定值？C++17 之前想都不敢想的事情，现在一行 `auto [a, b, c] = expr` 就能搞定。

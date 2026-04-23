@@ -4,11 +4,9 @@ date: 2026-04-15 21:32:00
 categories:
 - 技术分析
 tags:
-- 汽车座舱
-- CAN总线
-- CLI工具链
+- 汽车AI
 - AI Agent
-- 车载软件
+- 工具调用
 description: "如何将传统汽车座舱内的各种应用CLI化，让AI Agent能够像人类一样控制车辆，同时最大限度地减少适配工作量？"
 ---
 

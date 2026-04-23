@@ -1,12 +1,11 @@
 ---
 title: 【C++23】（一）std::expected：错误处理的新范式
-date: 2026-04-24 09:53:00
+date: 2026-04-23 09:53:00
 categories:
 - C++新特性
 tags:
+- C++
 - C++23
-- std::expected
-- Error Handling
 ---
 
 > 传统的 `std::optional` 只能告诉你"没有值"，但无法告诉你"为什么没有值"。C++23 引入的 `std::expected<T, E>`，终于让错误处理既能表达"出了什么问题"，又无需承担异常的性能开销。

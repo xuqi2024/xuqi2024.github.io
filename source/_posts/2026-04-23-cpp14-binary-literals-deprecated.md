@@ -2,7 +2,9 @@
 title: 【C++14】（二）Binary Literals、Digit Separators 与 Deprecated：编译器辅助编程
 date: 2026-04-23 12:00:00
 categories: [C++新特性]
-tags: [C++14, Literals, Attribute]
+tags:
+- C++
+- C++14
 ---
 
 > 好的代码不仅要能运行，还要**自解释**。C++14 引入的这些特性，让编译器成为你的"代码审查员"。

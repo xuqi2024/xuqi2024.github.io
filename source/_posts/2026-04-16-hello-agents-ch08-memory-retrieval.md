@@ -6,9 +6,7 @@ categories:
 tags:
 - AI Agent
 - RAG
-- 向量数据库
 - 记忆系统
-- FAISS
 - hello-agents
 ---
 

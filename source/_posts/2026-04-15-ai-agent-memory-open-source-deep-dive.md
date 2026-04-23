@@ -6,12 +6,10 @@ categories:
   - LLM
   - 开源
 tags:
-  - AI Agent
-  - Memory
-  - RAG
-  - Multi-Agent
-  - LLM
-  - 向量数据库
+- AI Agent
+- RAG
+- 记忆系统
+- 多智能体
 description: 深入对比分析四个主流开源 AI Agent + Memory 项目的核心架构、决策机制、记忆存储方案，以及它们在设计思路上的本质差异。
 ---
 

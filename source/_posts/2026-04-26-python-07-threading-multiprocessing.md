@@ -1,13 +1,10 @@
 ---
 title: 【Python AI教程】（七）Threading 与 Multiprocessing：并发三剑客
-date: 2026-04-26 10:30:00
+date: 2026-04-23 10:30:00
 categories:
 - Python AI教程
 tags:
 - Python
-- Threading
-- Multiprocessing
-- GIL
 - 并发
 ---
 

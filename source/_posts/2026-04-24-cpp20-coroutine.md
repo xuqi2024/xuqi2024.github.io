@@ -1,8 +1,10 @@
 ---
 title: 【C++20】（六）Coroutine 深入解析：异步编程的变革力量
-date: 2026-04-24 10:00:00
+date: 2026-04-23 10:00:00
 categories: [C++新特性]
-tags: [C++20, Coroutine, Async]
+tags:
+- C++
+- C++20
 ---
 
 > **协程不是新概念，但 C++20 引入的协程将异步编程从"callback 地狱"中彻底解救出来。**

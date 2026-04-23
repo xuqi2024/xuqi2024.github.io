@@ -1,13 +1,10 @@
 ---
 title: 【Python AI教程】（三）生成器与迭代器：流式AI数据处理的基石
-date: 2026-04-25 14:00:00
+date: 2026-04-23 14:00:00
 categories:
 - Python AI教程
 tags:
 - Python
-- 生成器
-- 迭代器
-- 异步
 ---
 
 > 当你调用 ChatGPT 或 Claude 时，为什么回复是**逐字出现**而不是一次性返回？这背后正是**流式处理（Streaming）** 在发挥作用。而在 Python 中，生成器和迭代器是实现这一能力的基石。

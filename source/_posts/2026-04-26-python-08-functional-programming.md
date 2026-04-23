@@ -1,15 +1,10 @@
 ---
 title: 【Python AI教程】（八）函数式编程：map/reduce/filter/itertools
-date: 2026-04-26 11:00:00
+date: 2026-04-23 11:00:00
 categories:
 - Python AI教程
 tags:
 - Python
-- 函数式
-- functools
-- itertools
-- map
-- reduce
 ---
 
 > **反常识结论**：`for` 循环不一定是处理数据的最佳方式——当你用 `map`/`filter`/`reduce` 重写逻辑时，代码不仅更简洁，还更容易并行化。本文从 AI 工程视角，系统讲解函数式编程在数据清洗、批量转换、pipeline 构建中的实战应用。

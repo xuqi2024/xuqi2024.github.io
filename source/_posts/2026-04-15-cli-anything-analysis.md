@@ -6,9 +6,7 @@ categories:
 tags:
 - AI Agent
 - 工具调用
-- CLI工具
 - MCP
-- Agent生态
 description: "Today's Software Serves Humans👨💻. Tomorrow's Users will be Agents🤖."
 ---
 

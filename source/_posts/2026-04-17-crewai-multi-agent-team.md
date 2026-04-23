@@ -4,11 +4,10 @@ date: 2026-04-17 11:00:00
 categories:
 - 技术科普
 tags:
-- CrewAI
-- 多智能体
 - AI Agent
+- 多智能体
+- Agent框架
 - Python
-- 团队协作
 ---
 
 > 📚 **AI Agent 开源框架实战系列**（3/6） | ⬅️ 上一篇：[LangGraph：用状态图构建有记忆的 AI 工作流](/2026/04/17/langgraph-stateful-workflow/) | ➡️ 下一篇：[AutoGen：让多个 AI Agent 对话协作](/2026/04/17/autogen-multi-agent-conversation/) | 🔗 [配套代码仓库](https://github.com/xuqi2024/ai-agent-tutorials)

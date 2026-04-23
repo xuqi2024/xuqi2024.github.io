@@ -4,11 +4,9 @@ date: 2026-04-17 13:00:00
 categories:
 - 技术科普
 tags:
-- Agno
 - AI Agent
+- Agent框架
 - Python
-- 多模态
-- 极简框架
 ---
 
 > 📚 **AI Agent 开源框架实战系列**（5/6） | ⬅️ 上一篇：[AutoGen：让多个 AI Agent 对话协作](/2026/04/17/autogen-multi-agent-conversation/) | ➡️ 下一篇：[Smolagents：HuggingFace 的轻量级 Agent 框架](/2026/04/17/smolagents-huggingface-lightweight-agent/) | 🔗 [配套代码仓库](https://github.com/xuqi2024/ai-agent-tutorials)
