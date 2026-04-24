@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Monda:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xuqi.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat","show_result":true},"fold":{"enable":false,"height":500},"language":false,"highlight_shrink":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":true,"nav":true,"disqus":{"shortname":"xuqi1987","count":true,"placeholder":"请开始你的表演","button":"发送","avatar":"mm","meta":"nickname,mail","pageSize":10,"reaction":true}},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"labels":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容: ${query}"}}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="【Python AI教程】（十三）缓存艺术：lru_cache&#x2F;ttl_cache&#x2F;自定义 本章讲解 Python 内置缓存机制、自定义 TTL 缓存实现，以及在 AI 应用中的 LLM 响应缓存策略。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Python AI教程】（十三）缓存艺术：lru_cache&#x2F;ttl_cache&#x2F;自定义">
+<meta property="og:url" content="https://xuqi.github.io/2026/04/27/2026-04-27-python-13-caching/index.html">
+<meta property="og:site_name" content="程序员的自我修养">
+<meta property="og:description" content="【Python AI教程】（十三）缓存艺术：lru_cache&#x2F;ttl_cache&#x2F;自定义 本章讲解 Python 内置缓存机制、自定义 TTL 缓存实现，以及在 AI 应用中的 LLM 响应缓存策略。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-27T03:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-22T02:55:57.537Z">
+<meta property="article:author" content="Xu Qi">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="缓存">
+<meta property="article:tag" content="LRU">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xuqi.github.io/2026/04/27/2026-04-27-python-13-caching/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xuqi.github.io/2026/04/27/2026-04-27-python-13-caching/","path":"2026/04/27/2026-04-27-python-13-caching/","title":"【Python AI教程】（十三）缓存艺术：lru_cache/ttl_cache/自定义"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>【Python AI教程】（十三）缓存艺术：lru_cache/ttl_cache/自定义 | 程序员的自我修养</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.5.0/mermaid.min.js","integrity":"sha256-2obLuIPcceEhkE3G09G33hBdmE55ivVcZUlcKcGNHjU="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="程序员的自我修养" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">程序员的自我修养</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">链接、装载与库</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E3%80%90Python-AI%E6%95%99%E7%A8%8B%E3%80%91%EF%BC%88%E5%8D%81%E4%B8%89%EF%BC%89%E7%BC%93%E5%AD%98%E8%89%BA%E6%9C%AF%EF%BC%9Alru-cache-ttl-cache-%E8%87%AA%E5%AE%9A%E4%B9%89"><span class="nav-number">1.</span> <span class="nav-text">【Python AI教程】（十三）缓存艺术：lru_cache&#x2F;ttl_cache&#x2F;自定义</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%BC%93%E5%AD%98%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">1. 缓存概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%B8%BA%E4%BB%80%E4%B9%88-AI-%E5%BA%94%E7%94%A8%E9%9C%80%E8%A6%81%E7%BC%93%E5%AD%98%EF%BC%9F"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 为什么 AI 应用需要缓存？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E7%BC%93%E5%AD%98%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 缓存类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-functools-lru-cache"><span class="nav-number">1.2.</span> <span class="nav-text">2. functools.lru_cache</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%9F%BA%E7%A1%80%E7%94%A8%E6%B3%95"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 基础用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E7%BC%93%E5%AD%98%E4%BF%A1%E6%81%AF"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 缓存信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E7%BC%93%E5%AD%98%E5%8F%82%E6%95%B0"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 缓存参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E7%BC%93%E5%AD%98%E5%A4%B1%E6%95%88"><span class="nav-number">1.2.4.</span> <span class="nav-text">2.4 缓存失效</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E8%87%AA%E5%AE%9A%E4%B9%89-TTL-Cache"><span class="nav-number">1.3.</span> <span class="nav-text">3. 自定义 TTL Cache</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-TTL-%E7%BC%93%E5%AD%98%E5%8E%9F%E7%90%86"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 TTL 缓存原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-TTLCache-%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 TTLCache 实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 使用示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-AI-%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.4.</span> <span class="nav-text">4. AI 应用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-LLM-%E5%93%8D%E5%BA%94%E7%BC%93%E5%AD%98"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 LLM 响应缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E8%AF%AD%E4%B9%89%E7%BC%93%E5%AD%98"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 语义缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E5%AE%8C%E6%95%B4%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.4.3.</span> <span class="nav-text">4.3 完整示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E7%BC%93%E5%AD%98%E7%AD%96%E7%95%A5%E9%80%89%E6%8B%A9"><span class="nav-number">1.5.</span> <span class="nav-text">5. 缓存策略选择</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E9%80%89%E6%8B%A9%E6%8C%87%E5%8D%97"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 选择指南</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E7%BC%93%E5%AD%98%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 缓存注意事项</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E6%80%BB%E7%BB%93"><span class="nav-number">1.6.</span> <span class="nav-text">6. 总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Xu Qi</p>
+  <div class="site-description" itemprop="description">读书笔记和技术分享</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xuqi.github.io/2026/04/27/2026-04-27-python-13-caching/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xu Qi">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员的自我修养">
+      <meta itemprop="description" content="读书笔记和技术分享">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="【Python AI教程】（十三）缓存艺术：lru_cache&#x2F;ttl_cache&#x2F;自定义 | 程序员的自我修养">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【Python AI教程】（十三）缓存艺术：lru_cache/ttl_cache/自定义
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-04-27 11:00:00" itemprop="dateCreated datePublished" datetime="2026-04-27T11:00:00+08:00">2026-04-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-04-22 10:55:57" itemprop="dateModified" datetime="2026-04-22T10:55:57+08:00">2026-04-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Python-AI%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">Python AI教程</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="【Python-AI教程】（十三）缓存艺术：lru-cache-ttl-cache-自定义"><a href="#【Python-AI教程】（十三）缓存艺术：lru-cache-ttl-cache-自定义" class="headerlink" title="【Python AI教程】（十三）缓存艺术：lru_cache&#x2F;ttl_cache&#x2F;自定义"></a>【Python AI教程】（十三）缓存艺术：lru_cache&#x2F;ttl_cache&#x2F;自定义</h1><blockquote>
+<p>本章讲解 Python 内置缓存机制、自定义 TTL 缓存实现，以及在 AI 应用中的 LLM 响应缓存策略。</p>
+</blockquote>
+<span id="more"></span>
+
+<hr>
+<h2 id="1-缓存概述"><a href="#1-缓存概述" class="headerlink" title="1. 缓存概述"></a>1. 缓存概述</h2><h3 id="1-1-为什么-AI-应用需要缓存？"><a href="#1-1-为什么-AI-应用需要缓存？" class="headerlink" title="1.1 为什么 AI 应用需要缓存？"></a>1.1 为什么 AI 应用需要缓存？</h3><p>AI 应用中的缓存至关重要：</p>
+<ul>
+<li><strong>成本优化</strong>：减少重复的 LLM API 调用</li>
+<li><strong>降低延迟</strong>：缓存命中时响应时间从秒级降至毫秒级</li>
+<li><strong>减轻 API 限流</strong>：减少请求次数避免触发限流</li>
+<li><strong>提升用户体验</strong>：重复问题秒回</li>
+</ul>
+<h3 id="1-2-缓存类型"><a href="#1-2-缓存类型" class="headerlink" title="1.2 缓存类型"></a>1.2 缓存类型</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>特点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LRU</td>
+<td>最近最少使用，有大小限制</td>
+<td>通用缓存</td>
+</tr>
+<tr>
+<td>TTL</td>
+<td>基于时间过期</td>
+<td>API 响应缓存</td>
+</tr>
+<tr>
+<td>FIFO</td>
+<td>先进先出</td>
+<td>任务队列</td>
+</tr>
+<tr>
+<td>LFU</td>
+<td>最不经常使用</td>
+<td>热点数据</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-functools-lru-cache"><a href="#2-functools-lru-cache" class="headerlink" title="2. functools.lru_cache"></a>2. <code>functools.lru_cache</code></h2><h3 id="2-1-基础用法"><a href="#2-1-基础用法" class="headerlink" title="2.1 基础用法"></a>2.1 基础用法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> functools</span><br><span class="line"></span><br><span class="line"><span class="meta">@functools.lru_cache(<span class="params">maxsize=<span class="number">128</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">expensive_computation</span>(<span class="params">x, y</span>):</span><br><span class="line">    <span class="comment"># 耗时计算</span></span><br><span class="line">    <span class="keyword">return</span> x + y</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第一次调用 (cache miss)</span></span><br><span class="line">result1 = expensive_computation(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第二次调用 (cache hit)</span></span><br><span class="line">result2 = expensive_computation(<span class="number">1</span>, <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-缓存信息"><a href="#2-2-缓存信息" class="headerlink" title="2.2 缓存信息"></a>2.2 缓存信息</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@functools.lru_cache(<span class="params">maxsize=<span class="number">128</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">llm_call</span>(<span class="params">prompt: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="keyword">import</span> time</span><br><span class="line">    time.sleep(<span class="number">0.1</span>)  <span class="comment"># 模拟 API 调用</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">f&quot;Response: <span class="subst">&#123;prompt&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看缓存状态</span></span><br><span class="line"><span class="built_in">print</span>(llm_call.cache_info())</span><br><span class="line"><span class="comment"># CacheInfo(hits=0, misses=0, maxsize=128, currsize=0)</span></span><br><span class="line"></span><br><span class="line">r1 = llm_call(<span class="string">&quot;Hello&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(llm_call.cache_info())</span><br><span class="line"><span class="comment"># CacheInfo(hits=0, misses=1, maxsize=128, currsize=1)</span></span><br><span class="line"></span><br><span class="line">r2 = llm_call(<span class="string">&quot;Hello&quot;</span>)  <span class="comment"># 命中缓存</span></span><br><span class="line"><span class="built_in">print</span>(llm_call.cache_info())</span><br><span class="line"><span class="comment"># CacheInfo(hits=1, misses=1, maxsize=128, currsize=1)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-缓存参数"><a href="#2-3-缓存参数" class="headerlink" title="2.3 缓存参数"></a>2.3 缓存参数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@functools.lru_cache(<span class="params">maxsize=<span class="number">128</span>, typed=<span class="literal">True</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">func</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># maxsize: 最大缓存条目数，None 表示无限制</span></span><br><span class="line"><span class="comment"># typed: 不同类型参数分开缓存 (e.g., 1 vs 1.0)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-缓存失效"><a href="#2-4-缓存失效" class="headerlink" title="2.4 缓存失效"></a>2.4 缓存失效</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方法1: 直接调用 clear</span></span><br><span class="line"><span class="meta">@functools.lru_cache(<span class="params">maxsize=<span class="number">128</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cached_func</span>(<span class="params">x</span>):</span><br><span class="line">    <span class="keyword">return</span> x ** <span class="number">2</span></span><br><span class="line"></span><br><span class="line">cached_func.clear()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法2: 重新创建函数</span></span><br><span class="line"><span class="meta">@functools.lru_cache(<span class="params">maxsize=<span class="number">128</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">new_cached_func</span>(<span class="params">x</span>):</span><br><span class="line">    <span class="keyword">return</span> x ** <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-自定义-TTL-Cache"><a href="#3-自定义-TTL-Cache" class="headerlink" title="3. 自定义 TTL Cache"></a>3. 自定义 TTL Cache</h2><h3 id="3-1-TTL-缓存原理"><a href="#3-1-TTL-缓存原理" class="headerlink" title="3.1 TTL 缓存原理"></a>3.1 TTL 缓存原理</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">TTL (Time To Live) = 缓存条目存活时间</span><br><span class="line"></span><br><span class="line">存储: &#123;key: (value, expire_time)&#125;</span><br><span class="line">检查: if now &lt; expire_time → 返回缓存</span><br><span class="line">      else → 删除条目，返回 None</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-TTLCache-实现"><a href="#3-2-TTLCache-实现" class="headerlink" title="3.2 TTLCache 实现"></a>3.2 TTLCache 实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime, timedelta</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Optional</span>, <span class="type">Callable</span>, <span class="type">Any</span></span><br><span class="line"><span class="keyword">import</span> functools</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TTLCache</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;基于时间过期的高级缓存&quot;&quot;&quot;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, ttl: <span class="built_in">int</span> = <span class="number">60</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            ttl: 缓存过期时间（秒）</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>._store: <span class="built_in">dict</span>[<span class="built_in">str</span>, <span class="built_in">tuple</span>[<span class="type">Any</span>, datetime]] = &#123;&#125;</span><br><span class="line">        <span class="variable language_">self</span>._ttl = ttl</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get</span>(<span class="params">self, key: <span class="built_in">str</span></span>) -&gt; <span class="type">Optional</span>[<span class="type">Any</span>]:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;获取缓存值&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> key <span class="keyword">in</span> <span class="variable language_">self</span>._store:</span><br><span class="line">            value, expire = <span class="variable language_">self</span>._store[key]</span><br><span class="line">            <span class="keyword">if</span> datetime.now() &lt; expire:</span><br><span class="line">                <span class="keyword">return</span> value</span><br><span class="line">            <span class="comment"># 过期删除</span></span><br><span class="line">            <span class="keyword">del</span> <span class="variable language_">self</span>._store[key]</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">set</span>(<span class="params">self, key: <span class="built_in">str</span>, value: <span class="type">Any</span></span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;设置缓存值&quot;&quot;&quot;</span></span><br><span class="line">        expire = datetime.now() + timedelta(seconds=<span class="variable language_">self</span>._ttl)</span><br><span class="line">        <span class="variable language_">self</span>._store[key] = (value, expire)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">delete</span>(<span class="params">self, key: <span class="built_in">str</span></span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;删除缓存&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> key <span class="keyword">in</span> <span class="variable language_">self</span>._store:</span><br><span class="line">            <span class="keyword">del</span> <span class="variable language_">self</span>._store[key]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">clear</span>(<span class="params">self</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;清空所有缓存&quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>._store.clear()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self, fn: <span class="type">Callable</span></span>) -&gt; <span class="type">Callable</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;作为装饰器使用&quot;&quot;&quot;</span></span><br><span class="line"><span class="meta">        @functools.wraps(<span class="params">fn</span>)</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">wrapper</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">            <span class="comment"># 生成缓存 key</span></span><br><span class="line">            key = json.dumps(&#123;</span><br><span class="line">                <span class="string">&quot;args&quot;</span>: <span class="built_in">str</span>(args),</span><br><span class="line">                <span class="string">&quot;kwargs&quot;</span>: <span class="built_in">sorted</span>(kwargs.items())</span><br><span class="line">            &#125;)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 尝试获取缓存</span></span><br><span class="line">            cached = <span class="variable language_">self</span>.get(key)</span><br><span class="line">            <span class="keyword">if</span> cached <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">f&quot;[HIT] <span class="subst">&#123;cached&#125;</span>&quot;</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 执行函数并缓存结果</span></span><br><span class="line">            result = fn(*args, **kwargs)</span><br><span class="line">            <span class="variable language_">self</span>.<span class="built_in">set</span>(key, result)</span><br><span class="line">            <span class="keyword">return</span> <span class="string">f&quot;[MISS] <span class="subst">&#123;result&#125;</span>&quot;</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> wrapper</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-使用示例"><a href="#3-3-使用示例" class="headerlink" title="3.3 使用示例"></a>3.3 使用示例</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="meta">@TTLCache(<span class="params">ttl=<span class="number">5</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">kb_search</span>(<span class="params">query</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;知识库搜索（5秒过期）&quot;&quot;&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;[QUERY] Searching for: <span class="subst">&#123;query&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">f&quot;KB Result: <span class="subst">&#123;query&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 第一次调用 - MISS</span></span><br><span class="line"><span class="built_in">print</span>(kb_search(<span class="string">&quot;Python&quot;</span>))</span><br><span class="line"><span class="comment"># Output: [QUERY] Searching for: Python</span></span><br><span class="line"><span class="comment">#         [MISS] KB Result: Python</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 第二次调用 - HIT（5秒内）</span></span><br><span class="line"><span class="built_in">print</span>(kb_search(<span class="string">&quot;Python&quot;</span>))</span><br><span class="line"><span class="comment"># Output: [HIT] KB Result: Python</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 等待 6 秒后 - 缓存过期，再次 MISS</span></span><br><span class="line">time.sleep(<span class="number">6</span>)</span><br><span class="line"><span class="built_in">print</span>(kb_search(<span class="string">&quot;Python&quot;</span>))</span><br><span class="line"><span class="comment"># Output: [QUERY] Searching for: Python</span></span><br><span class="line"><span class="comment">#         [MISS] KB Result: Python</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-AI-应用场景"><a href="#4-AI-应用场景" class="headerlink" title="4. AI 应用场景"></a>4. AI 应用场景</h2><h3 id="4-1-LLM-响应缓存"><a href="#4-1-LLM-响应缓存" class="headerlink" title="4.1 LLM 响应缓存"></a>4.1 LLM 响应缓存</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> functools</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LLMResponseCache</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;LLM 响应缓存&quot;&quot;&quot;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, ttl: <span class="built_in">int</span> = <span class="number">3600</span></span>):</span><br><span class="line">        <span class="variable language_">self</span>._cache = TTLCache(ttl=ttl)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_make_key</span>(<span class="params">self, prompt: <span class="built_in">str</span>, model: <span class="built_in">str</span>, **kwargs</span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;生成缓存 key&quot;&quot;&quot;</span></span><br><span class="line">        content = json.dumps(&#123;</span><br><span class="line">            <span class="string">&quot;prompt&quot;</span>: prompt,</span><br><span class="line">            <span class="string">&quot;model&quot;</span>: model,</span><br><span class="line">            **kwargs</span><br><span class="line">        &#125;, sort_keys=<span class="literal">True</span>)</span><br><span class="line">        <span class="keyword">return</span> hashlib.sha256(content.encode()).hexdigest()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">cached_call</span>(<span class="params">self, prompt: <span class="built_in">str</span>, model: <span class="built_in">str</span> = <span class="string">&quot;gpt-4&quot;</span>, **kwargs</span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;带缓存的 LLM 调用&quot;&quot;&quot;</span></span><br><span class="line">        key = <span class="variable language_">self</span>._make_key(prompt, model, **kwargs)</span><br><span class="line">        </span><br><span class="line">        cached = <span class="variable language_">self</span>._cache.get(key)</span><br><span class="line">        <span class="keyword">if</span> cached:</span><br><span class="line">            <span class="keyword">return</span> cached</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 调用 LLM API</span></span><br><span class="line">        result = call_openai(prompt, model, **kwargs)</span><br><span class="line">        <span class="variable language_">self</span>._cache.<span class="built_in">set</span>(key, result)</span><br><span class="line">        <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-语义缓存"><a href="#4-2-语义缓存" class="headerlink" title="4.2 语义缓存"></a>4.2 语义缓存</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SemanticCache</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;基于语义相似度的缓存（简化版）&quot;&quot;&quot;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, similarity_threshold: <span class="built_in">float</span> = <span class="number">0.8</span></span>):</span><br><span class="line">        <span class="variable language_">self</span>._cache = &#123;&#125;</span><br><span class="line">        <span class="variable language_">self</span>._threshold = similarity_threshold</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_normalize</span>(<span class="params">self, text: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;标准化文本用于比较&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot; &quot;</span>.join(text.lower().split())</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_get_key</span>(<span class="params">self, text: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;生成近似的缓存 key&quot;&quot;&quot;</span></span><br><span class="line">        normalized = <span class="variable language_">self</span>._normalize(text)</span><br><span class="line">        <span class="keyword">return</span> hashlib.md5(normalized.encode()).hexdigest()[:<span class="number">16</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get</span>(<span class="params">self, prompt: <span class="built_in">str</span></span>) -&gt; <span class="type">Optional</span>[<span class="built_in">str</span>]:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;获取缓存（简化版，实际应该用 embedding 相似度）&quot;&quot;&quot;</span></span><br><span class="line">        key = <span class="variable language_">self</span>._get_key(prompt)</span><br><span class="line">        <span class="keyword">if</span> key <span class="keyword">in</span> <span class="variable language_">self</span>._cache:</span><br><span class="line">            <span class="keyword">return</span> <span class="variable language_">self</span>._cache[key][<span class="string">&quot;response&quot;</span>]</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">set</span>(<span class="params">self, prompt: <span class="built_in">str</span>, response: <span class="built_in">str</span></span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;设置缓存&quot;&quot;&quot;</span></span><br><span class="line">        key = <span class="variable language_">self</span>._get_key(prompt)</span><br><span class="line">        <span class="variable language_">self</span>._cache[key] = &#123;<span class="string">&quot;prompt&quot;</span>: prompt, <span class="string">&quot;response&quot;</span>: response&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-完整示例"><a href="#4-3-完整示例" class="headerlink" title="4.3 完整示例"></a>4.3 完整示例</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> functools</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime, timedelta</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Optional</span>, <span class="type">Callable</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># lru_cache</span></span><br><span class="line"><span class="meta">@functools.lru_cache(<span class="params">maxsize=<span class="number">128</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">llm_call</span>(<span class="params">prompt: <span class="built_in">str</span>, model: <span class="built_in">str</span> = <span class="string">&quot;gpt-4&quot;</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;[MISS] Calling <span class="subst">&#123;model&#125;</span>...&quot;</span>)</span><br><span class="line">    time.sleep(<span class="number">0.1</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">f&quot;Response to: <span class="subst">&#123;prompt&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line">r1 = llm_call(<span class="string">&quot;What is AI?&quot;</span>)</span><br><span class="line">r2 = llm_call(<span class="string">&quot;What is AI?&quot;</span>)  <span class="comment"># hit</span></span><br><span class="line"><span class="built_in">print</span>(llm_call.cache_info())</span><br><span class="line"></span><br><span class="line"><span class="comment"># TTL cache</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TTLCache</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, ttl: <span class="built_in">int</span> = <span class="number">60</span></span>):</span><br><span class="line">        <span class="variable language_">self</span>._store = &#123;&#125;</span><br><span class="line">        <span class="variable language_">self</span>._ttl = ttl</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get</span>(<span class="params">self, k</span>):</span><br><span class="line">        <span class="keyword">if</span> k <span class="keyword">in</span> <span class="variable language_">self</span>._store:</span><br><span class="line">            val, expire = <span class="variable language_">self</span>._store[k]</span><br><span class="line">            <span class="keyword">if</span> datetime.now() &lt; expire:</span><br><span class="line">                <span class="keyword">return</span> val</span><br><span class="line">            <span class="keyword">del</span> <span class="variable language_">self</span>._store[k]</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">set</span>(<span class="params">self, k, v</span>):</span><br><span class="line">        <span class="variable language_">self</span>._store[k] = (v, datetime.now() + timedelta(seconds=<span class="variable language_">self</span>._ttl))</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self, fn: <span class="type">Callable</span></span>):</span><br><span class="line"><span class="meta">        @functools.wraps(<span class="params">fn</span>)</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">wrapper</span>(<span class="params">*args, **kwargs</span>):</span><br><span class="line">            key = json.dumps(&#123;<span class="string">&quot;a&quot;</span>: <span class="built_in">str</span>(args), <span class="string">&quot;k&quot;</span>: <span class="built_in">sorted</span>(kwargs.items())&#125;)</span><br><span class="line">            cached = <span class="variable language_">self</span>.get(key)</span><br><span class="line">            <span class="keyword">if</span> cached: <span class="keyword">return</span> <span class="string">f&quot;[HIT] <span class="subst">&#123;cached&#125;</span>&quot;</span></span><br><span class="line">            result = fn(*args, **kwargs)</span><br><span class="line">            <span class="variable language_">self</span>.<span class="built_in">set</span>(key, result)</span><br><span class="line">            <span class="keyword">return</span> <span class="string">f&quot;[MISS] <span class="subst">&#123;result&#125;</span>&quot;</span></span><br><span class="line">        <span class="keyword">return</span> wrapper</span><br><span class="line"></span><br><span class="line"><span class="meta">@TTLCache(<span class="params">ttl=<span class="number">5</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">kb_search</span>(<span class="params">query</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;[QUERY] <span class="subst">&#123;query&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">f&quot;KB: <span class="subst">&#123;query&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(kb_search(<span class="string">&quot;Python&quot;</span>))</span><br><span class="line"><span class="built_in">print</span>(kb_search(<span class="string">&quot;Python&quot;</span>))</span><br><span class="line">time.sleep(<span class="number">6</span>)</span><br><span class="line"><span class="built_in">print</span>(kb_search(<span class="string">&quot;Python&quot;</span>))</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="5-缓存策略选择"><a href="#5-缓存策略选择" class="headerlink" title="5. 缓存策略选择"></a>5. 缓存策略选择</h2><h3 id="5-1-选择指南"><a href="#5-1-选择指南" class="headerlink" title="5.1 选择指南"></a>5.1 选择指南</h3><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>推荐缓存</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>相同 prompt 重复调用</td>
+<td><code>lru_cache</code></td>
+<td>完全匹配，命中率高</td>
+</tr>
+<tr>
+<td>API 响应有时效性</td>
+<td><code>TTLCache</code></td>
+<td>避免返回过期数据</td>
+</tr>
+<tr>
+<td>用户可能换表述问相同问题</td>
+<td><code>SemanticCache</code></td>
+<td>语义相似匹配</td>
+</tr>
+<tr>
+<td>高频热点数据</td>
+<td><code>LFU Cache</code></td>
+<td>保留最常用项</td>
+</tr>
+</tbody></table>
+<h3 id="5-2-缓存注意事项"><a href="#5-2-缓存注意事项" class="headerlink" title="5.2 缓存注意事项"></a>5.2 缓存注意事项</h3><ol>
+<li><strong>不要缓存副作用</strong>：只缓存纯函数</li>
+<li><strong>考虑内存限制</strong>：设置合理的 <code>maxsize</code></li>
+<li><strong>TTL 设置</strong>：根据数据时效性调整</li>
+<li><strong>缓存键生成</strong>：确保唯一性和稳定性</li>
+</ol>
+<hr>
+<h2 id="6-总结"><a href="#6-总结" class="headerlink" title="6. 总结"></a>6. 总结</h2><p>本章我们学习了：</p>
+<ol>
+<li><strong><code>functools.lru_cache</code></strong>：Python 内置的 LRU 缓存，简单高效</li>
+<li><strong>自定义 TTLCache</strong>：基于时间过期的缓存实现</li>
+<li><strong>AI 响应缓存</strong>：多层次的缓存策略（完全匹配&#x2F;语义相似）</li>
+</ol>
+<p>合理使用缓存可以显著提升 AI 应用的性能和用户体验，同时降低成本和 API 限流风险。</p>
+<hr>
+<blockquote>
+<p>下节预告：【Python AI 教程】（十四）组合模式实战：构建模块化 AI Agent — 综合运用本系列所有知识，构建一个可扩展的模块化 AI Agent 框架。</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/%E7%BC%93%E5%AD%98/" rel="tag"># 缓存</a>
+              <a href="/tags/LRU/" rel="tag"># LRU</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/04/27/2026-04-27-python-12-exceptions-logging/" rel="prev" title="【Python AI教程】（十二）异常链与日志：AI健壮性保障">
+                  <i class="fa fa-angle-left"></i> 【Python AI教程】（十二）异常链与日志：AI健壮性保障
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/04/27/2026-04-27-python-14-composite-ai-agent/" rel="next" title="【Python AI教程】（十四）组合模式实战：构建模块化AI Agent">
+                  【Python AI教程】（十四）组合模式实战：构建模块化AI Agent <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2024 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Xu Qi</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

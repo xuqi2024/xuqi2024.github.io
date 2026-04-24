@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Monda:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xuqi.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat","show_result":true},"fold":{"enable":false,"height":500},"language":false,"highlight_shrink":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":true,"nav":true,"disqus":{"shortname":"xuqi1987","count":true,"placeholder":"请开始你的表演","button":"发送","avatar":"mm","meta":"nickname,mail","pageSize":10,"reaction":true}},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"labels":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容: ${query}"}}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="【深度长文】Hermes Agent 完全解读— FTS5、Honcho与自我进化智能体架构内幕 本文约15000字，深入解析 Hermes Agent 的核心技术：FTS5 全文搜索原理与实战、Honcho 用户画像系统架构、Agent 学习闭环机制，以及与 OpenClaw 的全方位深度对比。 项目地址：https:&#x2F;&#x2F;github.com&#x2F;NousResearch&#x2F;Hermes-Agent">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【深度长文】Hermes Agent 完全解读 — FTS5、Honcho与自我进化智能体架构内幕">
+<meta property="og:url" content="https://xuqi.github.io/2026/04/13/2026-04-13-hermes-agent%E6%B7%B1%E5%BA%A6%E5%AE%8C%E5%85%A8%E8%A7%A3%E8%AF%BB/index.html">
+<meta property="og:site_name" content="程序员的自我修养">
+<meta property="og:description" content="【深度长文】Hermes Agent 完全解读— FTS5、Honcho与自我进化智能体架构内幕 本文约15000字，深入解析 Hermes Agent 的核心技术：FTS5 全文搜索原理与实战、Honcho 用户画像系统架构、Agent 学习闭环机制，以及与 OpenClaw 的全方位深度对比。 项目地址：https:&#x2F;&#x2F;github.com&#x2F;NousResearch&#x2F;Hermes-Agent">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-13T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-13T05:07:11.401Z">
+<meta property="article:author" content="Xu Qi">
+<meta property="article:tag" content="深度">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Hermes">
+<meta property="article:tag" content="NousResearch">
+<meta property="article:tag" content="智能体">
+<meta property="article:tag" content="FTS5">
+<meta property="article:tag" content="Honcho">
+<meta property="article:tag" content="OpenClaw对比">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xuqi.github.io/2026/04/13/2026-04-13-hermes-agent%E6%B7%B1%E5%BA%A6%E5%AE%8C%E5%85%A8%E8%A7%A3%E8%AF%BB/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xuqi.github.io/2026/04/13/2026-04-13-hermes-agent%E6%B7%B1%E5%BA%A6%E5%AE%8C%E5%85%A8%E8%A7%A3%E8%AF%BB/","path":"2026/04/13/2026-04-13-hermes-agent深度完全解读/","title":"【深度长文】Hermes Agent 完全解读 — FTS5、Honcho与自我进化智能体架构内幕"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>【深度长文】Hermes Agent 完全解读 — FTS5、Honcho与自我进化智能体架构内幕 | 程序员的自我修养</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.5.0/mermaid.min.js","integrity":"sha256-2obLuIPcceEhkE3G09G33hBdmE55ivVcZUlcKcGNHjU="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="程序员的自我修养" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">程序员的自我修养</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">链接、装载与库</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-folder-open fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E3%80%90%E6%B7%B1%E5%BA%A6%E9%95%BF%E6%96%87%E3%80%91Hermes-Agent-%E5%AE%8C%E5%85%A8%E8%A7%A3%E8%AF%BB"><span class="nav-number">1.</span> <span class="nav-text">【深度长文】Hermes Agent 完全解读</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%80%94-FTS5%E3%80%81Honcho%E4%B8%8E%E8%87%AA%E6%88%91%E8%BF%9B%E5%8C%96%E6%99%BA%E8%83%BD%E4%BD%93%E6%9E%B6%E6%9E%84%E5%86%85%E5%B9%95"><span class="nav-number">1.1.</span> <span class="nav-text">— FTS5、Honcho与自我进化智能体架构内幕</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E8%A8%80%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88-Hermes-Agent-%E5%80%BC%E5%BE%97%E5%85%B3%E6%B3%A8%EF%BC%9F"><span class="nav-number">1.2.</span> <span class="nav-text">引言：为什么 Hermes Agent 值得关注？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%EF%BC%9AHermes-Agent-%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84"><span class="nav-number">1.3.</span> <span class="nav-text">第一部分：Hermes Agent 核心架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E5%85%A8%E6%99%AF%E5%9B%BE"><span class="nav-number">1.3.1.</span> <span class="nav-text">1.1 系统架构全景图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-AIAgent-%E6%A0%B8%E5%BF%83%E5%BE%AA%E7%8E%AF"><span class="nav-number">1.3.2.</span> <span class="nav-text">1.2 AIAgent 核心循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E6%A0%B8%E5%BF%83%E5%85%A5%E5%8F%A3%E7%82%B9%E8%AF%A6%E8%A7%A3"><span class="nav-number">1.3.3.</span> <span class="nav-text">1.3 核心入口点详解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CLI%EF%BC%88%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%95%8C%E9%9D%A2%EF%BC%89"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">CLI（命令行界面）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Gateway%EF%BC%88%E6%B6%88%E6%81%AF%E7%BD%91%E5%85%B3%EF%BC%89"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">Gateway（消息网关）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%EF%BC%9AFTS5-%E5%85%A8%E6%96%87%E6%90%9C%E7%B4%A2%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90"><span class="nav-number">1.4.</span> <span class="nav-text">第二部分：FTS5 全文搜索深度解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-FTS5%EF%BC%9F"><span class="nav-number">1.4.1.</span> <span class="nav-text">2.1 为什么需要 FTS5？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-FTS5-%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86"><span class="nav-number">1.4.2.</span> <span class="nav-text">2.2 FTS5 核心原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95%EF%BC%88Inverted-Index%EF%BC%89"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">倒排索引（Inverted Index）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FTS5-%E5%88%86%E8%AF%8D%E5%99%A8"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">FTS5 分词器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FTS5-%E6%9F%A5%E8%AF%A2%E8%AF%AD%E6%B3%95"><span class="nav-number">1.4.2.3.</span> <span class="nav-text">FTS5 查询语法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Hermes-%E4%B8%AD%E7%9A%84-FTS5-%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.4.3.</span> <span class="nav-text">2.3 Hermes 中的 FTS5 实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-FTS5-vs-%E5%85%B6%E4%BB%96%E6%90%9C%E7%B4%A2%E6%96%B9%E6%A1%88"><span class="nav-number">1.4.4.</span> <span class="nav-text">2.4 FTS5 vs 其他搜索方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E9%83%A8%E5%88%86%EF%BC%9AHoncho-%E7%94%A8%E6%88%B7%E7%94%BB%E5%83%8F%E7%B3%BB%E7%BB%9F%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90"><span class="nav-number">1.5.</span> <span class="nav-text">第三部分：Honcho 用户画像系统深度解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Honcho-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.5.1.</span> <span class="nav-text">3.1 Honcho 是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Honcho-%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.5.2.</span> <span class="nav-text">3.2 Honcho 数据模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-Honcho-%E6%8E%A8%E7%90%86%E5%BC%95%E6%93%8E%E8%AF%A6%E8%A7%A3"><span class="nav-number">1.5.3.</span> <span class="nav-text">3.3 Honcho 推理引擎详解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%8E%A8%E7%90%86%EF%BC%9F"><span class="nav-number">1.5.3.1.</span> <span class="nav-text">为什么需要推理？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BD%A2%E5%BC%8F%E9%80%BB%E8%BE%91%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6"><span class="nav-number">1.5.3.2.</span> <span class="nav-text">形式逻辑推理框架</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A8%E7%90%86%E7%BA%A7%E5%88%AB%EF%BC%88Dialectic-Levels%EF%BC%89"><span class="nav-number">1.5.3.3.</span> <span class="nav-text">推理级别（Dialectic Levels）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Token-%E6%89%B9%E5%A4%84%E7%90%86"><span class="nav-number">1.5.3.4.</span> <span class="nav-text">Token 批处理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-Peer-Card%EF%BC%88%E5%8F%82%E4%B8%8E%E8%80%85%E7%94%BB%E5%83%8F%EF%BC%89"><span class="nav-number">1.5.4.</span> <span class="nav-text">3.4 Peer Card（参与者画像）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-Honcho-vs-%E4%BC%A0%E7%BB%9F%E8%AE%B0%E5%BF%86%E6%96%B9%E6%A1%88%E5%AF%B9%E6%AF%94"><span class="nav-number">1.5.5.</span> <span class="nav-text">3.5 Honcho vs 传统记忆方案对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%EF%BC%9AHermes-%E5%B7%A5%E5%85%B7%E7%B3%BB%E7%BB%9F%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90"><span class="nav-number">1.6.</span> <span class="nav-text">第四部分：Hermes 工具系统深度解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%B7%A5%E5%85%B7%E6%B3%A8%E5%86%8C%E8%A1%A8%E6%9E%B6%E6%9E%84"><span class="nav-number">1.6.1.</span> <span class="nav-text">4.1 工具注册表架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E5%B7%A5%E5%85%B7%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="nav-number">1.6.2.</span> <span class="nav-text">4.2 工具执行流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E7%BB%88%E7%AB%AF%E5%90%8E%E7%AB%AF%E6%94%AF%E6%8C%81"><span class="nav-number">1.6.3.</span> <span class="nav-text">4.3 终端后端支持</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E9%83%A8%E5%88%86%EF%BC%9AHermes-vs-OpenClaw-%E6%B7%B1%E5%BA%A6%E5%AF%B9%E6%AF%94"><span class="nav-number">1.7.</span> <span class="nav-text">第五部分：Hermes vs OpenClaw 深度对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E5%9F%BA%E6%9C%AC%E4%BF%A1%E6%81%AF%E5%AF%B9%E6%AF%94"><span class="nav-number">1.7.1.</span> <span class="nav-text">5.1 基本信息对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E6%9E%B6%E6%9E%84%E5%93%B2%E5%AD%A6%E5%AF%B9%E6%AF%94"><span class="nav-number">1.7.2.</span> <span class="nav-text">5.2 架构哲学对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E8%AE%B0%E5%BF%86%E7%B3%BB%E7%BB%9F%E5%AF%B9%E6%AF%94"><span class="nav-number">1.7.3.</span> <span class="nav-text">5.3 记忆系统对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-%E6%B6%88%E6%81%AF%E5%B9%B3%E5%8F%B0%E5%AF%B9%E6%AF%94"><span class="nav-number">1.7.4.</span> <span class="nav-text">5.4 消息平台对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5-%E5%90%84%E8%87%AA%E6%9C%80%E4%BC%98%E5%9C%BA%E6%99%AF"><span class="nav-number">1.7.5.</span> <span class="nav-text">5.5 各自最优场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6-%E8%BF%81%E7%A7%BB%E8%83%BD%E5%8A%9B"><span class="nav-number">1.7.6.</span> <span class="nav-text">5.6 迁移能力</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%85%AD%E9%83%A8%E5%88%86%EF%BC%9A%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E5%8C%96%EF%BC%88Cron%EF%BC%89%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90"><span class="nav-number">1.8.</span> <span class="nav-text">第六部分：定时自动化（Cron）深度解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-Cron-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.8.1.</span> <span class="nav-text">6.1 Cron 工作原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E4%BB%BB%E5%8A%A1%E5%AE%9A%E4%B9%89"><span class="nav-number">1.8.2.</span> <span class="nav-text">6.2 自然语言任务定义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%83%E9%83%A8%E5%88%86%EF%BC%9A%E5%AD%90%E6%99%BA%E8%83%BD%E4%BD%93%E5%A7%94%E6%89%98%EF%BC%88Delegate%EF%BC%89%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90"><span class="nav-number">1.9.</span> <span class="nav-text">第七部分：子智能体委托（Delegate）深度解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E5%B9%B6%E8%A1%8C%E5%8A%A0%E9%80%9F%E5%8E%9F%E7%90%86"><span class="nav-number">1.9.1.</span> <span class="nav-text">7.1 并行加速原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.9.2.</span> <span class="nav-text">7.2 使用示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%85%AB%E9%83%A8%E5%88%86%EF%BC%9A%E5%AE%9E%E6%88%98%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97"><span class="nav-number">1.10.</span> <span class="nav-text">第八部分：实战部署指南</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85"><span class="nav-number">1.10.1.</span> <span class="nav-text">8.1 一键安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-Docker-%E9%83%A8%E7%BD%B2"><span class="nav-number">1.10.2.</span> <span class="nav-text">8.2 Docker 部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2%EF%BC%88Systemd%EF%BC%89"><span class="nav-number">1.10.3.</span> <span class="nav-text">8.3 服务器部署（Systemd）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.11.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E6%8B%A9-Hermes%EF%BC%9F"><span class="nav-number">1.11.1.</span> <span class="nav-text">为什么选择 Hermes？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E9%80%89-OpenClaw%EF%BC%9F"><span class="nav-number">1.11.2.</span> <span class="nav-text">什么时候选 OpenClaw？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.12.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Xu Qi</p>
+  <div class="site-description" itemprop="description">读书笔记和技术分享</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xuqi.github.io/2026/04/13/2026-04-13-hermes-agent%E6%B7%B1%E5%BA%A6%E5%AE%8C%E5%85%A8%E8%A7%A3%E8%AF%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xu Qi">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员的自我修养">
+      <meta itemprop="description" content="读书笔记和技术分享">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="【深度长文】Hermes Agent 完全解读 — FTS5、Honcho与自我进化智能体架构内幕 | 程序员的自我修养">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【深度长文】Hermes Agent 完全解读 — FTS5、Honcho与自我进化智能体架构内幕
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-04-13 12:00:00 / 修改时间：13:07:11" itemprop="dateCreated datePublished" datetime="2026-04-13T12:00:00+08:00">2026-04-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-Agent/" itemprop="url" rel="index"><span itemprop="name">AI Agent</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="【深度长文】Hermes-Agent-完全解读"><a href="#【深度长文】Hermes-Agent-完全解读" class="headerlink" title="【深度长文】Hermes Agent 完全解读"></a>【深度长文】Hermes Agent 完全解读</h1><h2 id="—-FTS5、Honcho与自我进化智能体架构内幕"><a href="#—-FTS5、Honcho与自我进化智能体架构内幕" class="headerlink" title="— FTS5、Honcho与自我进化智能体架构内幕"></a>— FTS5、Honcho与自我进化智能体架构内幕</h2><blockquote>
+<p>本文约15000字，深入解析 Hermes Agent 的核心技术：FTS5 全文搜索原理与实战、Honcho 用户画像系统架构、Agent 学习闭环机制，以及与 OpenClaw 的全方位深度对比。</p>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/NousResearch/Hermes-Agent">https://github.com/NousResearch/Hermes-Agent</a></p>
+</blockquote>
+<span id="more"></span>
+
+<hr>
+<h2 id="引言：为什么-Hermes-Agent-值得关注？"><a href="#引言：为什么-Hermes-Agent-值得关注？" class="headerlink" title="引言：为什么 Hermes Agent 值得关注？"></a>引言：为什么 Hermes Agent 值得关注？</h2><p>在 AI Agent 领域，大多数产品都是在<strong>调用 API + 拼接工具</strong>的范式下工作。这种方式有效，但有一个根本缺陷：<strong>每次对话从零开始，无法积累经验</strong>。</p>
+<p>Hermes Agent 打破了这一范式。它是<strong>第一个真正意义上具有自我进化能力的 AI Agent</strong>：</p>
+<ul>
+<li><strong>越用越聪明</strong>：完成任务后自动创建可复用技能</li>
+<li><strong>主动记忆</strong>：定期提醒自己保存重要知识</li>
+<li><strong>跨会话学习</strong>：通过 Honcho 建立用户画像，理解用户偏好</li>
+<li><strong>高效检索</strong>：FTS5 全文搜索 + LLM 摘要实现精准回忆</li>
+</ul>
+<hr>
+<h2 id="第一部分：Hermes-Agent-核心架构"><a href="#第一部分：Hermes-Agent-核心架构" class="headerlink" title="第一部分：Hermes Agent 核心架构"></a>第一部分：Hermes Agent 核心架构</h2><h3 id="1-1-系统架构全景图"><a href="#1-1-系统架构全景图" class="headerlink" title="1.1 系统架构全景图"></a>1.1 系统架构全景图</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line">    subgraph Entry[&quot;入口点&quot;]</span><br><span class="line">        CLI[&quot;CLI (cli.py)&lt;br/&gt;~8500行&quot;]</span><br><span class="line">        Gateway[&quot;Gateway (gateway/run.py)&lt;br/&gt;~7500行&quot;]</span><br><span class="line">        ACP[&quot;ACP (IDE集成)&quot;]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    subgraph Core[&quot;AIAgent (run_agent.py) ~9200行&quot;]</span><br><span class="line">        PB[&quot;Prompt Builder&lt;br/&gt;SOUL.md + 记忆 + 技能&quot;]</span><br><span class="line">        PR[&quot;Provider Resolution&lt;br/&gt;OpenRouter/OpenAI/Anthropic&quot;]</span><br><span class="line">        TD[&quot;Tool Dispatch&lt;br/&gt;47工具 + 40工具集&quot;]</span><br><span class="line">        </span><br><span class="line">        PB --&gt; PR</span><br><span class="line">        PR --&gt; TD</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    subgraph Storage[&quot;持久化层&quot;]</span><br><span class="line">        FTS5[&quot;SQLite + FTS5&lt;br/&gt;会话存储 + 全文搜索&quot;]</span><br><span class="line">        Honcho[&quot;Honcho&lt;br/&gt;用户画像 + 推理引擎&quot;]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    subgraph Backends[&quot;工具后端&quot;]</span><br><span class="line">        Terminal[&quot;Terminal: 6种后端&quot;]</span><br><span class="line">        Browser[&quot;Browser: 5种后端&quot;]</span><br><span class="line">        Web[&quot;Web: 4种后端&quot;]</span><br><span class="line">        MCP[&quot;MCP: 动态扩展&quot;]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    Entry --&gt; Core</span><br><span class="line">    Core --&gt; Storage</span><br><span class="line">    Core --&gt; Backends</span><br><span class="line"></span><br><span class="line">    style CLI fill:#e1f5fe</span><br><span class="line">    style Gateway fill:#e1f5fe</span><br><span class="line">    style Core fill:#fff3e0</span><br><span class="line">    style Storage fill:#e8f5e9</span><br><span class="line">    style Honcho fill:#f3e5f5</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-AIAgent-核心循环"><a href="#1-2-AIAgent-核心循环" class="headerlink" title="1.2 AIAgent 核心循环"></a>1.2 AIAgent 核心循环</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">sequenceDiagram</span><br><span class="line">    participant User as 用户</span><br><span class="line">    participant Agent as AIAgent</span><br><span class="line">    participant LLM as LLM Provider</span><br><span class="line">    participant Tools as 工具系统</span><br><span class="line">    participant DB as SQLite/FTS5</span><br><span class="line"></span><br><span class="line">    User-&gt;&gt;Agent: 用户输入</span><br><span class="line">    Agent-&gt;&gt;Agent: 构建提示词</span><br><span class="line">    Agent-&gt;&gt;Agent: 选择供应商</span><br><span class="line">    Agent-&gt;&gt;LLM: API调用</span><br><span class="line">    LLM--&gt;&gt;Agent: 响应</span><br><span class="line"></span><br><span class="line">    alt 工具调用</span><br><span class="line">        LLM-&gt;&gt;Tools: tool_call</span><br><span class="line">        Tools-&gt;&gt;Tools: 执行工具</span><br><span class="line">        Tools--&gt;&gt;LLM: 工具结果</span><br><span class="line">        LLM-&gt;&gt;LLM: 继续处理</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    Agent-&gt;&gt;DB: 保存会话</span><br><span class="line">    Agent--&gt;&gt;User: 最终响应</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-核心入口点详解"><a href="#1-3-核心入口点详解" class="headerlink" title="1.3 核心入口点详解"></a>1.3 核心入口点详解</h3><h4 id="CLI（命令行界面）"><a href="#CLI（命令行界面）" class="headerlink" title="CLI（命令行界面）"></a>CLI（命令行界面）</h4><p>位于 <code>cli.py</code>，约 <strong>8500 行代码</strong>，提供完整的 TUI 界面：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/new</code></td>
+<td>新建对话</td>
+</tr>
+<tr>
+<td><code>/model</code></td>
+<td>切换模型</td>
+</tr>
+<tr>
+<td><code>/personality</code></td>
+<td>设置人格</td>
+</tr>
+<tr>
+<td><code>/retry</code></td>
+<td>重试上轮</td>
+</tr>
+<tr>
+<td><code>/undo</code></td>
+<td>撤销</td>
+</tr>
+<tr>
+<td><code>/compress</code></td>
+<td>压缩上下文</td>
+</tr>
+<tr>
+<td><code>/skills</code></td>
+<td>浏览技能</td>
+</tr>
+<tr>
+<td><code>/usage</code></td>
+<td>查看用量</td>
+</tr>
+</tbody></table>
+<h4 id="Gateway（消息网关）"><a href="#Gateway（消息网关）" class="headerlink" title="Gateway（消息网关）"></a>Gateway（消息网关）</h4><p>位于 <code>gateway/run.py</code>，约 <strong>7500 行代码</strong>，连接 15+ 消息平台：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">    subgraph Platforms[&quot;支持的平台&quot;]</span><br><span class="line">        TG[&quot;Telegram&quot;]</span><br><span class="line">        DC[&quot;Discord&quot;]</span><br><span class="line">        WA[&quot;WhatsApp&quot;]</span><br><span class="line">        SL[&quot;Slack&quot;]</span><br><span class="line">        FF[&quot;飞书&quot;]</span><br><span class="line">        DD[&quot;钉钉&quot;]</span><br><span class="line">        WX[&quot;微信&quot;]</span><br><span class="line">        HA[&quot;Home Assistant&quot;]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    Platforms --&gt; Gateway[&quot;Gateway&lt;br/&gt;统一路由&quot;]</span><br><span class="line">    Gateway --&gt; AIAgent[&quot;AIAgent&quot;]</span><br><span class="line">    AIAgent --&gt; Platforms</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="第二部分：FTS5-全文搜索深度解析"><a href="#第二部分：FTS5-全文搜索深度解析" class="headerlink" title="第二部分：FTS5 全文搜索深度解析"></a>第二部分：FTS5 全文搜索深度解析</h2><h3 id="2-1-为什么需要-FTS5？"><a href="#2-1-为什么需要-FTS5？" class="headerlink" title="2.1 为什么需要 FTS5？"></a>2.1 为什么需要 FTS5？</h3><p>在 Hermes 中，用户可能产生数千条会话记录。假设每条平均 500 字，1000 条会话就是 <strong>50万字</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>查询方式</th>
+<th>时间复杂度</th>
+<th>50万字延迟</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>传统 LIKE</td>
+<td>O(n)</td>
+<td>数秒</td>
+</tr>
+<tr>
+<td>FTS5 倒排索引</td>
+<td>O(1)</td>
+<td>毫秒级</td>
+</tr>
+</tbody></table>
+<h3 id="2-2-FTS5-核心原理"><a href="#2-2-FTS5-核心原理" class="headerlink" title="2.2 FTS5 核心原理"></a>2.2 FTS5 核心原理</h3><h4 id="倒排索引（Inverted-Index）"><a href="#倒排索引（Inverted-Index）" class="headerlink" title="倒排索引（Inverted Index）"></a>倒排索引（Inverted Index）</h4><p><strong>假设有3条文档：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">文档1: &quot;今天天气很好，适合出门&quot;</span><br><span class="line">文档2: &quot;今天下雨，不出门&quot;</span><br><span class="line">文档3: &quot;天气不错，心情好&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>传统正排索引（doc → terms）：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">文档1 → [&quot;今天&quot;, &quot;天气&quot;, &quot;很好&quot;, &quot;适合&quot;, &quot;出门&quot;]</span><br><span class="line">文档2 → [&quot;今天&quot;, &quot;下雨&quot;, &quot;不出门&quot;]</span><br><span class="line">文档3 → [&quot;天气&quot;, &quot;不错&quot;, &quot;心情&quot;, &quot;好&quot;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>FTS5 倒排索引（term → docs）：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&quot;今天&quot;   → [文档1, 文档2]</span><br><span class="line">&quot;天气&quot;   → [文档1, 文档2, 文档3]</span><br><span class="line">&quot;很好&quot;   → [文档1]</span><br><span class="line">&quot;下雨&quot;   → [文档2]</span><br><span class="line">&quot;心情&quot;   → [文档3]</span><br><span class="line">&quot;好&quot;     → [文档1, 文档3]</span><br></pre></td></tr></table></figure>
+
+<p><strong>查询”天气”：直接查倒排表 O(1) 找到 [文档1, 文档2, 文档3]</strong></p>
+<h4 id="FTS5-分词器"><a href="#FTS5-分词器" class="headerlink" title="FTS5 分词器"></a>FTS5 分词器</h4><p>FTS5 默认使用 <strong>Unicode61 分词器</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>大小写转换</td>
+<td>“天气” &#x3D; “天气” &#x3D; “天氣”</td>
+</tr>
+<tr>
+<td>标点过滤</td>
+<td>“你好，世界” → [“你好”, “世界”]</td>
+</tr>
+<tr>
+<td>Unicode规范化</td>
+<td>“café” 处理重音符号</td>
+</tr>
+</tbody></table>
+<h4 id="FTS5-查询语法"><a href="#FTS5-查询语法" class="headerlink" title="FTS5 查询语法"></a>FTS5 查询语法</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 基础查询</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> sessions <span class="keyword">WHERE</span> sessions <span class="keyword">MATCH</span> <span class="string">&#x27;天气&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 短语查询（必须按顺序）</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> sessions <span class="keyword">WHERE</span> sessions <span class="keyword">MATCH</span> <span class="string">&#x27;&quot;今天 天气&quot;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 前缀查询</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> sessions <span class="keyword">WHERE</span> sessions <span class="keyword">MATCH</span> <span class="string">&#x27;天气*&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 布尔查询</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> sessions <span class="keyword">WHERE</span> sessions <span class="keyword">MATCH</span> <span class="string">&#x27;天气 AND 心情&#x27;</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> sessions <span class="keyword">WHERE</span> sessions <span class="keyword">MATCH</span> <span class="string">&#x27;天气 OR 温度&#x27;</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> sessions <span class="keyword">WHERE</span> sessions <span class="keyword">MATCH</span> <span class="string">&#x27;天气 NOT 下雨&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- NEAR 查询（相近词）</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> sessions <span class="keyword">WHERE</span> sessions <span class="keyword">MATCH</span> <span class="string">&#x27;NEAR(天气, 心情, 5)&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-Hermes-中的-FTS5-实现"><a href="#2-3-Hermes-中的-FTS5-实现" class="headerlink" title="2.3 Hermes 中的 FTS5 实现"></a>2.3 Hermes 中的 FTS5 实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># FTS5 + LLM 摘要召回</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">semantic_search</span>(<span class="params">self, query: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="comment"># 1. FTS5 快速召回 Top-5 相关会话</span></span><br><span class="line">    fts_results = <span class="keyword">await</span> <span class="variable language_">self</span>.search_sessions(query, limit=<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 2. 拼接召回的上下文</span></span><br><span class="line">    context = <span class="string">&quot;\n\n&quot;</span>.join([</span><br><span class="line">        <span class="string">f&quot;[会话 <span class="subst">&#123;i+<span class="number">1</span>&#125;</span>]\n<span class="subst">&#123;r[<span class="string">&#x27;content&#x27;</span>]&#125;</span>&quot;</span></span><br><span class="line">        <span class="keyword">for</span> i, r <span class="keyword">in</span> <span class="built_in">enumerate</span>(fts_results)</span><br><span class="line">    ])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 3. 交给 LLM 生成摘要</span></span><br><span class="line">    prompt = <span class="string">f&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    基于以下历史会话片段，回答用户问题。</span></span><br><span class="line"><span class="string">    问题: <span class="subst">&#123;query&#125;</span></span></span><br><span class="line"><span class="string">    历史会话: <span class="subst">&#123;context&#125;</span></span></span><br><span class="line"><span class="string">    请总结相关历史，并给出回答。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    response = <span class="keyword">await</span> <span class="variable language_">self</span>.llm.chat(prompt)</span><br><span class="line">    <span class="keyword">return</span> response.content</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-FTS5-vs-其他搜索方案"><a href="#2-4-FTS5-vs-其他搜索方案" class="headerlink" title="2.4 FTS5 vs 其他搜索方案"></a>2.4 FTS5 vs 其他搜索方案</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>FTS5</th>
+<th>Elasticsearch</th>
+<th>向量数据库</th>
+<th>传统 LIKE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>部署</strong></td>
+<td>⭐⭐⭐⭐⭐ SQLite内置</td>
+<td>⭐ 需要单独服务</td>
+<td>⭐⭐ 需要云服务</td>
+<td>⭐⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td><strong>查询延迟</strong></td>
+<td>⭐⭐⭐⭐⭐ 毫秒级</td>
+<td>⭐⭐⭐⭐⭐</td>
+<td>⭐⭐⭐</td>
+<td>⭐⭐</td>
+</tr>
+<tr>
+<td><strong>语义理解</strong></td>
+<td>❌ 关键词匹配</td>
+<td>❌</td>
+<td>✅ 语义向量</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><strong>精确匹配</strong></td>
+<td>✅</td>
+<td>✅</td>
+<td>⚠️</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><strong>内存占用</strong></td>
+<td>⭐⭐⭐⭐⭐ 极低</td>
+<td>⭐ 需要ES集群</td>
+<td>⭐⭐</td>
+<td>⭐⭐⭐⭐⭐</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="第三部分：Honcho-用户画像系统深度解析"><a href="#第三部分：Honcho-用户画像系统深度解析" class="headerlink" title="第三部分：Honcho 用户画像系统深度解析"></a>第三部分：Honcho 用户画像系统深度解析</h2><h3 id="3-1-Honcho-是什么？"><a href="#3-1-Honcho-是什么？" class="headerlink" title="3.1 Honcho 是什么？"></a>3.1 Honcho 是什么？</h3><p><strong>Honcho</strong> 是 <a target="_blank" rel="noopener" href="https://plasticlabs.ai/">Plastic Labs</a> 开发的<strong>持久化记忆与推理库</strong>。</p>
+<p>官网：<a target="_blank" rel="noopener" href="https://app.honcho.dev/">https://app.honcho.dev</a><br>GitHub：<a target="_blank" rel="noopener" href="https://github.com/plastic-labs/honcho">https://github.com/plastic-labs/honcho</a></p>
+<p><strong>核心理念：Memory as Reasoning — 记忆不仅是存储，而是推理</strong></p>
+<h3 id="3-2-Honcho-数据模型"><a href="#3-2-Honcho-数据模型" class="headerlink" title="3.2 Honcho 数据模型"></a>3.2 Honcho 数据模型</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line">    W[&quot;Workspace&lt;br/&gt;工作空间&quot;]</span><br><span class="line">    </span><br><span class="line">    W --&gt; P[&quot;Peers&lt;br/&gt;参与者&quot;]</span><br><span class="line">    W --&gt; S[&quot;Sessions&lt;br/&gt;会话&quot;]</span><br><span class="line">    W --&gt; R[&quot;Reasoning&lt;br/&gt;推理引擎&quot;]</span><br><span class="line">    </span><br><span class="line">    P --&gt; PC[&quot;Peer Card&lt;br/&gt;参与者画像&quot;]</span><br><span class="line">    S --&gt; M[&quot;Messages&lt;br/&gt;消息&quot;]</span><br><span class="line">    </span><br><span class="line">    PC --&gt; B[&quot;biographical&lt;br/&gt;基本信息&quot;]</span><br><span class="line">    PC --&gt; PF[&quot;preferences&lt;br/&gt;偏好&quot;]</span><br><span class="line">    PC --&gt; BP[&quot;behavioral_patterns&lt;br/&gt;行为模式&quot;]</span><br><span class="line">    PC --&gt; DI[&quot;derived_insights&lt;br/&gt;推理洞察&quot;]</span><br><span class="line">    </span><br><span class="line">    R --&gt; EX[&quot;explicit&lt;br/&gt;显式结论&quot;]</span><br><span class="line">    R --&gt; DE[&quot;deductive&lt;br/&gt;演绎结论&quot;]</span><br><span class="line">    R --&gt; IN[&quot;inductive&lt;br/&gt;归纳结论&quot;]</span><br><span class="line">    R --&gt; AB[&quot;abductive&lt;br/&gt;溯因结论&quot;]</span><br><span class="line">    </span><br><span class="line">    style W fill:#1976d2,color:#fff</span><br><span class="line">    style Honcho[&quot;Honcho&quot;] fill:#7b1fa2,color:#fff</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-Honcho-推理引擎详解"><a href="#3-3-Honcho-推理引擎详解" class="headerlink" title="3.3 Honcho 推理引擎详解"></a>3.3 Honcho 推理引擎详解</h3><h4 id="为什么需要推理？"><a href="#为什么需要推理？" class="headerlink" title="为什么需要推理？"></a>为什么需要推理？</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">    subgraph Traditional[&quot;传统 RAG&quot;]</span><br><span class="line">        S1[&quot;存储&quot;] --&gt; R1[&quot;检索&quot;] --&gt; RT[&quot;返回说过的话&quot;]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    subgraph Honcho[&quot;Honcho&quot;]</span><br><span class="line">        S2[&quot;存储&quot;] --&gt; RE[&quot;推理&quot;] --&gt; RG[&quot;生成结构化表征&quot;] --&gt; RT2[&quot;返回结论&quot;]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    Traditional --&gt;|&quot;不足&quot;| Honcho</span><br></pre></td></tr></table></figure>
+
+<p><strong>核心洞察：</strong></p>
+<ul>
+<li>传统 RAG 只返回<strong>说过的话</strong></li>
+<li>Honcho 通过推理返回<strong>从话语中得出的结论</strong></li>
+</ul>
+<h4 id="形式逻辑推理框架"><a href="#形式逻辑推理框架" class="headerlink" title="形式逻辑推理框架"></a>形式逻辑推理框架</h4><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;explicit&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span><span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;用户说他喜欢看代码示例&quot;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span><span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;用户表示文档太枯燥&quot;</span><span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;deductive&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;premises&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;用户说他喜欢看代码示例&quot;</span><span class="punctuation">,</span> <span class="string">&quot;用户表示文档太枯燥&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;conclusion&quot;</span><span class="punctuation">:</span> <span class="string">&quot;用户偏好实践导向的学习方式&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;inductive&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;observations&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;多次问实践问题&quot;</span><span class="punctuation">,</span> <span class="string">&quot;多次表达对理论的厌倦&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;pattern&quot;</span><span class="punctuation">:</span> <span class="string">&quot;用户是实践型学习者&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;abductive&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;observation&quot;</span><span class="punctuation">:</span> <span class="string">&quot;用户总是要求代码示例&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;hypothesis&quot;</span><span class="punctuation">:</span> <span class="string">&quot;用户可能是开发者或正在学习编程&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="推理级别（Dialectic-Levels）"><a href="#推理级别（Dialectic-Levels）" class="headerlink" title="推理级别（Dialectic Levels）"></a>推理级别（Dialectic Levels）</h4><table>
+<thead>
+<tr>
+<th>级别</th>
+<th>用途</th>
+<th>底层模型</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>minimal</strong></td>
+<td>快速提取</td>
+<td>Gemini</td>
+<td>高频简单更新</td>
+</tr>
+<tr>
+<td><strong>low</strong></td>
+<td>轻量推理</td>
+<td>Gemini</td>
+<td>标准对话</td>
+</tr>
+<tr>
+<td><strong>medium</strong></td>
+<td>标准分析</td>
+<td>Claude</td>
+<td>一般用途</td>
+</tr>
+<tr>
+<td><strong>high</strong></td>
+<td>深度分析</td>
+<td>Claude</td>
+<td>重要洞察</td>
+</tr>
+<tr>
+<td><strong>max</strong></td>
+<td>最深度推理</td>
+<td>Claude</td>
+<td>复杂推理</td>
+</tr>
+</tbody></table>
+<h4 id="Token-批处理"><a href="#Token-批处理" class="headerlink" title="Token 批处理"></a>Token 批处理</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">触发条件：约 1000 tokens 的消息队列</span><br><span class="line"></span><br><span class="line">用户: &quot;yes&quot; (3 tokens) → 等待</span><br><span class="line">用户: &quot;ok&quot; (2 tokens) → 继续等待</span><br><span class="line">... 累积到 ~1000 tokens</span><br><span class="line">    ↓</span><br><span class="line">一次性处理整个批次</span><br><span class="line">    ↓</span><br><span class="line">生成推理结论</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-4-Peer-Card（参与者画像）"><a href="#3-4-Peer-Card（参与者画像）" class="headerlink" title="3.4 Peer Card（参与者画像）"></a>3.4 Peer Card（参与者画像）</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;peer_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;user_xuqi&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;card&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;biographical&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;徐琪&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;开发者&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;timezone&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Asia/Shanghai&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;preferences&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;learning_style&quot;</span><span class="punctuation">:</span> <span class="string">&quot;hands_on&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;communication&quot;</span><span class="punctuation">:</span> <span class="string">&quot;简洁直接&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;language&quot;</span><span class="punctuation">:</span> <span class="string">&quot;中文&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;behavioral_patterns&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;active_hours&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;20:00-24:00&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;topics&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;ESP32&quot;</span><span class="punctuation">,</span> <span class="string">&quot;Python&quot;</span><span class="punctuation">,</span> <span class="string">&quot;AI Agent&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;interaction_frequency&quot;</span><span class="punctuation">:</span> <span class="string">&quot;high&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;derived_insights&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">            <span class="string">&quot;用户偏好通过实际项目学习&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="string">&quot;用户对AI助手有一定了解&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="string">&quot;用户经常在深夜工作&quot;</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-5-Honcho-vs-传统记忆方案对比"><a href="#3-5-Honcho-vs-传统记忆方案对比" class="headerlink" title="3.5 Honcho vs 传统记忆方案对比"></a>3.5 Honcho vs 传统记忆方案对比</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Honcho</th>
+<th>键值存储</th>
+<th>向量数据库</th>
+<th>文件记忆</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>推理能力</strong></td>
+<td>✅ 形式逻辑</td>
+<td>❌</td>
+<td>⚠️ 语义近似</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><strong>结构化表征</strong></td>
+<td>✅ Peer Card</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><strong>持续学习</strong></td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><strong>用户画像</strong></td>
+<td>✅ 自动生成</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><strong>查询灵活性</strong></td>
+<td>✅ SQL + LLM</td>
+<td>K&#x2F;V</td>
+<td>向量相似</td>
+<td>关键词</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="第四部分：Hermes-工具系统深度解析"><a href="#第四部分：Hermes-工具系统深度解析" class="headerlink" title="第四部分：Hermes 工具系统深度解析"></a>第四部分：Hermes 工具系统深度解析</h2><h3 id="4-1-工具注册表架构"><a href="#4-1-工具注册表架构" class="headerlink" title="4.1 工具注册表架构"></a>4.1 工具注册表架构</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line">    subgraph Registry[&quot;工具注册表 (registry.py)&quot;]</span><br><span class="line">        R[&quot;中心注册表&lt;br/&gt;47工具 + 40工具集&quot;]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    subgraph Tools[&quot;内置工具&quot;]</span><br><span class="line">        FT[&quot;文件工具&lt;br/&gt;read/write/patch/search&quot;]</span><br><span class="line">        WT[&quot;Web工具&lt;br/&gt;search/extract/fetch&quot;]</span><br><span class="line">        TT[&quot;终端工具&lt;br/&gt;6种后端&quot;]</span><br><span class="line">        MT[&quot;MCP工具&lt;br/&gt;动态扩展&quot;]</span><br><span class="line">        CT[&quot;代码执行&lt;br/&gt;Python沙箱&quot;]</span><br><span class="line">        DT[&quot;委托工具&lt;br/&gt;子智能体&quot;]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    subgraph Toolsets[&quot;工具集&quot;]</span><br><span class="line">        TS1[&quot;code&quot;]</span><br><span class="line">        TS2[&quot;web&quot;]</span><br><span class="line">        TS3[&quot;media&quot;]</span><br><span class="line">        TS4[&quot;system&quot;]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    R --&gt; Tools</span><br><span class="line">    FT --&gt; TS1</span><br><span class="line">    WT --&gt; TS2</span><br><span class="line">    MT --&gt; TS4</span><br><span class="line"></span><br><span class="line">    style R fill:#ff9800,color:#fff</span><br><span class="line">    style Tools fill:#4caf50,color:#fff</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-工具执行流程"><a href="#4-2-工具执行流程" class="headerlink" title="4.2 工具执行流程"></a>4.2 工具执行流程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">sequenceDiagram</span><br><span class="line">    participant LLM</span><br><span class="line">    participant Registry as 工具注册表</span><br><span class="line">    participant Tool as 具体工具</span><br><span class="line">    participant User as 用户</span><br><span class="line"></span><br><span class="line">    LLM-&gt;&gt;Registry: tool_call(name, args)</span><br><span class="line">    Registry-&gt;&gt;Registry: 验证参数</span><br><span class="line"></span><br><span class="line">    alt 危险命令</span><br><span class="line">        Registry-&gt;&gt;User: 请求确认</span><br><span class="line">        User--&gt;&gt;Registry: 批准/拒绝</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    Registry-&gt;&gt;Tool: 执行</span><br><span class="line">    Tool--&gt;&gt;Registry: 结果</span><br><span class="line">    Registry--&gt;&gt;LLM: 返回</span><br><span class="line"></span><br><span class="line">    Note over Registry: 记录执行日志</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-终端后端支持"><a href="#4-3-终端后端支持" class="headerlink" title="4.3 终端后端支持"></a>4.3 终端后端支持</h3><table>
+<thead>
+<tr>
+<th>后端</th>
+<th>用途</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>local</strong></td>
+<td>本地执行</td>
+<td>最快，无网络延迟</td>
+</tr>
+<tr>
+<td><strong>docker</strong></td>
+<td>隔离容器</td>
+<td>完全隔离，可限制资源</td>
+</tr>
+<tr>
+<td><strong>SSH</strong></td>
+<td>远程执行</td>
+<td>连接到其他机器</td>
+</tr>
+<tr>
+<td><strong>Daytona</strong></td>
+<td>Serverless</td>
+<td>按需启停，成本低</td>
+</tr>
+<tr>
+<td><strong>Modal</strong></td>
+<td>Serverless GPU</td>
+<td>支持 GPU 任务</td>
+</tr>
+<tr>
+<td><strong>Singularity</strong></td>
+<td>HPC 容器</td>
+<td>高性能计算</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="第五部分：Hermes-vs-OpenClaw-深度对比"><a href="#第五部分：Hermes-vs-OpenClaw-深度对比" class="headerlink" title="第五部分：Hermes vs OpenClaw 深度对比"></a>第五部分：Hermes vs OpenClaw 深度对比</h2><h3 id="5-1-基本信息对比"><a href="#5-1-基本信息对比" class="headerlink" title="5.1 基本信息对比"></a>5.1 基本信息对比</h3><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Hermes Agent</th>
+<th>OpenClaw</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>开发团队</strong></td>
+<td>Nous Research</td>
+<td>OpenClaw 社区</td>
+</tr>
+<tr>
+<td><strong>开源协议</strong></td>
+<td>MIT</td>
+<td>MIT</td>
+</tr>
+<tr>
+<td><strong>核心语言</strong></td>
+<td>Python (~50k行)</td>
+<td>TypeScript&#x2F;Node.js</td>
+</tr>
+<tr>
+<td><strong>定位</strong></td>
+<td>自我进化智能体</td>
+<td>多功能 Agent 框架</td>
+</tr>
+<tr>
+<td><strong>学习闭环</strong></td>
+<td>✅ 内置 Honcho 推理</td>
+<td>⚠️ MEMORY.md 持久化</td>
+</tr>
+<tr>
+<td><strong>模型支持</strong></td>
+<td>18+ 供应商</td>
+<td>多种模型</td>
+</tr>
+<tr>
+<td><strong>消息平台</strong></td>
+<td>15+ 平台</td>
+<td>多种</td>
+</tr>
+<tr>
+<td><strong>部署方式</strong></td>
+<td>VPS&#x2F;Serverless&#x2F;NAS</td>
+<td>NAS&#x2F;本地&#x2F;云</td>
+</tr>
+<tr>
+<td><strong>工具数量</strong></td>
+<td>47内置 + MCP扩展</td>
+<td>Skills 扩展</td>
+</tr>
+</tbody></table>
+<h3 id="5-2-架构哲学对比"><a href="#5-2-架构哲学对比" class="headerlink" title="5.2 架构哲学对比"></a>5.2 架构哲学对比</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">    subgraph Hermes[&quot;Hermes Agent&quot;]</span><br><span class="line">        H1[&quot;每次对话&quot;] --&gt; H2[&quot;经验积累&quot;]</span><br><span class="line">        H2 --&gt; H3[&quot;技能创建&quot;]</span><br><span class="line">        H3 --&gt; H4[&quot;越用越聪明&quot;]</span><br><span class="line">        H4 --&gt; H1</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    subgraph OpenClaw[&quot;OpenClaw&quot;]</span><br><span class="line">        O1[&quot;Skills&quot;] --&gt; O2[&quot;Tools&quot;]</span><br><span class="line">        O2 --&gt; O3[&quot;Channel&quot;]</span><br><span class="line">        O3 --&gt; O4[&quot;模块化定制&quot;]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    Hermes ---|&quot;各有优势&quot;| OpenClaw</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-3-记忆系统对比"><a href="#5-3-记忆系统对比" class="headerlink" title="5.3 记忆系统对比"></a>5.3 记忆系统对比</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Hermes (Honcho)</th>
+<th>OpenClaw (文件记忆)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>存储方式</strong></td>
+<td>PostgreSQL + pgvector</td>
+<td>文件系统 (MEMORY.md)</td>
+</tr>
+<tr>
+<td><strong>推理能力</strong></td>
+<td>✅ 形式逻辑推理</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><strong>用户画像</strong></td>
+<td>✅ 自动生成 Peer Card</td>
+<td>⚠️ 手动维护 USER.md</td>
+</tr>
+<tr>
+<td><strong>持续学习</strong></td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><strong>跨会话累积</strong></td>
+<td>✅</td>
+<td>⚠️ 需手动合并</td>
+</tr>
+<tr>
+<td><strong>查询方式</strong></td>
+<td>FTS5 + SQL + LLM</td>
+<td>文本搜索</td>
+</tr>
+</tbody></table>
+<h3 id="5-4-消息平台对比"><a href="#5-4-消息平台对比" class="headerlink" title="5.4 消息平台对比"></a>5.4 消息平台对比</h3><table>
+<thead>
+<tr>
+<th>平台</th>
+<th>Hermes</th>
+<th>OpenClaw</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Telegram</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Discord</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>WhatsApp</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>飞书</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>钉钉</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>企业微信</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>微信</td>
+<td>⚠️ 社区桥接</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Signal</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Home Assistant</td>
+<td>✅</td>
+<td>✅⭐ 原生</td>
+</tr>
+</tbody></table>
+<h3 id="5-5-各自最优场景"><a href="#5-5-各自最优场景" class="headerlink" title="5.5 各自最优场景"></a>5.5 各自最优场景</h3><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>推荐</th>
+<th>核心优势</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>需要自我进化</strong></td>
+<td>Hermes</td>
+<td>内置 Honcho 推理</td>
+</tr>
+<tr>
+<td><strong>跨平台消息</strong></td>
+<td>Hermes</td>
+<td>15+平台原生</td>
+</tr>
+<tr>
+<td><strong>Home Assistant集成</strong></td>
+<td>OpenClaw</td>
+<td>⭐⭐⭐⭐⭐ 原生支持</td>
+</tr>
+<tr>
+<td><strong>NAS部署</strong></td>
+<td>OpenClaw</td>
+<td>轻量，TypeScript生态</td>
+</tr>
+<tr>
+<td><strong>研究用途</strong></td>
+<td>Hermes</td>
+<td>RL环境、轨迹导出</td>
+</tr>
+<tr>
+<td><strong>低成本VPS</strong></td>
+<td>Hermes</td>
+<td>$5可跑，serverless</td>
+</tr>
+</tbody></table>
+<h3 id="5-6-迁移能力"><a href="#5-6-迁移能力" class="headerlink" title="5.6 迁移能力"></a>5.6 迁移能力</h3><p><strong>重要：Hermes 支持从 OpenClaw 迁移！</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一键迁移</span></span><br><span class="line">hermes claw migrate</span><br><span class="line"></span><br><span class="line"><span class="comment"># 预览迁移内容</span></span><br><span class="line">hermes claw migrate --dry-run</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>迁移项</th>
+<th>Hermes 目标</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SOUL.md</td>
+<td>SOUL.md</td>
+</tr>
+<tr>
+<td>MEMORY.md</td>
+<td>Honcho Memory</td>
+</tr>
+<tr>
+<td>USER.md</td>
+<td>Honcho Peer Card</td>
+</tr>
+<tr>
+<td>Skills</td>
+<td>~&#x2F;.hermes&#x2F;skills&#x2F;</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="第六部分：定时自动化（Cron）深度解析"><a href="#第六部分：定时自动化（Cron）深度解析" class="headerlink" title="第六部分：定时自动化（Cron）深度解析"></a>第六部分：定时自动化（Cron）深度解析</h2><h3 id="6-1-Cron-工作原理"><a href="#6-1-Cron-工作原理" class="headerlink" title="6.1 Cron 工作原理"></a>6.1 Cron 工作原理</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">flowchart TD</span><br><span class="line">    A[&quot;Scheduler Tick&quot;] --&gt; B&#123;检查 jobs.json&#125;</span><br><span class="line">    B --&gt;|到期| C[&quot;创建 Fresh AIAgent&quot;]</span><br><span class="line">    C --&gt; D[&quot;注入任务提示词&quot;]</span><br><span class="line">    D --&gt; E[&quot;AIAgent.run_conversation()&quot;]</span><br><span class="line">    E --&gt; F[&quot;交付到目标平台&quot;]</span><br><span class="line">    F --&gt; G[&quot;更新下次执行时间&quot;]</span><br><span class="line"></span><br><span class="line">    style A fill:#e91e63,color:#fff</span><br><span class="line">    style C fill:#9c27b0,color:#fff</span><br><span class="line">    style G fill:#4caf50,color:#fff</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-2-自然语言任务定义"><a href="#6-2-自然语言任务定义" class="headerlink" title="6.2 自然语言任务定义"></a>6.2 自然语言任务定义</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;jobs&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;daily-report&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;每日工作报告&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;schedule&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0 8 * * *&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;prompt&quot;</span><span class="punctuation">:</span> <span class="string">&quot;请生成昨天的工作报告，包含：1.完成的工作 2.遇到的问题 3.今日计划。&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;deliver_to&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;telegram&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>用户只需要说：<strong>“每天早上8点给我发日报”</strong>，Hermes 自动解析并创建任务。</p>
+<hr>
+<h2 id="第七部分：子智能体委托（Delegate）深度解析"><a href="#第七部分：子智能体委托（Delegate）深度解析" class="headerlink" title="第七部分：子智能体委托（Delegate）深度解析"></a>第七部分：子智能体委托（Delegate）深度解析</h2><h3 id="7-1-并行加速原理"><a href="#7-1-并行加速原理" class="headerlink" title="7.1 并行加速原理"></a>7.1 并行加速原理</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line">    subgraph Serial[&quot;传统串行 (12分钟)&quot;]</span><br><span class="line">        S1[&quot;分析目录结构&lt;br/&gt;2分钟&quot;] --&gt; S2[&quot;检查代码质量&lt;br/&gt;5分钟&quot;]</span><br><span class="line">        S2 --&gt; S3[&quot;生成测试报告&lt;br/&gt;3分钟&quot;]</span><br><span class="line">        S3 --&gt; S4[&quot;整理文档&lt;br/&gt;2分钟&quot;]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    subgraph Parallel[&quot;Delegate并行 (5分钟)&quot;]</span><br><span class="line">        P1[&quot;分析目录结构&lt;br/&gt;2分钟&quot;]</span><br><span class="line">        P2[&quot;检查代码质量&lt;br/&gt;5分钟&quot;]</span><br><span class="line">        P3[&quot;生成测试报告&lt;br/&gt;3分钟&quot;]</span><br><span class="line">        P4[&quot;整理文档&lt;br/&gt;2分钟&quot;]</span><br><span class="line">    end</span><br><span class="line"></span><br><span class="line">    P1 &amp; P2 &amp; P3 &amp; P4 --&gt; P5[&quot;汇总结果&quot;]</span><br><span class="line"></span><br><span class="line">    Serial --&gt;|&quot;12分钟&quot;| Result[&quot;结果&quot;]</span><br><span class="line">    Parallel --&gt;|&quot;5分钟&quot;| Result</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-2-使用示例"><a href="#7-2-使用示例" class="headerlink" title="7.2 使用示例"></a>7.2 使用示例</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">用户: &quot;帮我分析这个项目的代码质量和安全性&quot;</span><br><span class="line"></span><br><span class="line">Hermes 执行:</span><br><span class="line">/parallel</span><br><span class="line">  /delegate &quot;分析代码目录结构和模块划分&quot;</span><br><span class="line">  /delegate &quot;检查代码质量问题&quot;</span><br><span class="line">  /delegate &quot;安全审计&quot;</span><br><span class="line">  /delegate &quot;生成测试覆盖率报告&quot;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="第八部分：实战部署指南"><a href="#第八部分：实战部署指南" class="headerlink" title="第八部分：实战部署指南"></a>第八部分：实战部署指南</h2><h3 id="8-1-一键安装"><a href="#8-1-一键安装" class="headerlink" title="8.1 一键安装"></a>8.1 一键安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Linux / macOS / WSL2</span></span><br><span class="line">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 验证安装</span></span><br><span class="line">hermes --version</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-2-Docker-部署"><a href="#8-2-Docker-部署" class="headerlink" title="8.2 Docker 部署"></a>8.2 Docker 部署</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker-compose.yml</span></span><br><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3.8&#x27;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">hermes:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nousresearch/hermes-agent:latest</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./hermes_data:/root/.hermes</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">OPENROUTER_API_KEY=$&#123;OPENROUTER_API_KEY&#125;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-3-服务器部署（Systemd）"><a href="#8-3-服务器部署（Systemd）" class="headerlink" title="8.3 服务器部署（Systemd）"></a>8.3 服务器部署（Systemd）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/systemd/system/hermes.service</span></span><br><span class="line">[Unit]</span><br><span class="line">Description=Hermes Agent</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">User=ubuntu</span><br><span class="line">ExecStart=/usr/local/bin/hermes gateway start</span><br><span class="line">Restart=on-failure</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> hermes</span><br><span class="line"><span class="built_in">sudo</span> systemctl start hermes</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="为什么选择-Hermes？"><a href="#为什么选择-Hermes？" class="headerlink" title="为什么选择 Hermes？"></a>为什么选择 Hermes？</h3><ol>
+<li><p><strong>真正的自我进化</strong></p>
+<ul>
+<li>内置 Honcho 推理引擎</li>
+<li>跨会话学习，用户画像持续优化</li>
+<li>FTS5 + LLM 实现高效精准检索</li>
+</ul>
+</li>
+<li><p><strong>平台无关设计</strong></p>
+<ul>
+<li>15+ 消息平台一个 Agent</li>
+<li>从 Telegram 发消息，云端 VM 执行</li>
+</ul>
+</li>
+<li><p><strong>模型无关设计</strong></p>
+<ul>
+<li>OpenRouter 200+ 模型随意切换</li>
+<li>不被供应商绑定</li>
+</ul>
+</li>
+<li><p><strong>研究友好</strong></p>
+<ul>
+<li>内置 RL 训练环境</li>
+<li>轨迹导出支持</li>
+<li>开源 MIT</li>
+</ul>
+</li>
+</ol>
+<h3 id="什么时候选-OpenClaw？"><a href="#什么时候选-OpenClaw？" class="headerlink" title="什么时候选 OpenClaw？"></a>什么时候选 OpenClaw？</h3><ul>
+<li>需要深度 Home Assistant 集成</li>
+<li>轻量级 NAS 部署</li>
+<li>喜欢 TypeScript&#x2F;Node.js 生态</li>
+</ul>
+<hr>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><table>
+<thead>
+<tr>
+<th>资源</th>
+<th>链接</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hermes 官网</td>
+<td><a target="_blank" rel="noopener" href="https://hermes-agent.nousresearch.com/">https://hermes-agent.nousresearch.com</a></td>
+</tr>
+<tr>
+<td>Hermes GitHub</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NousResearch/Hermes-Agent">https://github.com/NousResearch/Hermes-Agent</a></td>
+</tr>
+<tr>
+<td>Honcho 官网</td>
+<td><a target="_blank" rel="noopener" href="https://app.honcho.dev/">https://app.honcho.dev</a></td>
+</tr>
+<tr>
+<td>Honcho GitHub</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/plastic-labs/honcho">https://github.com/plastic-labs/honcho</a></td>
+</tr>
+<tr>
+<td>Honcho 文档</td>
+<td><a target="_blank" rel="noopener" href="https://docs.honcho.dev/">https://docs.honcho.dev</a></td>
+</tr>
+<tr>
+<td>Nous Research</td>
+<td><a target="_blank" rel="noopener" href="https://nousresearch.com/">https://nousresearch.com</a></td>
+</tr>
+<tr>
+<td>FTS5 文档</td>
+<td><a target="_blank" rel="noopener" href="https://www.sqlite.org/fts5.html">https://www.sqlite.org/fts5.html</a></td>
+</tr>
+<tr>
+<td>Discord 社区</td>
+<td><a target="_blank" rel="noopener" href="https://discord.gg/NousResearch">https://discord.gg/NousResearch</a></td>
+</tr>
+</tbody></table>
+<hr>
+<p><strong>本文作者：</strong> xuqi2024<br><strong>编写日期：</strong> 2026年4月13日<br><strong>许可协议：</strong> CC BY-SA 4.0</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6/" rel="tag"># 深度</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/Hermes/" rel="tag"># Hermes</a>
+              <a href="/tags/NousResearch/" rel="tag"># NousResearch</a>
+              <a href="/tags/%E6%99%BA%E8%83%BD%E4%BD%93/" rel="tag"># 智能体</a>
+              <a href="/tags/FTS5/" rel="tag"># FTS5</a>
+              <a href="/tags/Honcho/" rel="tag"># Honcho</a>
+              <a href="/tags/OpenClaw%E5%AF%B9%E6%AF%94/" rel="tag"># OpenClaw对比</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/03/21/13-%E8%B0%83%E8%AF%95/" rel="prev" title="第十三章：调试">
+                  <i class="fa fa-angle-left"></i> 第十三章：调试
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/04/24/2026-04-24-mcp-model-context-protocol-detailed-introduction/" rel="next" title="MCP 详细介绍：让 AI 助手更强大的协议">
+                  MCP 详细介绍：让 AI 助手更强大的协议 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2024 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Xu Qi</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
