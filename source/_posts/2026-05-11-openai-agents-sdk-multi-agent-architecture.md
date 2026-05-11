@@ -1,3 +1,18 @@
+---
+title: "OpenAI Agents SDK 核心架构与多 Agent 协作设计原理深度解析"
+date: 2026-05-11 08:00:00
+categories:
+  - AI
+  - 项目评测
+tags:
+  - Agent
+  - OpenAI
+  - 架构分析
+  - 多Agent
+  - Handoff
+  - Guardrails
+---
+
 # OpenAI Agents SDK 核心架构与多 Agent 协作设计原理深度解析
 
 > 本文深入剖析 OpenAI 官方发布的 Agents SDK（openai-agents-python），这是 OpenAI 推出的首个轻量级多 Agent 开发框架。该项目在 GitHub 上已获得 26,000+ Stars，近 30 天保持活跃更新，为 Python 开发者提供了构建生产级多 Agent 应用的完整工具链。
