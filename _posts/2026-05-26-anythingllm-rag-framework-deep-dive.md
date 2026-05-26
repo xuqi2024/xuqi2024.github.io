@@ -74,6 +74,33 @@ graph TB
 | 向量库 | LanceDB（默认）、Pinecone 等 | 语义检索 |
 | 文件存储 | 本地磁盘或 S3 | 原始文档持久化 |
 
+**Collector 微服务设计原因：**
+
+Collector 独立为单独进程，不是简单为了"解耦"，而是有实际的工程考量：
+
+1. **CPU 密集型任务隔离**：PDF 解析、OCR 识别、文本分块都是 CPU 密集操作，独立 Collector 避免阻塞 NodeJS 主进程的 HTTP 请求处理
+2. **内存峰值隔离**：大文件解析会产生内存峰值，独立容器防止内存溢出影响主服务稳定性
+3. **弹性扩展**：高负载时可以多起几个 Collector 实例做负载均衡（目前官方未实现但架构支持）
+4. **长连接友好**：文档解析可能耗时很长，独立服务不会让 API 请求超时
+
+**向量库管理器的抽象层设计：**
+
+Server 层通过统一接口访问向量库，屏蔽不同后端的差异：
+
+```javascript
+// 向量库管理器接口（简化）
+class VectorDBManager {
+  async addDocuments(workspaceId, documents) // 统一添加接口
+  async search(query, workspaceId, topK)   // 统一搜索接口
+  async deleteWorkspace(workspaceId)         // 统一删除接口
+}
+
+// 具体实现：LanceDB / Pinecone / Chroma / Milvus / Qdrant
+// 配置 VECTOR_DB=lancedb|pinecone|chroma|milvus|qdrant 自动切换
+```
+
+这种设计让你**换向量库不需要改代码**，只需要改一行环境变量。迁移时需要重新导入文档（向量无法跨库迁移），但整个过程是可控的。
+
 ## 核心机制
 
 ### 1. 文档处理管道
@@ -169,6 +196,24 @@ AnythingLLM vs LangChain vs Dify：
 - **Dify** 是**SaaS 平台**，偏向可视化编排，介于产品和框架之间
 
 AnythingLLM 的优势在于**零配置跑起来**，但二次开发灵活性不如 LangChain。如果你需要快速搭一个私有文档问答系统，选 AnythingLLM；如果你需要高度定制化的 RAG 管道，选 LangChain。
+
+## 优缺点分析
+
+### 优点
+
+1. **开箱即用**：Docker 一键部署，零配置跑起来
+2. **全栈完整**：前端+后端+Collector 微服务，不用自己组装
+3. **多用户原生支持**：完善的权限管理，适合团队场景
+4. **MCP 兼容**：能融入更大的 Agent 工具生态
+5. **文档处理管道完整**：PDF/Word/表格/多栏都能处理
+
+### 缺点
+
+1. **定制化受限**：架构固定，二次开发需要改源码
+2. **Collector 单点**：大文件解析占用 Collector 资源，没有负载均衡
+3. **向量库切换成本**：热插拔支持但迁移需要重新导入
+4. **中文支持一般**：Embedding 对中文分词效果不如专门的向量模型
+5. **多模态能力有限**：虽然说支持多模态，但实际只支持基础图片理解
 
 ## 使用指南
 
