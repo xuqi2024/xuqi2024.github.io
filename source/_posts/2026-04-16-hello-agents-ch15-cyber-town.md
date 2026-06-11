@@ -8,7 +8,7 @@ tags:
 - AI Agent
 - 多智能体
 - hello-agents
-
+description: "核心结论：Stanford Generative…"
 ---
 
 > **核心结论**：Stanford Generative Agents实验（2023）最惊人的发现不是AI能模拟人类行为，而是**当每个Agent只遵循简单规则时，整个群体会涌现出没有人编程过的社会行为**——比如自发组织聚会、传播八卦、形成友谊圈。

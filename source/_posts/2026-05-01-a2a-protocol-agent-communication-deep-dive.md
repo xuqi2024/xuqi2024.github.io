@@ -9,6 +9,7 @@ tags:
 - 协议
 - 架构分析
 - MCP
+description: "一句话核心结论：A2A（Agent2Agent）协议是 AI Agent 世界的HTTP——它让不同框架、不同公司构建的 Agent 能够互相通信，而 MCP 负责的是 Agent…"
 ---
 
 > **一句话核心结论**：A2A（Agent2Agent）协议是 AI Agent 世界的"HTTP"——它让不同框架、不同公司构建的 Agent 能够互相通信，而 MCP 负责的是 Agent 内部的工具调用。A2A 解决的是 Agent 协作的"最后一公里"问题。

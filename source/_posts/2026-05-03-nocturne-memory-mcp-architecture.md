@@ -10,6 +10,7 @@ tags:
 - MCP
 - 架构分析
 - Nocturne Memory
+description: "当 AI 说我记得你——它是真的想起了什么，还是在查数据库？ > 大多数 Agent 框架用 Vector RAG 解决记忆问题，但这在架构上是一个根本性错误。 > Nocturne Memory…"
 ---
 
 > 当 AI 说"我记得你"——它是真的想起了什么，还是在查数据库？

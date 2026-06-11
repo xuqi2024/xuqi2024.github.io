@@ -7,6 +7,7 @@ tags:
 - AI Agent
 - ReAct
 - hello-agents
+description: "一句话结论：Agent想太多绝对是优点——关键是用对思考方式。ReAct适合动态探索，Plan-and-Solve适合结构化任务，Reflection适合精益求精，三种范式各有其战场。"
 ---
 
 > **一句话结论：Agent"想太多"绝对是优点——关键是用对思考方式。ReAct适合动态探索，Plan-and-Solve适合结构化任务，Reflection适合精益求精，三种范式各有其战场。**

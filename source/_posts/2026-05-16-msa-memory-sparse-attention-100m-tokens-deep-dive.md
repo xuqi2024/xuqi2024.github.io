@@ -14,6 +14,7 @@ tags:
   - RAG
   - 向量数据库
   - Transformer
+description: "大语言模型（LLM）的上下文长度一直是衡量其能力的重要指标。从 GPT-4 的 128K 到 Claude 的…"
 ---
 
 # 【MSA】突破100M Token 上下文：记忆稀疏注意力架构深度解析

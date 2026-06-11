@@ -6,6 +6,7 @@ categories:
 tags:
 - C++
 - C++17
+description: "为什么调用成员函数要写 std::mem_fn？为什么展开 tuple 调用函数那么麻烦？C++17 的 std::apply 和 std::invoke 就是来终结这些历史遗留问题的。"
 ---
 
 > 为什么调用成员函数要写 `std::mem_fn`？为什么展开 `tuple` 调用函数那么麻烦？C++17 的 `std::apply` 和 `std::invoke` 就是来终结这些历史遗留问题的。

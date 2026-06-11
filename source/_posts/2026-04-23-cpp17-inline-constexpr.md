@@ -5,6 +5,7 @@ categories: [C++新特性]
 tags:
 - C++
 - C++17
+description: "头文件里定义一个 const 变量就 ODR violation？模板静态成员变量要初始化还得跑到 .cpp 文件？C++17 的 inline 变量和全面进化的 constexpr…"
 ---
 
 > 头文件里定义一个 `const` 变量就 ODR violation？模板静态成员变量要初始化还得跑到 .cpp 文件？C++17 的 inline 变量和全面进化的 constexpr 让这些问题统统成为历史。

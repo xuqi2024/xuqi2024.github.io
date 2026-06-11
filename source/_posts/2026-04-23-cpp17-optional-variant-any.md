@@ -5,6 +5,7 @@ categories: [C++新特性]
 tags:
 - C++
 - C++17
+description: "C++ 以类型安全著称，但在 C++17 之前，值可能不存在 和 类型不确定 一直是痛点。std::optional / variant / any 就是答案。"
 ---
 
 > C++ 以"类型安全"著称，但在 C++17 之前，**"值可能不存在"** 和 **"类型不确定"** 一直是痛点。std::optional / variant / any 就是答案。

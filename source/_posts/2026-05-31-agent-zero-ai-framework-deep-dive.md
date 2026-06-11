@@ -4,6 +4,7 @@ date: 2026-05-31 08:00:00
 categories: [AI, 项目评测]
 tags: [Agent, Agent Zero, 架构分析, AI Agent, 多Agent, Linux容器]
 toc: true
+description: "当大多数 AI Agent 框架还在讨论如何让 LLM 调用工具时，Agent Zero 已经走上了另一条路——把整个 Linux 系统塞进 Docker 容器，让 Agent…"
 ---
 
 # 【Agent Zero】运行在容器中的 Linux AI Agent 系统架构深度解析

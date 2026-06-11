@@ -3,6 +3,7 @@ title: 【Superpowers】Agentic Skills Framework 核心架构与设计原理深�
 date: 2026-06-01
 categories: [AI, 项目评测]
 tags: [Agent, Superpowers, Skills Framework, Claude Code, workflow, TDD]
+description: "当我第一次在终端里启动 Claude Code 并尝试构建一个 Web 应用时，我习惯性地开始写代码——然后被一个提示拦住了："
 ---
 
 # 【Superpowers】Agentic Skills Framework 核心架构与设计原理深度解析

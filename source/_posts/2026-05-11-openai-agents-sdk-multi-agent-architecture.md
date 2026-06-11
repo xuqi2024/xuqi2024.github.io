@@ -11,6 +11,7 @@ tags:
   - 多Agent
   - Handoff
   - Guardrails
+description: "本文深入剖析 OpenAI 官方发布的 Agents SDK（openai-agents-python），这是 OpenAI 推出的首个轻量级多 Agent 开发框架。该项目在 GitHub…"
 ---
 
 # OpenAI Agents SDK 核心架构与多 Agent 协作设计原理深度解析

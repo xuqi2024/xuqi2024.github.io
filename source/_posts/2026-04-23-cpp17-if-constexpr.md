@@ -5,6 +5,7 @@ categories: [C++新特性]
 tags:
 - C++
 - C++17
+description: "模板代码中最讨厌的是什么？SFINAE 那种拐弯抹角的控制流！C++17 的 if constexpr 让编译期分支变得像普通 if 语句一样直观。"
 ---
 
 > 模板代码中最讨厌的是什么？SFINAE 那种拐弯抹角的控制流！C++17 的 `if constexpr` 让编译期分支变得像普通 if 语句一样直观。

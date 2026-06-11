@@ -13,7 +13,7 @@ tags:
   - 向量数据库
   - LLM
   - mem0
-description: 从架构设计、核心机制、检索原理三个层面，深度解析GitHub 53K stars的Universal Memory Layer项目mem0，涵盖三级记忆体系、pluggable向量存储、以及混合检索策略，并对比LangChain记忆方案与LlamaIndex的记忆设计。
+description: "从架构设计、核心机制、检索原理三个层面，深度解析GitHub 53K stars的Universal Memory…"
 ---
 
 # mem0——为AI Agent打造的Universal Memory Layer深度解读

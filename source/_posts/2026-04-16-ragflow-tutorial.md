@@ -7,6 +7,7 @@ tags:
 - RAG
 - LLM
 - 开源项目
+description: "RAG（Retrieval-Augmented Generation）作为当前最火热的LLM应用架构之一，已经成为企业构建知识库问答系统的首选方案。然而传统的RAG实现面临诸多痛点：文档解析粗糙…"
 ---
 
 # RAGFlow开源RAG引擎完整入门教程：从零搭建基于深度文档理解的智能问答系统

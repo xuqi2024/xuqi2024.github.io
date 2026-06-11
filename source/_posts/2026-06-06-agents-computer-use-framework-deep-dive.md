@@ -13,7 +13,7 @@ tags:
 categories:
   - AI
   - 项目评测
-description: Agent-S 是 Simular AI 推出的开源 Computer-Use Agent 框架，Agent S3 在 OSWorld 基准上以 72.6% 首次超越人类水平。本文从架构、过程记忆、ACI 接口、Behavior Best-of-N 等角度深入拆解其设计原理。
+description: "Agent-S 是 Simular AI 推出的开源 Computer-Use Agent 框架，Agent S3 在 OSWorld 基准上以 72.6%…"
 ---
 
 ## 一、引子：当 LLM 开始"像人一样"操作电脑

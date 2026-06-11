@@ -3,6 +3,7 @@ title: "ESP-Claw：乐鑫科技开源的「对话编程」AI Agent 框架，边�
 date: 2026-04-29 16:00:00
 tags: [AI Agent, IoT, ESP32, 边缘智能, MCP, 乐鑫科技]
 categories: [AI Agent框架解析]
+description: "当你花几块钱买了一块 ESP32-S3 开发板，除了点灯、跑 MQTT、接传感器，还能做什么？"
 ---
 
 ## 引子

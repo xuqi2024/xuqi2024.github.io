@@ -3,6 +3,7 @@ title: "voice-pipeline-tutorial 实时语音处理管道深度解析"
 date: 2026-06-01 09:10:00
 tags: [语音AI, VAD, FunASR, 声纹识别, 实时处理, Docker]
 categories: [AI Agents]
+description: "做一个能听能说能认人的智能语音助手，听起来需要很复杂——但如果把它拆解成一条数据流水线，每个环节只做一件事，就会清晰很多。"
 ---
 
 ## 引子

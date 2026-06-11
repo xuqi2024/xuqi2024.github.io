@@ -8,6 +8,7 @@ tags:
 - 多智能体
 - Agent框架
 - Python
+description: "📚 AI Agent 开源框架实战系列（4/6） | ⬅️ 上一篇：CrewAI：用角色扮演构建多 Agent 团队 | ➡️ 下一篇：Agno：极简主义的 AI Agent 框架 | 🔗…"
 ---
 
 > 📚 **AI Agent 开源框架实战系列**（4/6） | ⬅️ 上一篇：[CrewAI：用角色扮演构建多 Agent 团队](/2026/04/17/crewai-multi-agent-team/) | ➡️ 下一篇：[Agno：极简主义的 AI Agent 框架](/2026/04/17/agno-minimalist-agent-framework/) | 🔗 [配套代码仓库](https://github.com/xuqi2024/ai-agent-tutorials)

@@ -11,6 +11,7 @@ tags:
   - Swarm
   - MCP
   - Rufus
+description: "当我们谈论 AI Agent 的生产级落地，最大的挑战往往不是让单个 Agent 足够聪明，而是：如何让成百上千个专业 Agent 高效协作、自主演进、跨边界安全通信？…"
 ---
 
 # 【Ruflo】多智能体编排平台核心架构与设计原理深度解析

@@ -11,6 +11,7 @@ tags:
 categories:
   - AI
   - 项目评测
+description: "在 2024 年底，GitHub 上一个叫 browser-use/browser-use 的项目横空出世。到 2026 年 6 月，这个项目已经斩获 97k+ stars、10k+…"
 ---
 
 ## 引子

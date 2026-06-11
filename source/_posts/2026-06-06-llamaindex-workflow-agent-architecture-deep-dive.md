@@ -10,6 +10,7 @@ tags:
 categories:
   - AI
   - 项目评测
+description: "在 LLM 应用框架的版图里，LlamaIndex 是一个略显特殊的名字。它最初以GPT Index的身份出道，是 RAG（检索增强生成）事实上的标准之一 —— 与 LangChain…"
 ---
 
 ## 引子：当 RAG 框架开始"长出"事件驱动 Agent 引擎

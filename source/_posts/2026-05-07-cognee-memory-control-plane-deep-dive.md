@@ -12,6 +12,7 @@ tags:
   - RAG
   - 知识图谱
   - LLM
+description: "大模型 Agent 为什么总是记不住？这是每一个尝试将 LLM 落地到实际应用场景的开发者都会遇到的灵魂拷问。"
 ---
 
 # 【Cognee】Agent 记忆控制平面架构深度解析

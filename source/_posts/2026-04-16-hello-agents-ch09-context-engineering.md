@@ -7,6 +7,7 @@ tags:
 - AI Agent
 - LLM
 - hello-agents
+description: "核心结论：Agent的智商上限，不是模型决定的，而是你塞进上下文窗口的信息质量决定的。"
 ---
 
 > **核心结论：Agent的智商上限，不是模型决定的，而是你塞进上下文窗口的信息质量决定的。**

@@ -6,7 +6,7 @@ categories:
 tags:
 - C++
 - C++17
-description: C++17 引入了 [[nodiscard]]、[[maybe_unused]]、[[fallthrough]] 三个重要的属性标记，让开发者能够显式地向编译器和静态分析工具传达代码意图，减少警告遗漏，提升代码可维护性。
+description: "C++17 引入了 [[nodiscard]]、[[maybe_unused]]、[[fallthrough]]…"
 ---
 
 > **一句话结论：`[[nodiscard]]` 告诉你「这个返回值必须用」，`[[maybe_unused]]` 告诉你「这个变量我知道没用」，`[[fallthrough]]` 告诉编译器「switch 里的 break 我故意不加」——三个 Attribute，把隐式意图全部显式化。**

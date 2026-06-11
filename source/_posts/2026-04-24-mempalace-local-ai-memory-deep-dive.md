@@ -13,6 +13,7 @@ tags:
   - RAG
   - Knowledge Graph
   - Python
+description: "大模型（LLM）的上下文窗口越来越大，从 4K token 扩展到 200K、1M——但现实是，任何有意义的长期项目，记忆量都远超上下文容量。当 AI Agent…"
 ---
 
 # 【MemPalace】本地优先 AI 记忆系统：宫殿式存储架构与混合检索原理深度解析

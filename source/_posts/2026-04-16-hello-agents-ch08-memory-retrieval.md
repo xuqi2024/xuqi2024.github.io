@@ -8,6 +8,7 @@ tags:
 - RAG
 - 记忆系统
 - hello-agents
+description: "Agent失忆不是Bug，是Context Window的物理硬限制。RAG（检索增强生成）不是让模型变聪明，而是给它配了一个能随时翻书的外挂记忆系统。"
 ---
 
 > Agent"失忆"不是Bug，是Context Window的物理硬限制。RAG（检索增强生成）不是让模型变聪明，而是给它配了一个能"随时翻书"的外挂记忆系统。

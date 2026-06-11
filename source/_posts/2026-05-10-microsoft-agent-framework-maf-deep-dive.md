@@ -12,6 +12,7 @@ tags:
   - 工作流编排
   - Python
   - .NET
+description: "在企业级 AI Agent 开发领域，Microsoft 再次出手。2025年中，Microsoft 正式发布了 Microsoft Agent Framework（简称…"
 ---
 
 # Microsoft Agent Framework 核心架构与设计原理深度解析

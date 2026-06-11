@@ -3,6 +3,7 @@ title: "XiaoZhi vs ESP-Claw：两大开源 ESP32 AI Agent 框架深度对比"
 date: 2026-04-29 17:00:00
 tags: [AI Agent, IoT, ESP32, MCP, XiaoZhi, ESP-Claw, 边缘智能, 乐鑫科技]
 categories: [AI Agent框架对比]
+description: "在 ESP32 平台上跑 AI Agent，乐鑫生态里有两个明星项目常被拿来对比："
 ---
 
 ## 引子

@@ -8,6 +8,7 @@ tags:
 - Python
 categories:
   - AI
+description: "上一篇文章写了 Agent 的皮毛——能用，但不知道为什么这样设计，遇到复杂问题就不知道怎么改了。"
 ---
 
 ## 前言

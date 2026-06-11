@@ -9,6 +9,7 @@ tags:
   - 多智能体
   - 架构分析
   - MCP
+description: "核心结论：LobeHub 提出了一个极简却强大的多智能体协作模型——Supervisor-Executor 双层状态机架构。不同于 CrewAI 的顺序角色链或 AutoGen…"
 ---
 
 > **核心结论**：LobeHub 提出了一个极简却强大的多智能体协作模型——Supervisor-Executor 双层状态机架构。不同于 CrewAI 的顺序角色链或 AutoGen 的对话总线，LobeHub 通过「监督者决策 + 执行者行动」的循环，将多 Agent 协作收敛为一个可预测、可中断、可追踪的有状态过程。

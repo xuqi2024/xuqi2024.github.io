@@ -6,6 +6,7 @@ categories:
 tags:
 - C++
 - C++20
+description: "如果说 Concepts 是 C++20 约束的顶层语法，那么 requires 就是它的底层引擎。你可以在 requires 子句中使用 Concept，也可以在 requires…"
 ---
 
 ## 前言：requires 是什么？

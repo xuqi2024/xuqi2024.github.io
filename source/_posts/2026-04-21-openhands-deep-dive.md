@@ -6,6 +6,7 @@ categories:
 tags:
 - AI Agent
 - 开源项目
+description: "软件开发正站在一个转折点：AI 从辅助工具演进为执行主体。当 Devin（ Cognition AI）在沙盒环境中自主完成完整项目时，整个行业为之震动——但它是闭源的。OpenHands…"
 ---
 
 # OpenHands 深度完全解读：开源 AI 驱动的软件开发平台

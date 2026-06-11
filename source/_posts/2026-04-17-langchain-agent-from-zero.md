@@ -8,6 +8,7 @@ tags:
 - LLM
 - Agent框架
 - Python
+description: "📚 AI Agent 开源框架实战系列（1/6） | ➡️ 下一篇：LangGraph：用状态图构建有记忆的 AI 工作流 | 🔗 配套代码仓库"
 ---
 
 > 📚 **AI Agent 开源框架实战系列**（1/6） | ➡️ 下一篇：[LangGraph：用状态图构建有记忆的 AI 工作流](/2026/04/17/langgraph-stateful-workflow/) | 🔗 [配套代码仓库](https://github.com/xuqi2024/ai-agent-tutorials)

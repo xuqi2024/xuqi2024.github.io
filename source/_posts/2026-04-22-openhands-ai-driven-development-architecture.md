@@ -7,6 +7,7 @@ tags:
 categories:
   - AI
   - 项目评测
+description: "当 AI 能够自主阅读代码库、编写修复方案、执行命令行操作、提交 Pull Request —— 软件开发会变成什么样子？OpenHands 正在将这个愿景变为现实。"
 ---
 
 ## 引子

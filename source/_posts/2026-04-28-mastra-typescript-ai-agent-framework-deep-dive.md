@@ -12,6 +12,7 @@ tags:
   - 多Agent
   - Memory
   - Workflow
+description: "在 AI Agent 框架层出不穷的今天，大多数框架要么面向 Python 生态，要么设计过于复杂难以上手。Mastra 的出现填补了一个关键空白——为 TypeScript/JavaScript…"
 ---
 
 # 【Mastra】TypeScript 优先的 AI Agent 框架核心架构与设计原理深度解析

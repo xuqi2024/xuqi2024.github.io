@@ -13,7 +13,7 @@ tags:
 categories:
   - AI
   - 项目评测
-description: 当所有 Agent 框架都在讲"类型安全"和"图编排"时，deepset 团队用一个叫 Haystack 的"组件即积木"的老牌 RAG 框架，把 Pipeline + Component + State schema 三件套拼成了一套工业级的 LLM 编排引擎。
+description: "当所有 Agent 框架都在讲'类型安全'和'图编排'时，deepset 团队用一个叫 Haystack 的'组件即积木'的老牌 RAG 框架，把 Pipeline + Component +…"
 ---
 
 ## 引子：Agent 框架的"第二战场"在哪里？

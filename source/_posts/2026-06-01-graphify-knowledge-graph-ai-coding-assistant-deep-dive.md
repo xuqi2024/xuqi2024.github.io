@@ -11,6 +11,7 @@ tags:
 categories:
   - AI
   - 项目评测
+description: "当我们面对一个陌生的代码仓库时，往往面临一个两难困境：需要了解整体架构才能高效提问，但了解整体架构又需要先读大量代码。传统的做法是先 grep 浏览文件，再顺着 import/call…"
 ---
 
 # 【Graphify】Y Combinator S26 明星项目——将任意代码库转化为可查询知识图谱的 AI 技能深度解析

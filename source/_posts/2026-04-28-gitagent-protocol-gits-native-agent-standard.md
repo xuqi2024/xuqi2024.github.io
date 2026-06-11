@@ -13,6 +13,7 @@ tags:
   - GAP
   - gapman
   - OpenGAP
+description: "当我们谈论 AI Agent 时，往往会陷入一个困境：每个框架（LangChain、CrewAI、AutoGen、Claude Code）都有自己定义 Agent 的方式，Agent…"
 ---
 
 # 【GitAgentProtocol】Git 原生的 AI Agent 定义标准深度解析

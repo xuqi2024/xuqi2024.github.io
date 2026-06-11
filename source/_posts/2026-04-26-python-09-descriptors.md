@@ -5,6 +5,7 @@ categories:
 - 技术分析
 tags:
 - Python
+description: "很多人写了几年 Python，却不知道 property 底层是怎么实现的。答案就三个字：描述符协议。"
 ---
 
 > 很多人写了几年 Python，却不知道 `property` 底层是怎么实现的。答案就三个字：**描述符协议**。

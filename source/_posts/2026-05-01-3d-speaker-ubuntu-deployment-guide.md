@@ -3,6 +3,7 @@ title: "3D-Speaker 说话人识别实战：Ubuntu 从零部署指南"
 date: 2026-05-01 16:00:00
 tags: [3D-Speaker, 说话人识别, Speaker Verification, Ubuntu部署, 声纹识别, Docker, 阿里云]
 categories: [AI技术]
+description: "上篇文章我们介绍了 FunASR 实时语音识别，今天来玩另一个阿里开源的好东西——3D-Speaker。"
 ---
 
 ## 引子

@@ -3,6 +3,7 @@ title: "IndexTTS vs ChatTTS：两款中文对话式 TTS 深度对比"
 date: 2026-05-02 21:30:00
 tags: [TTS, 语音合成, IndexTTS, ChatTTS, AI]
 categories: [AI技术]
+description: "过去一年，开源 TTS 领域最火的两款模型非 IndexTTS 和 ChatTTS 莫属。前者背靠哔哩哔哩，主打情感控制与时长可控；后者来自 2noise…"
 ---
 
 ## 引子

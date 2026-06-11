@@ -7,6 +7,7 @@ tags:
 - AI Agent
 - Agent框架
 - Python
+description: "📚 AI Agent 开源框架实战系列（6/6） | ⬅️ 上一篇：Agno：极简主义的 AI Agent 框架 | 🔗 配套代码仓库"
 ---
 
 > 📚 **AI Agent 开源框架实战系列**（6/6） | ⬅️ 上一篇：[Agno：极简主义的 AI Agent 框架](/2026/04/17/agno-minimalist-agent-framework/) | 🔗 [配套代码仓库](https://github.com/xuqi2024/ai-agent-tutorials)

@@ -3,6 +3,7 @@ title: "FunASR 实时语音识别实战：Docker 一键部署 + WebSocket 实时
 date: 2026-05-01 15:00:00
 tags: [语音识别, ASR, FunASR, Docker, WebSocket, 实时识别, 中文识别, 阿里云]
 categories: [AI技术]
+description: "语音识别（ASR）是 AI 应用落地最广泛的场景之一。从智能助手到会议转录，从语音输入到字幕生成，实时准确的语音识别能大幅提升效率。"
 ---
 
 ## 引子

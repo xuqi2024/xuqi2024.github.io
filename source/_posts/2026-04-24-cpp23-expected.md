@@ -6,6 +6,7 @@ categories:
 tags:
 - C++
 - C++23
+description: "传统的 std::optional 只能告诉你没有值，但无法告诉你为什么没有值。C++23 引入的 std::expected<T…"
 ---
 
 > 传统的 `std::optional` 只能告诉你"没有值"，但无法告诉你"为什么没有值"。C++23 引入的 `std::expected<T, E>`，终于让错误处理既能表达"出了什么问题"，又无需承担异常的性能开销。

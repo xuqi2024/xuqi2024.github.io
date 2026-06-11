@@ -7,7 +7,7 @@ tags:
 - AI Agent
 - Agent框架
 - RAG
-
+description: "用 LLM 构建应用，绕不开几个核心问题：Prompt 怎么管理？工具怎么串联？多 Agent 怎么协作？记忆怎么持久化？"
 ---
 
 ## 引子

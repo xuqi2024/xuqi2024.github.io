@@ -9,6 +9,7 @@ tags:
 - 多智能体
 - 架构分析
 - Gemini
+description: "Google 出手了——一款「代码优先」的 Agent 开发框架，能否撼动 LangChain 的霸主地位？"
 ---
 
 > Google 出手了——一款「代码优先」的 Agent 开发框架，能否撼动 LangChain 的霸主地位？

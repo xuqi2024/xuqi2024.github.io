@@ -6,6 +6,7 @@ categories:
 tags:
 - C++
 - C++23
+description: "C++23 不仅带来了 std::expected、if consteval 这样的大新闻，还升级了一系列日常工具函数。std::print 让输出更简洁，std::to_underlying…"
 ---
 
 > C++23 不仅带来了 `std::expected`、`if consteval` 这样的"大新闻"，还升级了一系列日常工具函数。`std::print` 让输出更简洁，`std::to_underlying` 让类型转换更清晰，`contains()` 让查找更直观。本文为你盘点这些"小而美"的改进。

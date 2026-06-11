@@ -12,7 +12,7 @@ tags:
 categories:
   - AI
   - 项目评测
-description: Graphiti 是 Zep 开源的时序上下文图（Temporal Context Graph）引擎，为 AI Agent 提供带有效期的事实追踪、回溯溯源、双时态索引与混合检索。在 DMR 基准上以 94.8% 超越 MemGPT（93.4%），LongMemEval 上精度提升 18.5%、延迟降低 90%。本文从架构、节点/边模型、检索管线、混合 RRF 重排、与 GraphRAG/Mem0/Letta 的对比维度深入拆解。
+description: "Graphiti 是 Zep 开源的时序上下文图（Temporal Context Graph）引擎，为 AI Agent 提供带有效期的事实追踪、回溯溯源、双时态索引与混合检索。在 DMR…"
 ---
 
 ## 引子：当 Agent 的"记忆"开始有了时间轴

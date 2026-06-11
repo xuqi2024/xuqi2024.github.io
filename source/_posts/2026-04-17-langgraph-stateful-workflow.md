@@ -7,6 +7,7 @@ tags:
 - AI Agent
 - Agent框架
 - Python
+description: "📚 AI Agent 开源框架实战系列（2/6） | ⬅️ 上一篇：LangChain：从零构建你的第一个 AI Agent | ➡️ 下一篇：CrewAI：用角色扮演构建多 Agent 团队 |…"
 ---
 
 > 📚 **AI Agent 开源框架实战系列**（2/6） | ⬅️ 上一篇：[LangChain：从零构建你的第一个 AI Agent](/2026/04/17/langchain-agent-from-zero/) | ➡️ 下一篇：[CrewAI：用角色扮演构建多 Agent 团队](/2026/04/17/crewai-multi-agent-team/) | 🔗 [配套代码仓库](https://github.com/xuqi2024/ai-agent-tutorials)

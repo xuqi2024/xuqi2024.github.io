@@ -10,6 +10,7 @@ tags:
   - Workflow
   - 架构分析
   - 生产级
+description: "在分布式系统领域，工作流编排引擎并非新鲜事物——从早期的 jbpm、Activiti，到 Netflix 内部自研的 Conductor，再到近年各 Agent 框架的工作流概念，编排逻辑始终是可靠…"
 ---
 
 # 【Conductor】Netflix 出品的企业级 Agentic Workflow 引擎深度解析

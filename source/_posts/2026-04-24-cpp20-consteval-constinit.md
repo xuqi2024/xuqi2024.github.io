@@ -5,6 +5,7 @@ categories: [C++新特性]
 tags:
 - C++
 - C++20
+description: "C++14 引入 constexpr 函数，C++20 带来 consteval 和 constinit。这三个关键字守卫着编译期计算的大门，但职责各不相同。"
 ---
 
 > **C++14 引入 `constexpr` 函数，C++20 带来 `consteval` 和 `constinit`。这三个关键字守卫着编译期计算的大门，但职责各不相同。**

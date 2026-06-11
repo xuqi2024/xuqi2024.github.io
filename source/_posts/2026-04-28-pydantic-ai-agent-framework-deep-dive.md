@@ -10,6 +10,7 @@ tags:
 - 架构分析
 - 类型安全
 - Python
+description: "FastAPI 给 Python Web 开发带来了革命性的变化——用 Pydantic 的类型校验把所有错误从运行时提前到编写时，让写了就能跑成为可能。"
 ---
 
 # 【Pydantic AI】类型安全的 AI Agent 框架：Pydantic 式架构设计深度解析

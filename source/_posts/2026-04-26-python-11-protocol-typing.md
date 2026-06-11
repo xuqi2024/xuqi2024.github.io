@@ -5,6 +5,7 @@ categories:
 - 技术分析
 tags:
 - Python
+description: "如果它走路像鸭子，叫声像鸭子，那它就是鸭子。——这就是结构化子类型。Python 3.8+ 用 Protocol 把它带入了类型系统。"
 ---
 
 > "如果它走路像鸭子，叫声像鸭子，那它就是鸭子。"——这就是结构化子类型。Python 3.8+ 用 Protocol 把它带入了类型系统。

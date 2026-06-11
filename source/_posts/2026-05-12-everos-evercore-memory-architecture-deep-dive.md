@@ -12,6 +12,7 @@ tags:
   - RAG
   - Multi-modal
   - Architecture
+description: "当我们与 AI 对话时，模型本身是无状态的（Stateless）——每一次对话都是独立的，模型不会记住你昨天说了什么、你喜欢什么、你和它讨论过哪些项目。然而，对于真正有用的个人 AI…"
 ---
 
 # 【EverOS · EverCore】开源 Agent 记忆基础设施架构与设计原理深度解析

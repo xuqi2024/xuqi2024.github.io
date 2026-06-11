@@ -12,6 +12,7 @@ tags:
 categories:
   - AI
   - 项目评测
+description: "2025 年是 LLM Agent 爆发的一年。MCP（Model Context Protocol）解决了Agent 怎么用工具的问题，A2A（Agent2Agent）解决了Agent…"
 ---
 
 ## 引子：当 Agent 想要"开口说话"
@@ -57,7 +58,7 @@ AG-UI 在协议三件套中明确定位为**"Agent ↔ 用户"**这层：
 
 在 AG-UI 出现之前，Agent 前端集成通常有三种做法：
 
-**方案 A：把整个对话塞进 LLM 的 system prompt**。让模型自己输出 markdown，前端用正则解析。问题显而易见——格式不稳定、无法流式呈现复杂结构、用户打断困难。
+**方案 A：把整个对话塞进 LLM 的 system prompt**。让模型自己输出 markdown，前端用正则解析。问题很直接——格式不稳定、无法流式呈现复杂结构、用户打断困难。
 
 **方案 B：各家框架私有协议**。LangGraph 有自己的事件格式，CrewAI 又是另一套，Autogen 又是第三套。**前端开发者要为每个框架写一套适配器**——这就是 iPhone 出现前手机充电器各家不兼容的乱象。
 

@@ -5,6 +5,7 @@ categories:
 - Python AI教程
 tags:
 - Python
+description: "反常识结论：多线程在 Python 中并不一定能加速你的代码——即使你有 16 核 CPU，一个 CPU 密集型的 Python 程序也可能只跑出单核的速度。这不是你的问题，是 Python…"
 ---
 
 > **反常识结论**：多线程在 Python 中并不一定能加速你的代码——即使你有 16 核 CPU，一个 CPU 密集型的 Python 程序也可能只跑出单核的速度。这不是你的问题，是 Python 设计的「原罪」。本文彻底拆解 GIL 原理、线程 vs 进程的抉择，以及 AI 工程中的并发实战套路。

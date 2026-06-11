@@ -10,6 +10,7 @@ tags:
   - 架构分析
   - Skill
   - TypeScript
+description: "在 Agent 框架遍地开花的今天，earendil-works/pi 是一个独特的存在。它不只是一个 Coding Agent 终端工具，而是一套分层清晰、职责分明的 Agent 运行时架构。截至…"
 ---
 
 # 【earendil-works/pi】模块化 Agent Harness 架构深度解析：Skill、Compaction 与多 Provider 统一抽象

@@ -11,7 +11,7 @@ tags:
 categories:
   - AI
   - 项目评测
-description: Swarms（kyegomez/swarms）是一个"企业级、生产就绪"的多智能体编排框架。它把"编排架构"做成了和编程语言一样可组合的乐高积木——12+ 种预构建架构、einsum 风格的 flow DSL、ArXiv 论文级别的结构化通信、分布式 AOP 协议、完整的 MCP/A2A/Skills 互操作。本文从源码、运行时、协议三个层次深度拆解它。
+description: "Swarms（kyegomez/swarms）是一个'企业级、生产就绪'的多智能体编排框架。它把'编排架构'做成了和编程语言一样可组合的乐高积木——12+ 种预构建架构、einsum 风格的…"
 keywords:
   - Swarms
   - Multi-Agent

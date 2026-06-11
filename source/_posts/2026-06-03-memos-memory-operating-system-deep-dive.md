@@ -14,6 +14,7 @@ tags:
 categories:
   - AI
   - 项目评测
+description: "随着 LLM 应用的不断深入，记忆已经从可选项变成了必需的能力。Mem0、Letta、MemPalace、Cognee 等项目都在尝试用不同思路解决AI 怎么记得住、想得起、还学得会的问题。但当一个…"
 ---
 
 ## 引子

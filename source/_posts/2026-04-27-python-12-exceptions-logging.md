@@ -4,6 +4,7 @@ date: 2026-04-23 10:00:00 +0800
 categories: [Python AI教程]
 tags:
 - Python
+description: "本章讲解 Python 异常链机制、自定义异常层次设计、logging 模块，以及 AI 应用中的优雅降级与错误恢复策略。"
 ---
 
 # 【Python AI教程】（十二）异常链与日志：AI健壮性保障
