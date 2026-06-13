@@ -87,7 +87,7 @@ flowchart TD
 ```
 
 每一轮循环，Agent都输出以下格式：
-```
+```yaml
 Thought: [分析问题，决定下一步]
 Action: tool_name[tool_input]
 Observation: [工具返回的结果]
@@ -427,7 +427,7 @@ class ReflectionAgent:
 待评审代码：
 ```python
 {current_code}
-```
+```text
 
 请从以下角度评审：
 1. **算法效率**：时间复杂度是否最优？有没有更好的算法？
@@ -453,7 +453,7 @@ class ReflectionAgent:
 上一版本代码：
 ```python
 {current_code}
-```
+```text
 
 评审反馈：
 {feedback}
@@ -590,3 +590,39 @@ ReAct论文发表时轰动了圈子，但它并非万能。**在任务结构清�
 16. [学完16章，现在从0构建你自己的Agent](/2026/04/16/2026-04-16-hello-agents-ch16-graduation/)
 
 </details>
+
+本章介绍 ReAct、Plan-and-Solve、Reflection 三种 Agent 思考范式，对比维度：三种范式内部 vs 相邻章节的 LLM 与框架实践 vs 工业界主流 Agent 框架的实现选择。
+
+## 对比分析
+
+### 一、本章概念 vs 相邻章节
+
+| 维度 | ch04 思考范式 | ch03 LLM 原理 | ch05 低代码平台 | ch06 框架实战 |
+|------|---------------|---------------|----------------|--------------|
+| 抽象层级 | 思考模板 | 模型能力 | 拖拽工具 | 代码级框架 |
+| 关注问题 | "如何决定下一步" | "为什么能决定" | "不写代码怎么做" | "怎么选框架" |
+| 与本章互补 | —— | 提供推理能力 | 把范式封装成可视化 | 把范式封装成 SDK |
+
+### 二、对比生产中类似框架
+
+| 范式 | 工业对应 | 代表实现 | 适用任务 |
+|------|----------|----------|----------|
+| ReAct | Thought → Action → Observation 循环 | LangChain AgentExecutor、ReAct Agent | 需要调用工具的开放任务 |
+| Plan-and-Solve | 先列计划再逐步执行 | LangChain PlanAndExecute、BabyAGI | 多步结构化任务 |
+| Reflection | 生成 → 评审 → 改进 | Reflexion、CrewAI reviewer 角色 | 写作 / 代码 / 长链推理 |
+
+### 三、本章观点的优缺点
+
+优点：
+- 把三种范式的"何时用"讲得清楚，避免乱选
+- 用同一个旅行规划例子贯穿三种范式，对比直观
+
+缺点：
+- 没有覆盖 Tree of Thoughts、Self-Ask 等进阶方法
+- 对失败回滚机制讨论较少
+
+### 四、何时选
+
+- 简单查 / 写任务：ReAct 足够
+- 多步有依赖：Plan-and-Solve
+- 需要质量把关：Reflection（可与 ReAct 嵌套使用）
