@@ -84,7 +84,7 @@ with Timer("LLM call"):
 ```
 
 输出：
-```
+```text
 LLM call: 0.0501s
 ```
 
@@ -112,7 +112,7 @@ with LLMSession("sk-xxx") as llm:
 ```
 
 输出：
-```
+```text
 🔑 LLM session started: gpt-4
 Calling gpt-4...
 ✅ Session ended. Requests: 1
@@ -144,7 +144,7 @@ with timer_cm("API call"):
 ```
 
 输出：
-```
+```text
 API call: 0.0302s
 ```
 
@@ -261,7 +261,7 @@ with DBConnection("primary"):
 ```
 
 输出：
-```
+```text
   📦 Open primary
   📦 Open replica
   📦 Close replica
@@ -404,7 +404,6 @@ graph LR
 
 *代码已通过 Python 3.11+ 验证。*
 ---
-
 ## 📚 Python AI教程 系列导航
 
 > 本文是《Python AI教程》系列第 **2/14** 篇。
@@ -433,3 +432,48 @@ graph LR
 14. [（十四）组合模式实战](/2026/04/23/2026-04-27-python-14-composite-ai-agent/)
 
 </details>
+
+## 对比分析
+
+本章核心是 Python 的上下文管理器（`with` 语句 + `__enter__/__exit__`）。
+
+### 维度一：上下文管理器 vs 旧写法（try/finally）
+
+| 方案 | 语法 | 异常处理 | 可读性 | 嵌套 |
+|------|------|----------|--------|------|
+| **`with` 语句（PEP 343）** | `with open(f) as fp:` | 由 `__exit__` 统一处理 | 简洁、声明式 | 支持 `with A() as a, B() as b:` |
+| **try / finally（Python 2.5 之前）** | `try: ... finally: fp.close()` | 手动 `try/except/finally` | 模板代码多 | 嵌套金字塔 |
+| **装饰器 + 闭包** | 临时方案，不规范 | 手动 | 不直观 | 不支持 |
+
+### 维度二：与其他语言的资源管理
+
+| 语言 | 资源管理机制 | 与 Python `with` 对比 |
+|------|--------------|------------------------|
+| **Java** | try-with-resources（Java 7+） | 语义最接近，要求资源实现 `AutoCloseable`；`__enter__` 等价于方法调用，`__exit__` 等价于 `close()` |
+| **C++** | RAII（构造函数获取、析构函数释放） | 编译期保证、无需语法糖，但模板元编程复杂 |
+| **Go** | `defer file.Close()` | 延迟到函数返回；无法像 `with` 那样"进入即生效"且有强作用域 |
+| **Rust** | `Drop` Trait + `?` 运算符 | 零运行时、零样板代码，编译期保证资源释放 |
+| **C#** | `using` 语句块（IDisposable） | 几乎等价于 Python `with`；C# 8+ 还有"using 声明"语法 |
+| **JavaScript** | try/finally（ES2019 才有 `using` 提案） | 标准做法仍是 try/finally，`using` 提案借鉴 Python |
+
+### 维度三：上下文管理器 vs 其他抽象
+
+- **装饰器**：解决"函数前后"问题；上下文管理器解决"代码块前后"问题
+- **回调（callback）**：把控制权交给被调方；上下文管理器由调用方控制作用域
+- **RAII（C++）**：基于对象生命周期；Python `with` 基于显式协议，更动态
+
+### 优缺点小结
+
+- **Python `with`**：协议简单（两个魔术方法）、`contextlib` 工具丰富、嵌套清晰；缺点是仅支持同步代码，异步场景要 `async with`
+- **Java try-with-resources**：类型系统强制约束、编译器检查；缺点是只能用于 `AutoCloseable`
+- **C++ RAII**：零开销、编译器保证；缺点是析构函数里抛异常难处理
+- **Rust `Drop`**：编译期安全、零运行时；缺点是所有权概念对新手不友好
+- **Go `defer`**：写法最简单、延迟到函数结束；缺点是不支持块级作用域
+
+### 何时选
+
+- 选 **with 语句**：打开文件、加锁、连接数据库、临时改环境变量等"成对操作"
+- 选 **try/finally**：异常分支需要复杂控制流、或与不实现协议的对象配合
+- 选 **contextlib.contextmanager**：只想写生成器，不想定义类
+- 选 **ExitStack**：动态数量资源（同时打开 N 个文件）
+- 选 **async with**：异步资源（aiohttp session、asyncpg 连接）
