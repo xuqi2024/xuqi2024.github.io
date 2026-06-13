@@ -846,3 +846,58 @@ Swarms 的真正价值不是"又多了一个 Agent 框架"，而是它把"多 Ag
 - **互操作协议**：MCP、Anthropic Skills、x402
 
 > **本文为「AI 项目深度评测」系列，所有架构图基于源码 + 行为倒推绘制，可运行示例经过本地验证。**
+
+## 对比分析
+
+Swarms（kyegomez/swarms）的核心定位是"企业级、生产就绪的多智能体编排框架"，把"编排架构"做成可组合的乐高积木（12+ 种）。在"多 Agent 编排框架"赛道里，跟它定位最像、且社区讨论最多的项目是 LangGraph、AutoGen 和 CrewAI。下面对它们做一次横向对比。
+
+### 维度一：架构抽象
+
+| 项目 | 抽象单位 | 编排范式数量 | 可组合性 |
+|------|----------|----------------|----------|
+| **Swarms** | Swarm 变体（Sequential/Hierarchical/Graph/HeavySwarm 等） | 12+ 预构建架构 | ✅ 架构即乐高 |
+| **LangGraph** | Node / Edge / Graph | 1 种（显式图）+ 子图 | ✅ 自由但需手画 |
+| **AutoGen** | ConversableAgent + GroupChat | GroupChat 模式为主 | ⚠️ 偏对话 |
+| **CrewAI** | Agent / Crew / Task | 顺序/层级/共识 | ✅ 低代码组合 |
+
+### 维度二：企业级特性
+
+- **Swarms**：HeavySwarm、Mixture-of-Agents、GraphWorkflow 等都内建"日志/审计/可观测性"对接点；提供 SwarmRouter、AgentRearrange 等组合原语
+- **LangGraph**：Checkpoint / Thread / Tracing 一应俱全（LangSmith），但"组合"要靠子图
+- **AutoGen**：GroupChat 模式灵活，但工程化体验较 AutoGen 0.2/0.4 之间有过大改动
+- **CrewAI**：上手快，复杂编排（多层级 + 辩论）需要绕路
+
+### 维度三：协议互操作
+
+- Swarms：明确支持 MCP、Anthropic Skills、x402 等"AI 协议"，强调"协议层"互操作
+- LangGraph：通过工具调用兼容 MCP，本身不直接吃协议
+- AutoGen：早期就支持 Function Calling，与 MCP 集成需要自写胶水
+- CrewAI：与 LangChain 生态打通，MCP 适配在迭代中
+
+**优缺点小结**
+
+- **Swarms**：12+ 架构变体 + 协议互操作 + 企业级可观测性；缺点是变体多导致"选择困难"，需要理解每种架构的适用场景
+- **LangGraph**：图编排最自由；缺点是学习曲线较陡，复杂业务需要写很多图
+- **AutoGen**：学术标杆 + GroupChat 灵活；缺点是工程化文档较少
+- **CrewAI**：低代码体验最好；缺点是复杂场景下灵活度不足
+
+**何时选 Swarms**
+
+- 你在做"企业级多 Agent 编排"，需要快速切换 12+ 种编排架构
+- 你需要"协议层互操作"（MCP、Skills、x402 等）
+- 你想要"开箱即用的可观测性"而不只是 LangSmith 商业版
+
+**何时不选 Swarms**
+
+- 你想要"图编排最大自由度"——LangGraph 更纯粹
+- 你做"纯多 Agent 学术研究"——AutoGen 更对味
+- 你只想"快速搭一个 3-5 个 Agent 的业务流"——CrewAI 几行代码
+
+**参考资料**
+
+- Swarms GitHub：<https://github.com/kyegomez/swarms>
+- Swarms 文档：<https://docs.swarms.world>
+- Swarms 论文：<https://arxiv.org/abs/2502.11098>
+- LangGraph：<https://langchain-ai.github.io/langgraph/>
+- AutoGen：<https://github.com/microsoft/autogen>
+- CrewAI：<https://github.com/crewAIInc/crewAI>
