@@ -410,6 +410,19 @@ pyright your_agent_code.py
 > **下一章**：【Python AI教程】（六）async/await：异步编程入门到精通——让你的 AI 应用并发处理多个 API 调用，不再排队等待。
 ---
 
+```mermaid
+graph LR
+    A[Python 源码]:::input --> B[PEP 484 类型注解]:::process
+    B --> C[mypy / pyright]:::process
+    C --> D{类型检查}:::decision
+    D -->|通过| E[IDE 智能提示]:::output
+    D -->|失败| F[类型错误报告]:::warn
+    classDef input fill:#FFE5E5,stroke:#FF9AA2,color:#333
+    classDef process fill:#E5F3FF,stroke:#A0C4FF,color:#333
+    classDef decision fill:#FFF4E5,stroke:#FFD6A0,color:#333
+    classDef output fill:#E5FFE5,stroke:#B5EAD7,color:#333
+    classDef warn fill:#FFD6A0,stroke:#FF9AA2,color:#333
+```
 ## 📚 Python AI教程 系列导航
 
 > 本文是《Python AI教程》系列第 **4/14** 篇。
@@ -438,3 +451,53 @@ pyright your_agent_code.py
 14. [（十四）组合模式实战](/2026/04/23/2026-04-27-python-14-composite-ai-agent/)
 
 </details>
+
+## 对比分析
+
+本章核心是 Python 的类型提示（`typing` 模块 / PEP 484+）。
+
+### 维度一：类型提示 vs 旧写法（注释 + docstring）
+
+| 方案 | 工具支持 | 运行时影响 | 文档能力 |
+|------|----------|------------|----------|
+| **类型提示（PEP 484+）** | mypy / pyright / IDE 自动补全 | 运行时默认不强制（Pydantic/Beartype 除外） | 类型即文档 |
+| **docstring + Sphinx** | 仅文档生成 | 无 | 自由但易过时 |
+| **手写注释** | 无工具 | 无 | 不可机器解析 |
+| **`# type: x` 注释** | mypy 旧式支持 | 无 | 易读性差 |
+
+### 维度二：与其他语言的静态类型
+
+| 语言 | 类型系统 | 与 Python 类型提示对比 |
+|------|----------|--------------------------|
+| **Java** | 强类型、编译期检查、泛型擦除 | 类型即强制约束；缺点是不支持结构化子类型 |
+| **C++** | 模板 + Concepts（C++20） | 编译期模板元编程、零运行时开销；学习曲线陡 |
+| **Go** | 静态类型 + `interface{}` + generics（1.18+） | 显式声明、语法简单；缺点是泛型能力有限 |
+| **Rust** | 静态类型 + Trait + 泛型 | 表达力最强（生命周期、Trait bound）；缺点是编译慢 |
+| **TypeScript** | 结构化类型（与 Python Protocol 思路一致） | 最像 Python 的静态类型；可在 JS 引擎直接擦除运行 |
+| **C#** | 强类型 + `var` + generics | 与 Java 类似，但 nullable reference types（C# 8+）处理"可空"更优雅 |
+
+### 维度三：`typing` vs 数据类库
+
+| 方案 | 主要用途 | 校验 | 序列化 | 适用场景 |
+|------|----------|------|--------|----------|
+| **typing** | 类型注解 | ❌（仅类型检查） | ❌ | 函数签名、IDE 提示 |
+| **dataclass** | 简化类定义 | ❌ | ❌ | DTO、配置对象 |
+| **attrs** | 同 dataclass，功能更多 | ✅（可选 validators） | ❌ | 复杂数据类 |
+| **Pydantic** | 数据验证 + 序列化 | ✅ 强大 | ✅ JSON / dict | API 边界、配置加载 |
+| **TypedDict** | 字典的键值类型 | ❌ | ❌ | JSON 风格数据结构 |
+
+### 优缺点小结
+
+- **Python typing**：渐进式、可选、零运行时开销；缺点是类型擦除后运行时无法校验
+- **Java / C#**：强制类型、编译期保证；缺点是改类型要改大量代码
+- **TypeScript**：结构化子类型最成熟；缺点是大型项目编译慢
+- **Rust**：类型即正确性证明；缺点是开发速度最慢
+
+### 何时选
+
+- 选 **typing**：库作者公开 API、IDE 提示、文档
+- 选 **dataclass**：纯数据容器，不需要运行时校验
+- 选 **Pydantic**：API 边界、外部输入（HTTP body / 配置文件）
+- 选 **TypedDict**：动态字典、JSON 风格结构
+- 选 **Protocol**：需要"鸭子类型"的形式化（见第 11 章）
+- 运行时校验需求强：再叠一层 **Beartype** 或 **Pydantic**
