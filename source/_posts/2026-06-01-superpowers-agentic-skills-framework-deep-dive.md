@@ -200,7 +200,7 @@ writing-plans 将设计文档转化为**可执行的任务清单**。它的核�
 def test_specific_behavior():
     result = function(input)
     assert result == expected
-```
+```yaml
 
 - [ ] **Step 2: Run test to verify it fails**
 Run: `pytest tests/path/test.py::test_name -v`
@@ -210,7 +210,7 @@ Expected: FAIL with "function not defined"
 ```python
 def function(input):
     return expected
-```
+```yaml
 
 - [ ] **Step 4: Run test to verify it passes**
 Run: `pytest tests/path/test.py::test_name -v`
@@ -259,7 +259,7 @@ flowchart TD
 
 systematic-debugging 强制执行**根因分析优先**原则：
 
-```
+```text
 NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
 ```
 
@@ -510,3 +510,57 @@ Superpowers 代表了一种重要的范式转变：不是让AI学会更多技能
 - **星标**: 213,735+
 - **语言**: Shell（技能定义）+ 多语言集成
 - **支持Harness**: Claude Code, Codex CLI, OpenCode, Cursor, Gemini CLI, GitHub Copilot CLI
+
+## 对比分析
+
+Superpowers 的设计哲学是"用技能（Skills）约束 Agent 行为 + 强 TDD 流程"。在"AI Coding Agent 工作流"赛道里，跟它定位接近、且社区讨论最多的项目是 Claude Code 自带的 Skills 系统（Sub-agents + Commands）和 DSPy 风格的"程序化提示工程"。下面对它们做一次对比。
+
+### 维度一：抽象层级
+
+| 项目 | 抽象单位 | 约束方式 | 主要载体 |
+|------|----------|----------|----------|
+| **Superpowers** | Skill（Markdown + 可执行脚本） | 强制 prompt 注入 + 流程 | Claude Code / Codex CLI / Cursor 等 |
+| **Claude Code Sub-agents** | Sub-agent（独立上下文） | 系统提示词 + 工具白名单 | Claude Code 原生 |
+| **OpenAI Codex CLI Skills** | Skill（YAML/Markdown） | Hooks + 沙箱执行 | Codex CLI 原生 |
+| **DSPy** | Module / Signature / Optimizer | 程序化提示 + 自动优化 | Python SDK，模型无关 |
+
+### 维度二：流程纪律
+
+- **Superpowers**：把"brainstorming → spec → plan → TDD → review"做成默认流程，强制 Agent 走完才能动手写代码
+- **Claude Code Sub-agents**：提供并行/串行编排能力，但不强制"先想后写"
+- **Codex CLI Skills**：以"工具调用安全 + Hook"为主，对"工程方法论"约束较弱
+- **DSPy**：把 prompt 当作"可编译的程序"，侧重"自动找最优 prompt"，不约束开发流程
+
+### 维度三：可移植性
+
+- Superpowers：跨 Harness 移植（Claude Code / Codex / Cursor / OpenCode / Gemini / Copilot CLI）
+- Claude Code Sub-agents：紧绑 Claude Code 生态
+- Codex CLI Skills：紧绑 Codex CLI
+- DSPy：模型与 Harness 无关，但和具体 Coding CLI 集成需要自写胶水
+
+**优缺点小结**
+
+- **Superpowers**：方法论 + 跨工具移植性双优；缺点是依赖 Harness 本身支持 skill 协议
+- **Claude Code Sub-agents**：Claude Code 用户上手零成本；缺点是跨工具不可移植
+- **Codex CLI Skills**：与 OpenAI 生态深度集成；缺点是工具/模型生态较窄
+- **DSPy**：可优化、可解释；缺点是偏 Python 工程视角，对"产品级方法论"无约束
+
+**何时选 Superpowers**
+
+- 你的开发流程强调"先 spec、再 plan、再 TDD"
+- 你同时使用多个 Coding Agent（Claude Code + Cursor + Codex），希望技能库只写一次
+- 你想要"团队统一的工程纪律"而不是"个人 prompt 调优"
+
+**何时不选 Superpowers**
+
+- 你的目标只是"自动优化 prompt"——选 DSPy
+- 你只用一个 Coding Agent（且是 Claude Code）——Sub-agents 零成本
+- 你不需要"先想后做"的纪律——直接用普通 Coding Agent 即可
+
+**参考资料**
+
+- Superpowers GitHub：<https://github.com/obra/superpowers>
+- Claude Code Sub-agents：<https://docs.anthropic.com/en/docs/claude-code/sub-agents>
+- OpenAI Codex CLI：<https://github.com/openai/codex>
+- DSPy：<https://dspy.ai/>
+- "Skills vs Sub-agents" 社区讨论：<https://github.com/obra/superpowers/discussions>
