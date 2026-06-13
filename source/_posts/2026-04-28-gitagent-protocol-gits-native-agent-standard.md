@@ -510,7 +510,7 @@ find . -type f | grep -v '.git'
 ```
 
 输出：
-```
+```text
 ./SOUL.md
 ./AGENTS.md
 ./RULES.md
@@ -595,3 +595,46 @@ GitAgentProtocol（OpenGAP）提出了一种优雅的思路：**把 Agent 的定
 - **Spec**: v0.1.0
 - **官网**: https://gitagent.sh
 - **论文**: OpenGAP (arXiv, 即将发布)
+
+---
+
+## 对比分析
+
+GitAgent Protocol（OpenGAP）提出"Agent 即 Git 仓库"的范式，与现有 Agent 定义/调度方案在抽象层与互操作性上形成差异。
+
+### 维度对比表
+
+| 维度 | GitAgent Protocol (OpenGAP) | LangChain Hub | MCP Registry |
+|------|----------------------------|---------------|--------------|
+| 抽象单位 | Git 仓库（Agent = repo） | Prompt Template（hub 仓库） | Tool/Server（注册到 registry） |
+| 版本控制 | 原生 Git（commit/tag/branch） | 弱（hub commit 历史） | 由 registry 实现决定 |
+| 框架无关 | 是（声明式 manifest 描述） | 否（LangChain 生态内） | 否（MCP 生态内） |
+| 合规/审计 | Git 提交即审计证据 | 较弱 | 依赖 registry |
+| 互操作性 | 通过 manifest + 适配层 | LangChain-to-LangChain | MCP-to-MCP |
+| 生态阶段 | 早期（spec v0.1.0） | 成熟 | 快速发展 |
+
+### 优缺点
+
+**GitAgent Protocol**
+- 优点：把 Agent 定义从代码提升到 Git 仓库，原生支持版本控制、协作、审计；框架无关，迁移成本低；适合企业合规场景。
+- 缺点：处于早期阶段，生态与文档尚不成熟；适配层需要各框架自行实现；复杂 Agent 行为仍需代码补充。
+
+**LangChain Hub**
+- 优点：与 LangChain 生态无缝集成；Prompt 模板托管成熟。
+- 缺点：局限于 LangChain；不覆盖 Agent 行为/工具/记忆的完整定义；版本控制弱。
+
+**MCP Registry**
+- 优点：聚焦工具（Tool）注册与发现，是 Agent 与外部资源互联的事实标准之一。
+- 缺点：不直接定义 Agent 自身（只定义工具）；注册表治理模式相对单一。
+
+### 何时选
+
+- **选 GitAgent Protocol**：你在构建企业级 Agent 系统，需要 Git 原生版本控制、跨框架互操作、合规审计。
+- **选 LangChain Hub**：你的项目锁定在 LangChain 生态，主要需要 Prompt 模板管理。
+- **选 MCP Registry**：你重点解决 Agent 与工具/数据源的接入问题，关注工具市场而非 Agent 定义。
+
+### 参考资料
+
+- GitAgent Protocol：https://gitagent.sh
+- LangChain Hub：https://smith.langchain.com/hub
+- Model Context Protocol：https://modelcontextprotocol.io/
