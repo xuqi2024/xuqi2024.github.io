@@ -263,3 +263,40 @@ graph LR
 > 多 Agent 系统的本质，不是"多个 AI 叠加就更聪明"，而是**分工让每个 AI 更专注**。就像一家运转良好的公司，不需要每个员工都是全才——需要的是清晰的职责边界和顺畅的协作流程。
 >
 > **你的第一个 AI 团队，今天就可以开始搭建。**
+
+---
+
+## 对比分析
+
+CrewAI 把多 Agent 系统抽象为"角色 + 任务 + 流程"。下面与同样做多 Agent 的两个项目对比：AutoGen（对话式）和 LangGraph（图编排）。
+
+### 对比维度一：抽象与表达
+| 维度 | CrewAI | AutoGen | LangGraph |
+| --- | --- | --- | --- |
+| 抽象层级 | Role / Task / Crew / Process | Agent + GroupChat | Node / Edge / State |
+| 流程控制 | Sequential / Hierarchical | 对话选择 + speaker 规则 | 任意图结构 |
+| 表达重点 | 业务流水线 | 对话协商 | 状态与控制流 |
+| 学习曲线 | 低 | 中 | 中偏高 |
+
+### 对比维度二：可观测与扩展
+| 维度 | CrewAI | AutoGen | LangGraph |
+| --- | --- | --- | --- |
+| 可视化 | 中 | 弱 | 强 |
+| 持久化 | 任务级 | 有限 | Checkpointer |
+| 第三方工具 | 内置工具库 | 需自封装 | LangChain 全栈 |
+| 适合谁 | 业务/产品经理 | 研究者 | 工程师 |
+
+### 优缺点
+- **CrewAI**：角色化模型最易"业务化"，门槛最低；复杂场景需走 LangGraph。
+- **AutoGen**：对话驱动，适合灵活推演；缺乏结构化流程控制。
+- **LangGraph**：图模型表达力最强，但学习曲线偏高。
+
+### 何时选哪个
+- 业务团队最熟悉的"角色 + 任务"模型 → 选 CrewAI
+- 让多个 Agent 自由对话推演 → 选 AutoGen
+- 复杂流程需要可视化、状态管理 → 选 LangGraph
+
+### 参考资料
+- CrewAI 仓库：https://github.com/crewAIInc/crewAI
+- AutoGen 仓库：https://github.com/microsoft/autogen
+- LangGraph 仓库：https://github.com/langchain-ai/langgraph
