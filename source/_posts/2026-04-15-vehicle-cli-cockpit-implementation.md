@@ -484,7 +484,7 @@ class AndroidMediaAdapter:
   "ac_enabled": true,
   "sync_enabled": false
 }
-```
+```text
 
 ### vehicle-hvac temp set
 **功能**: 设置目标温度
@@ -498,7 +498,7 @@ class AndroidMediaAdapter:
 ```
 用户: "主驾温度调到22度"
 Agent: vehicle-hvac temp set --zone driver --temperature 22
-```
+```text
 
 ### vehicle-hvac fan speed
 **功能**: 设置风速
@@ -664,7 +664,7 @@ Result: {"status": "success", "current_temp": 26}
 用户: "放首歌听听"
 Agent: vehicle-media play --source last  # 播放上次内容
 Result: {"status": "success", "track": "周杰伦-晴天", "duration": "4:29"}
-```
+```text
 
 ## 错误处理策略
 
@@ -790,7 +790,7 @@ timeline
 
 ### 6.2 终极愿景
 
-```
+```text
 2028年的某一天：
 
 用户： "帮我规划一个去杭州的自驾游，
@@ -860,3 +860,38 @@ flowchart TB
 ---
 
 *本文为技术实践，如有合作意愿，欢迎联系。*
+
+---
+
+## 对比分析
+
+本文讨论座舱 CLI 化工具链。下面选取两个同样关注"终端/命令行驱动硬件"的真实开源项目做对比：OpenClaw（节点式 Agent）和 pi-mono（编程 Agent）。
+
+### 对比维度一：硬件交互形态
+| 维度 | 本文座舱 CLI | OpenClaw | pi-mono |
+| --- | --- | --- | --- |
+| 主交互 | CAN/串口/以太网 CLI | 节点心跳 + 命令 | 文件系统 + 命令行 |
+| 自动化层级 | 工具链 → 平台 Agent | 长期 Agent | 编程任务 |
+| 适合场景 | 座舱调试 / OTA / 自检 | 24h 在线助手 | 开发机编程 |
+
+### 对比维度二：扩展能力
+| 维度 | 本文座舱 CLI | OpenClaw | pi-mono |
+| --- | --- | --- | --- |
+| 工具复用 | 模块化 | 插件 | 注册式工具 |
+| 可观测 | 日志/总线 trace | 心跳/状态 | 日志/重放 |
+| 多节点 | 视总线拓扑 | 显式支持 | 单进程 |
+
+### 优缺点
+- **本文座舱 CLI**：贴近车机场景的总线/接口适配是优势；生态限于座舱。
+- **OpenClaw**：节点 + 心跳模式更适合"长期值守"的智能体；不是硬件总线专用。
+- **pi-mono**：轻量编程 Agent 范式；不适合直接驱动车机硬件。
+
+### 何时选哪个
+- 做座舱工具链、调试自动化 → 选本文路线
+- 做车机端 7×24 个人助手 → 选 OpenClaw
+- 做工程师桌面编程助手 → 选 pi-mono
+
+### 参考资料
+- OpenClaw 仓库：https://github.com/NousResearch/openclaw
+- pi-mono 仓库：https://github.com/malcolmyu/pi-mono
+- CANutils / SocketCAN 工具集（Linux 内核自带）
