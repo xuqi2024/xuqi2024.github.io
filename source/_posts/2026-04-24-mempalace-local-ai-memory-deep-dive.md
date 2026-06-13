@@ -142,7 +142,7 @@ graph LR
 - **Token 预算**：~100 tokens
 - **内容**：`~/.mempalace/identity.txt` 纯文本文件，由用户手动编写
 - **示例**：
-  ```
+  ```text
   ## L0 — IDENTITY
   我是 Atlas，一个帮助 Alice 工作的个人 AI 助手。
   特点：温暖、直接、记住所有细节。
@@ -626,3 +626,47 @@ MemPalace 代表了 AI 记忆系统的一个新方向：**完全本地、零摘�
 ---
 
 *本文基于 MemPalace v3.3.2 源码分析编写，所有代码示例均来自项目实际代码，非伪代码。*
+
+---
+
+## 对比分析
+
+MemPalace 走"完全本地、零摘要、逐字保留"路线，与 mem0、Letta（前 MemGPT）在记忆设计上形成鲜明对比。
+
+### 维度对比表
+
+| 维度 | MemPalace | mem0 | Letta (MemGPT) |
+|------|-----------|------|----------------|
+| 数据策略 | 零摘要，逐字保留原始证据 | 自动提取 + 摘要成情景/语义记忆 | 分层记忆（核心/外部/召回），可摘要 |
+| 部署模型 | 完全本地（Ollama + Chroma） | 云服务 + OSS + 多后端 | 自托管（Postgres + LLM） |
+| 检索机制 | Chroma 向量 + 三库（精确/索引/上下文）路由 | 向量 + 关键词 + 时序混合 | 分页式上下文管理（core memory + archival） |
+| 工具生态 | 29 个 MCP 工具 | mem0 自身 API + 多平台 SDK | REST API + Python/TS SDK |
+| 隐私性 | 强（全部本地） | 中（依赖云/OSS 配置） | 中（本地为主，但需外部 DB） |
+| 适合场景 | 隐私敏感 / 高保真 / 本地优先 | 通用 Agent 长期记忆 | 大上下文 LLM 长期会话 |
+
+### 优缺点
+
+**MemPalace**
+- 优点：完全本地、零摘要保证证据保真度；逐字回溯支持高精度；MCP 工具丰富；公开 benchmark 可复现。
+- 缺点：依赖 Chroma 单向量库；社区规模相比 mem0 较小；模型调用需配合 Ollama。
+
+**mem0**
+- 优点：三层记忆体系成熟、可插拔后端、云/OSS 双轨、社区大。
+- 缺点：自动摘要会损失原始证据细节；部分能力依赖云服务。
+
+**Letta (MemGPT)**
+- 优点：核心/外部/召回分层记忆模型优雅；适合超长会话；学术与开源社区成熟。
+- 缺点：架构相对复杂，需要熟悉状态机/分页管理；记忆写入策略非"零摘要"。
+
+### 何时选
+
+- **选 MemPalace**：你处理隐私敏感数据（医疗/法律/合规），需要证据级保真；希望本地优先 + MCP 生态。
+- **选 mem0**：你需要通用、活跃社区、云/OSS 双轨的 Agent 记忆基础设施。
+- **选 Letta**：你构建超长会话助手，需要状态机式的记忆管理。
+
+### 参考资料
+
+- MemPalace GitHub：https://github.com/MemPalace/mempalace
+- mem0 GitHub：https://github.com/mem0ai/mem0
+- Letta (MemGPT) GitHub：https://github.com/letta-ai/letta
+- MemGPT 论文：https://arxiv.org/abs/2310.08560
