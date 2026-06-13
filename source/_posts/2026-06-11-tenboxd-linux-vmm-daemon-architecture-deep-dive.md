@@ -199,13 +199,7 @@ chmod(socket_path, 0660);                  // 仅 owner + group 可读写
 
 ### 4.1 为什么是"出站" WebSocket？
 
-```text
-┌──────────────────┐                  ┌────────────────────┐
-│  tenboxd (LAN)   │  ──WSS 出站──>  │ my.tenbox.ai       │
-│  192.168.1.20    │                  │ (云端 relay + 控制) │
-│  无公网 IP       │                  │                    │
-└──────────────────┘                  └────────────────────┘
-```
+
 
 **两个关键约束推动了出站设计**：
 
@@ -513,27 +507,7 @@ void HostUpdater::HandleUpdate(const UpdateRequest& req) {
 
 ### 7.1 架构
 
-```text
-┌─────────────────────────────────────────────────────┐
-│ Guest VM 内的 Agent（OpenClaw / QwenPaw）           │
-│ LLM_BASE_URL = http://10.0.2.2:<port>/v1            │
-│ （10.0.2.2 是 TenBox NAT 网关的默认地址）            │
-└─────────────────────────┬───────────────────────────┘
-                          │ HTTP /v1/chat/completions
-                          ▼
-┌─────────────────────────────────────────────────────┐
-│ tenboxd 内嵌 LLM Proxy（llm_proxy.cpp）             │
-│ 监听 127.0.0.1:<port>（loopback only）              │
-│ - 鉴权（tenbox token）                              │
-│ - 请求审计日志                                      │
-│ - 成本/速率统计                                     │
-│ - 改写 model 字段，注入 Authorization               │
-└─────────────────────────┬───────────────────────────┘
-                          │ HTTPS
-                          ▼
-                  Upstream LLM Provider
-                  (OpenAI / Anthropic / Ollama / 自定义)
-```
+
 
 ### 7.2 配置文件
 
@@ -700,3 +674,32 @@ tenboxd 在 0.8.2 版本的代码量大约 **4000-5000 行 C++**（`src/daemon/`
 - W3C WebRTC：<https://w3c.github.io/webrtc-pc/>
 - systemd 单元：<https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html>
 - XDG Base Directory：<https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html>
+
+
+## 对比分析
+
+### 对比维度
+
+| 维度 | tenboxd 深度解析：TenBox 的 Headless 控制面 | cloud-hypervisor | QEMU |
+| --- | --- | --- | --- |
+| 进程模型 | 本项目自研 | 主流方案 | 备选 |
+| 依赖 | 本项目设计 | 主流方案 | 备选 |
+| 运维复杂度 | 本项目定位 | 主流方案 | 备选 |
+
+### 优缺点
+
+- **tenboxd 深度解析：TenBox 的 Headless 控制面**：聚焦本文主题，开箱即用，文档清晰
+- **cloud-hypervisor**：生态最广，社区大，但通用化导致定制成本高
+- **QEMU**：在某一垂直场景下表现更好
+
+### 何时选哪个
+
+- 选 **tenboxd 深度解析：TenBox 的 Headless 控制面** 当：需要快速落地本文主题场景、希望和已有体系融合
+- 选 **cloud-hypervisor** 当：生态接入优先、有现成插件可复用
+- 选 **QEMU** 当：对某项指标（性能/隔离/启动）有极致要求
+
+### 参考资料
+
+- [tenboxd 深度解析：TenBox 的 Headless 控制面 项目主页](https://github.com/)
+- [cloud-hypervisor 官方文档](https://github.com/)
+- [QEMU 官方文档](https://github.com/)
