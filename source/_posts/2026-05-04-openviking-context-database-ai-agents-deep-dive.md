@@ -189,7 +189,7 @@ graph TB
 
 所有上下文通过 `viking://` 协议组织成虚拟目录结构：
 
-```
+```text
 viking://
 ├── resources/              # 资源：项目文档、代码仓库、网页等
 │   └── volcengine/
@@ -546,3 +546,45 @@ OpenViking 的出现填补了"记忆管理"和"检索系统"之间的鸿沟。�
 ---
 
 > 💡 **开源的意义**：当 RAG 成为标配、Agent 框架百花齐放的时候，上下文管理反而成了被忽视的角落。OpenViking 的开源，为整个 Agent 生态提供了一个被验证过的、架构清晰的上下文数据库参考实现。
+---
+
+## 对比分析
+
+OpenViking 用文件系统范式管理 Agent 上下文，与向量数据库（如 Milvus/Qdrant）以及传统知识库（Notion/Obsidian 类）相比抽象层次不同。
+
+### 维度对比表
+
+| 维度 | OpenViking | 纯向量数据库 (Milvus/Qdrant) | 知识库 (Obsidian/Notion) |
+|------|------------|-------------------------------|----------------------------|
+| 抽象 | 文件系统范式（URI + L0/L1/L2） | 向量 + 元数据 | 文档树/块 |
+| 加载策略 | 按需渐进加载（L0 元数据 → L1 摘要 → L2 全文） | 整段 Top-K | 全文 + 链接 |
+| 检索模式 | 目录递归 + 精细检索 | ANN 向量搜索 | 关键字 + 反向链接 |
+| 适合对象 | Agent 上下文（记忆/资源/技能） | 通用语义检索 | 人类知识管理 |
+| 自进化 | 自动提取 + 迭代 | 不涉及 | 不涉及 |
+| Token 经济性 | 高（L0/L1 降低 token 成本） | 中 | 低（全文加载） |
+
+### 优缺点
+
+OpenViking
+- 优点：文件系统抽象统一（记忆/资源/技能）；L0/L1/L2 渐进加载降低 token 成本；自进化记忆；目录递归检索质量高。
+- 缺点：相对早期，生态与文档仍在完善；复杂应用需自行探索最佳实践。
+
+Milvus / Qdrant
+- 优点：成熟、扩展性强、ANN 性能优秀；通用语义检索首选。
+- 缺点：不解决 Agent 上下文的多层级管理；不自带渐进加载策略。
+
+Obsidian / Notion 类知识库
+- 优点：人类可读、可编辑、链接丰富。
+- 缺点：不直接为 Agent 设计；自动化提取与渐进加载能力弱。
+
+### 何时选
+
+- 选 OpenViking：构建需要长期记忆/技能/资源管理的 Agent，关注 token 经济性与自进化。
+- 选 Milvus/Qdrant：通用语义检索、RAG 基础组件。
+- 选 Obsidian/Notion：人类知识管理为主，Agent 仅做辅助检索。
+
+### 参考资料
+
+- OpenViking GitHub：https://github.com/volcengine/OpenViking
+- Milvus：https://milvus.io/
+- Qdrant：https://qdrant.tech/
