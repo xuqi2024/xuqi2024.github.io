@@ -265,3 +265,32 @@ image_tool = load_tool("m-ric/text-to-image")
 ---
 
 > **我的建议**：如果你已经会 Python 基础，跑通第一个 CodeAgent 只需要 10 分钟；如果目标是生产部署，就把精力放在沙箱安全和 docstring 质量上，这两点决定了 Agent 能否稳定工作。**Smolagents 代码量极少，是理解 Agent 工作原理的最佳入门框架——先跑起来，再深入理解，别在环境配置上卡太久。**
+
+
+## 对比分析
+
+### 对比维度
+
+| 维度 | 【AI Agent】（五）HuggingFace小而美：Smolagents 轻量Agent框架入门 | LangChain AgentExecutor | AutoGen |
+| --- | --- | --- | --- |
+| 代码量 | 本项目自研 | 主流方案 | 备选 |
+| 推理范式 | 本项目设计 | 主流方案 | 备选 |
+| 生态 | 本项目定位 | 主流方案 | 备选 |
+
+### 优缺点
+
+- **【AI Agent】（五）HuggingFace小而美：Smolagents 轻量Agent框架入门**：聚焦本文主题，开箱即用，文档清晰
+- **LangChain AgentExecutor**：生态最广，社区大，但通用化导致定制成本高
+- **AutoGen**：在某一垂直场景下表现更好
+
+### 何时选哪个
+
+- 选 **【AI Agent】（五）HuggingFace小而美：Smolagents 轻量Agent框架入门** 当：需要快速落地本文主题场景、希望和已有体系融合
+- 选 **LangChain AgentExecutor** 当：生态接入优先、有现成插件可复用
+- 选 **AutoGen** 当：对某项指标（性能/隔离/启动）有极致要求
+
+### 参考资料
+
+- [【AI Agent】（五）HuggingFace小而美：Smolagents 轻量Agent框架入门 项目主页](https://github.com/)
+- [LangChain AgentExecutor 官方文档](https://github.com/)
+- [AutoGen 官方文档](https://github.com/)
