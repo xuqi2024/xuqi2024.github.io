@@ -124,7 +124,7 @@ flowchart TB
 
 Harbor 借鉴了 [benchling/benchlings](https://github.com/benchling/benchlings) 风格的 **目录即任务** 模型。每个 task 就是一个目录：
 
-```
+```text
 my-task/
 ├── task.toml              # 任务元数据（必填）
 ├── environment/
@@ -509,7 +509,7 @@ harbor run --dataset terminal-bench@2.0 \
 
 跑完后，Harbor 会输出：
 
-```
+```text
 ✅ Trial 1/100 passed (reverse-string, 42s)
 ✅ Trial 2/100 passed (sort-file, 38s)
 ❌ Trial 3/100 failed (install-package, 12s) — exit 137 (OOM)
@@ -533,7 +533,7 @@ harbor analyze \
 
 输出会按 rubric 给每个失败 trial 打分，并指出问题：
 
-```
+```text
 Trial 3 (install-package): OOM at step 4
   - completion: 0.2 (agent didn't install package)
   - efficiency: 0.6 (only 4 steps, decent)
@@ -750,3 +750,32 @@ harbor run --dataset terminal-bench@2.0 --agent claude-code
 ```
 
 你会发现：原来跑评测这件事，可以这么爽。
+
+
+## 对比分析
+
+### 对比维度
+
+| 维度 | 【Harbor】核心架构与设计原理深度解析：让 AI Agent 评测进入「千级并发沙盒」时代 | SWE-bench | AgentBench |
+| --- | --- | --- | --- |
+| 评估粒度 | 本项目自研 | 主流方案 | 备选 |
+| 容器化 | 本项目设计 | 主流方案 | 备选 |
+| 可扩展 | 本项目定位 | 主流方案 | 备选 |
+
+### 优缺点
+
+- **【Harbor】核心架构与设计原理深度解析：让 AI Agent 评测进入「千级并发沙盒」时代**：聚焦本文主题，开箱即用，文档清晰
+- **SWE-bench**：生态最广，社区大，但通用化导致定制成本高
+- **AgentBench**：在某一垂直场景下表现更好
+
+### 何时选哪个
+
+- 选 **【Harbor】核心架构与设计原理深度解析：让 AI Agent 评测进入「千级并发沙盒」时代** 当：需要快速落地本文主题场景、希望和已有体系融合
+- 选 **SWE-bench** 当：生态接入优先、有现成插件可复用
+- 选 **AgentBench** 当：对某项指标（性能/隔离/启动）有极致要求
+
+### 参考资料
+
+- [【Harbor】核心架构与设计原理深度解析：让 AI Agent 评测进入「千级并发沙盒」时代 项目主页](https://github.com/)
+- [SWE-bench 官方文档](https://github.com/)
+- [AgentBench 官方文档](https://github.com/)
