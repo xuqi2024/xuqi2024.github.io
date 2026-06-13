@@ -307,7 +307,7 @@ for _ in range(10):  # 最多 10 轮对话
 ```
 
 **输出示例**：
-```
+```text
 🤖 Assistant: 好的，我来帮你开发这个股票交易机器人。首先，我需要了解...
 👤 User: 好的，我需要它能读取CSV格式的K线数据...
 🤖 Assistant: 我来写一个数据加载器...
@@ -375,3 +375,45 @@ CAMEL 适合那些**愿意深入理解框架、追求灵活协作机制**的团�
 ---
 
 > 参考资料：[CAMEL GitHub](https://github.com/camel-ai/camel) | [arXiv 论文](https://arxiv.org/abs/2303.17760) | [官方文档](https://docs.camel-ai.org)
+---
+
+## 对比分析
+
+CAMEL 主张"对话即协作"，与 CrewAI（角色流水线）、MetaGPT（SOP 公司模拟）在多 Agent 协作机制上风格迥异。
+
+### 维度对比表
+
+| 维度 | CAMEL | CrewAI | MetaGPT |
+|------|-------|--------|---------|
+| 协作机制 | 角色化对话（Role-Playing + Inception Prompting） | 角色任务委派（Crew + Task） | SOP 公司模拟（产品/架构/工程师角色流水线） |
+| 流程结构 | 自由对话，自发涌现 | 显式任务列表 | 严格 SOP 阶段化 |
+| 数据生成 | CoT Data Generation + 自动化微调 | 不侧重 | 软件全流程产物生成 |
+| 学习曲线 | 中（Inception Prompt 概念需理解） | 低 | 中（SOP 概念需理解） |
+| 适合场景 | 探索协作 Scaling Law、研究 | 角色化内容流水线 | 模拟软件公司产出代码/文档 |
+
+### 优缺点
+
+CAMEL
+- 优点：对话协作机制灵活、学术与工业研究价值高；CoT 数据生成 + Unsloth 微调一体化；社区 Cookbook 丰富。
+- 缺点：对话式协作结果可预测性弱；不适合严格流程控制的生产系统；学习曲线取决于 Prompt 工程经验。
+
+CrewAI
+- 优点：角色驱动直观；Pythonic 上手快；适合内容流水线。
+- 缺点：缺少 SOP 阶段化机制；多 Agent 协作深度不如 MetaGPT。
+
+MetaGPT
+- 优点：SOP 完整模拟软件公司；多角色协同产出结构化产物（PRD/设计/代码）。
+- 缺点：流程较重，不适合轻量场景；扩展定制成本高。
+
+### 何时选
+
+- 选 CAMEL：你希望探索"对话即协作"的边界、做研究/数据生成/灵活协作。
+- 选 CrewAI：内容流水线、原型优先、Pythonic。
+- 选 MetaGPT：模拟软件公司、生成结构化产品文档与代码。
+
+### 参考资料
+
+- CAMEL GitHub：https://github.com/camel-ai/camel
+- CrewAI 文档：https://docs.crewai.com/
+- MetaGPT GitHub：https://github.com/geekan/MetaGPT
+- CAMEL 论文：https://arxiv.org/abs/2303.17760
