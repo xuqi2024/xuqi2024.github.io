@@ -162,7 +162,7 @@ Leiden 算法比 Louvain 更精细，能检测嵌套社区，且保证社区划�
 
 ### 三种输出格式
 
-```
+```mermaid
 graphify-out/
 ├── graph.html      # 交互式图谱（点击节点、过滤、搜索）
 ├── graph.json      # 完整图数据（GraphRAG 可用）
@@ -406,3 +406,57 @@ Graphify 的出现代表了 AI 编码助手的下一步方向：**从"读代码"
 **项目链接**：https://github.com/safishamsi/graphify  
 **PyPI**：https://pypi.org/project/graphifyy  
 **官网**：https://graphifylabs.ai
+
+## 对比分析
+
+Graphify 的核心是"把代码库/文档/媒体都建为可查询的知识图谱"。在"代码知识图谱"这条赛道上，能拿出来横向对比的真正项目是微软 GraphRAG、aider 的 repo map，以及 Sourcegraph。下面从知识表达、检索范式、构建成本三个维度展开。
+
+### 维度一：知识表达
+
+| 项目 | 节点类型 | 边类型 | 关系挖掘方式 |
+|------|----------|--------|----------------|
+| **Graphify** | 代码符号、文档段落、图片对象、视频关键帧 | 引用、调用、包含、语义相似 | LLM 抽取 + embedding + 静态分析 |
+| **GraphRAG (Microsoft)** | 实体（人/概念/事件） | 关系类型 | LLM 抽取 + 社区发现（Leiden） |
+| **Sourcegraph (code graph)** | 代码符号、定义、引用 | 类型/调用/导入 关系 | 静态分析（LSIF/SCIP） |
+| **aider repo map** | 文件 + 类/函数符号 | import / 调用 | 静态扫描 + tag 压缩 |
+
+### 维度二：检索范式
+
+- **Graphify**：支持"图遍历"和"向量检索"双模式，通过 MCP 暴露给 LLM，Agent 可以混合调用
+- **GraphRAG**：基于"实体 + 社区摘要"的全局/局部双层检索，强项是"全文总结性问题"
+- **Sourcegraph**：强项是"精确符号搜索 + 跨仓引用"，对 IDE 集成最友好
+- **aider repo map**：把整个仓库压成"标签树"塞进 prompt，简单粗暴但有效
+
+### 维度三：构建成本 & 适用规模
+
+- Graphify：多模态内容都能进图，适合"代码 + 文档 + 截图/视频"混合分析；缺点是 LLM 抽取成本高
+- GraphRAG：纯 LLM 抽取 + 社区发现，对大文本（百万 token 级别）效果惊艳，但首次构建很贵
+- Sourcegraph：需要部署 code-intel 索引服务，运维成本高；适合"超大型 monorepo + 团队"
+- aider repo map：零成本、即时生成；缺点是表达能力弱，没有跨文件语义
+
+**优缺点小结**
+
+- **Graphify**：多模态 + GraphRAG + MCP 三件套是它的差异化卖点；缺点是 LLM 抽取成本与延迟，仍在快速迭代
+- **GraphRAG (Microsoft)**：适合"对长文档做主题/全局提问"；缺点是仅文本、不支持代码符号
+- **Sourcegraph**：代码搜索的事实标准；缺点是体量重，不适合小仓库或个人项目
+- **aider repo map**：轻量务实；缺点是无持久知识图谱，会话结束即丢弃
+
+**何时选 Graphify**
+
+- 你希望"代码 + 文档 + 媒体"统一成一张可查询图谱
+- 你的 Agent 通过 MCP 调用工具，希望把"代码理解"作为结构化服务
+- 你在做 monorepo 级别的知识检索
+
+**何时不选 Graphify**
+
+- 只需要"文本主题级问答"——GraphRAG 更轻
+- 你的核心是"跨仓代码搜索"——Sourcegraph 是行业标杆
+- 你只想给 LLM 一个小上下文摘要——aider repo map 够用
+
+**参考资料**
+
+- Graphify GitHub：<https://github.com/safishamsi/graphify>
+- GraphRAG 论文：<https://arxiv.org/abs/2404.16130>
+- Sourcegraph：<https://sourcegraph.com/docs/code-intelligence>
+- aider repo map：<https://aider.chat/2023/10/22/repo-map.html>
+- MCP 协议：<https://modelcontextprotocol.io/>
