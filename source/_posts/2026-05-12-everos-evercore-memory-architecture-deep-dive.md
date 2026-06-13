@@ -246,7 +246,7 @@ def rrf_fusion(results_list: List[List[RetrievedDoc]], k=60):
 
 对于复杂查询，EverCore 支持 **Agentic 检索模式**——LLM 会分析查询并生成 2-3 个互补子查询：
 
-```
+```text
 用户问："我上周和老板讨论的项目进展如何？"
 
 LLM 分析后生成子查询：
@@ -457,3 +457,46 @@ EverCore 是当前开源社区中**对 Agent 记忆基础设施思考最深入�
 - GitHub：[EverMind-AI/EverOS](https://github.com/EverMind-AI/EverOS)
 - 官网：[evermind.ai](https://evermind.ai)
 - 文档：[docs.evermind.ai](https://docs.evermind.ai)
+---
+
+## 对比分析
+
+EverOS / EverCore 用 MemCell 抽象构建 Agent 认知记忆，与 mem0（提取式摘要）、Letta（分层状态机）在记忆设计上各有特色。
+
+### 维度对比表
+
+| 维度 | EverCore (EverOS) | mem0 | Letta (MemGPT) |
+|------|-------------------|------|-----------------|
+| 记忆抽象 | MemCell（原子化对话记忆 + 证据） | 三层（情景/语义/程序性） | 核心/外部/召回（Core/Archival/Recall） |
+| 证据保真度 | 高（MemCell 保留原始证据） | 中（自动摘要会损失细节） | 中 |
+| 记忆层级 | Episode / Profile / Foresight | 情景 / 语义 / 程序性 | Core / Archival / Recall |
+| 跨 Agent 共享 | Team 模式 | 通过共享后端 | 通过共享 DB |
+| 基准评估 | LoCoMo 等 | 内部基准 | LoCoMo / LongMemEval |
+| 适合场景 | 需要"可理解、可溯源"记忆的 Agent | 通用 Agent 长期记忆 | 超长会话、状态机式记忆 |
+
+### 优缺点
+
+EverCore
+- 优点：MemCell 抽象让记忆"可理解、可溯源"；Episode/Profile/Foresight 多层结构；认知循环（构建 ↔ 感知）闭环。
+- 缺点：相对早期，生态规模小于 mem0；学习曲线取决于对认知架构的理解。
+
+mem0
+- 优点：生态成熟、云/OSS 双轨、接入简单。
+- 缺点：自动摘要会损失证据细节；分层抽象不如 EverCore 显式。
+
+Letta
+- 优点：Core/Archival/Recall 分层优雅；学术社区活跃；适合超长会话。
+- 缺点：架构相对复杂，状态机学习成本高；非"零摘要"。
+
+### 何时选
+
+- 选 EverCore：需要"可理解、可溯源"的记忆，关注认知循环闭环，研究型 Agent。
+- 选 mem0：通用 Agent 长期记忆、快速集成。
+- 选 Letta：超长会话、状态机式记忆管理。
+
+### 参考资料
+
+- EverOS GitHub：https://github.com/EverMind-AI/EverOS
+- mem0 GitHub：https://github.com/mem0ai/mem0
+- Letta GitHub：https://github.com/letta-ai/letta
+- LoCoMo 基准：https://github.com/snap-stanford/locomo
