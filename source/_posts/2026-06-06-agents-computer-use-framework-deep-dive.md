@@ -322,7 +322,7 @@ def construct_simple_worker_procedural_memory(agent_class, skipped_actions):
     (Grounded Action)
     ```python
     agent.click(...)
-    ```
+    ```text
     """
 
     return procedural_memory.strip()
@@ -758,3 +758,58 @@ Agent-S 给我们最大的启示不是某个具体技术，而是**"Less is More
 **官网**：https://www.simular.ai
 
 > 如果你正在做 GUI Agent、桌面 RPA、Computer-Use 相关项目，Agent-S 是 2026 年绕不开的基线。
+
+## 对比分析
+
+Agent-S 的核心特征是"Worker + Reflection + 过程记忆 + ACI 抽象"。在"Computer-Use / GUI Agent 框架"赛道里，跟它最相关的项目是 OpenAI CUA、Anthropic Computer Use，以及 UI-TARS 配套框架。下面对它们做一次横向对比。
+
+### 维度一：开源与可复现
+
+| 项目 | 模型/框架 | OSWorld 成绩 | 协议/接口 |
+|------|----------|--------------|------------|
+| **Agent-S (Simular)** | 开源框架 + 任意 VLM | 72.6% (S3 + bBoN) | ACI（Agent-Computer Interface） |
+| **OpenAI CUA / Operator** | 闭源 CUA 模型 | 38.1%（早期 CUA） | OpenAI CUA SDK |
+| **Anthropic Computer Use** | 闭源 Claude 多模态 | ~28-44% | Claude Tool Use |
+| **UI-TARS 框架** | 模型权重开源（Apache-2.0） | 46.6%（UI-TARS-1.5） | Python SDK + CLI |
+
+### 维度二：过程记忆与可解释性
+
+- **Agent-S**：显式"Episodic Memory"（任务级 + 步骤级），Worker 失败时 Reflection 可引用历史
+- **OpenAI CUA**：闭源，过程不暴露
+- **Anthropic Computer Use**：可看到工具调用链，但无"显式过程记忆"概念
+- **UI-TARS**：模型内嵌 CoT，框架层不做记忆管理
+
+### 维度三：定制化与可扩展
+
+- Agent-S：ACI 装饰器方式添加新动作最直观；可换 Grounding 模型
+- OpenAI CUA：仅可调节"操作粒度"，核心模型闭源
+- Anthropic Computer Use：可换 prompt 与工具集
+- UI-TARS：模型权重可微调，框架相对简单
+
+**优缺点小结**
+
+- **Agent-S**：开源 + 可扩展 + 过程记忆 + 72.6% SOTA；缺点是部署较重，需要外接 VLM 推理
+- **OpenAI CUA / Operator**：商业产品体验最好；缺点是闭源、难定制
+- **Anthropic Computer Use**：API 体验最稳；缺点是闭源、价格贵
+- **UI-TARS**：模型权重开源 + 跨平台；缺点是过程记忆等框架增强少
+
+**何时选 Agent-S**
+
+- 你需要"开源 + 可复现 + 可扩展"的 GUI Agent 框架
+- 你想基于 ACI 装饰器风格快速加新动作
+- 你能接受"Worker + Reflection + bBoN"带来的额外推理成本
+
+**何时不选 Agent-S**
+
+- 你要"开箱即用、零部署"——OpenAI Operator / Claude Computer Use 更省心
+- 你只关心"模型本身"——UI-TARS 权重可直接微调
+- 你的目标是"低资源、低延迟"——双 Agent + bBoN 较重
+
+**参考资料**
+
+- Agent-S GitHub：<https://github.com/simular-ai/Agent-S>
+- Agent S3 论文：<https://arxiv.org/abs/2510.02250>
+- OpenAI CUA：<https://openai.com/index/operator-and-cua/>
+- Anthropic Computer Use：<https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/computer-use-tool>
+- UI-TARS：<https://github.com/bytedance/UI-TARS>
+- OSWorld 基准：<https://os-world.github.io>
