@@ -586,7 +586,7 @@ message AgentCardSignature {
 
 A2A 协议支持在单一端点上托管多个 Agent，通过 `tenant` 路径参数区分：
 
-```
+```text
 POST /{tenant}/message:send
 GET  /{tenant}/tasks/{id}
 ```
@@ -743,3 +743,47 @@ flowchart TD
 ---
 
 > **结尾金句**：A2A 的出现，标志着 AI Agent 从"各自为战"走向"协同网络"的关键转折。理解 A2A，就是理解 AI Agent 大规模协作的未来。
+---
+
+## 对比分析
+
+A2A（Agent-to-Agent）协议是面向 Agent 互联的协议级规范，与 MCP（Model Context Protocol）、OpenAI Function Calling 等"模型-工具/Agent 互联"机制形成互补。
+
+### 维度对比表
+
+| 维度 | A2A Protocol | MCP (Model Context Protocol) | OpenAI Function Calling |
+|------|--------------|-------------------------------|---------------------------|
+| 抽象对象 | Agent ↔ Agent | Model ↔ Tool/Resource | Model ↔ Function |
+| 通信模式 | 异步、面向任务、长期连接 | 请求/响应（tool call） | 同步函数调用 |
+| 发现机制 | Agent Card（能力声明） | Server 注册 | 工具 schema |
+| 互操作性 | 跨框架、跨语言 | 跨模型、跨工具 | OpenAI 模型为主 |
+| 适合场景 | 多 Agent 协作 / 跨厂商 Agent 网络 | 单 Agent 工具/数据接入 | 单次工具调用 |
+
+### 优缺点
+
+A2A Protocol
+- 优点：聚焦 Agent-to-Agent 协作，标准化任务委派、状态、产物交换；跨厂商、跨语言；与 MCP 互补而非竞争。
+- 缺点：仍处早期，多数框架尚未原生支持；需要 SDK 适配；长期运行任务的状态机较复杂。
+
+MCP
+- 优点：事实标准化的"模型-工具/数据"接口；生态快速增长；JSON-RPC 简单稳定。
+- 缺点：聚焦单 Agent 视角；多 Agent 协作不在协议范围。
+
+OpenAI Function Calling
+- 优点：实现简单；OpenAI 生态最强；广泛兼容。
+- 缺点：仅 OpenAI 模型原生支持；每次调用是同步函数，无长期任务概念。
+
+### 何时选
+
+- 用 A2A：跨厂商/跨框架 Agent 协作、Agent Marketplace、需要长期任务委派与状态同步。
+- 用 MCP：单个 Agent 接入大量工具、数据源、资源。
+- 用 Function Calling：仅需单步工具调用、不需要协议化抽象。
+
+注：A2A 与 MCP 是互补关系，实际项目中通常同时使用——MCP 让 Agent 接入工具，A2A 让多个 Agent 互相调用。
+
+### 参考资料
+
+- A2A 官方文档：https://a2a-protocol.org
+- A2A GitHub：https://github.com/a2aproject/A2A
+- MCP 官方：https://modelcontextprotocol.io/
+- OpenAI Function Calling 文档：https://platform.openai.com/docs/guides/function-calling
