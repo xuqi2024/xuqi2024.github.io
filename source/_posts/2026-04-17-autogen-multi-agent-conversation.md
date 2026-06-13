@@ -224,3 +224,39 @@ user_proxy.initiate_chat(
 - 💻 配套代码：[github.com/xuqi2024/ai-agent-tutorials](https://github.com/xuqi2024/ai-agent-tutorials)
 
 > **现在就行动**：打开终端，`pip install pyautogen`，把代码跑起来。看两个 AI 互相"挑毛病"的那一刻，你对多智能体协作的理解会比读十篇文章都深。
+
+---
+
+## 对比分析
+
+AutoGen 是微软推出的多 Agent 对话框架。下面与两个同属"多 Agent 协作"赛道、同语言 Python 的项目对比：CrewAI（角色化流水线）和 LangGraph（图编排）。
+
+### 对比维度一：协作模型
+| 维度 | AutoGen | CrewAI | LangGraph |
+| --- | --- | --- | --- |
+| 协作范式 | 对话（GroupChat / 两人对话） | 角色 + 任务流水线 | 图节点 + 边 |
+| 控制权 | UserProxyAgent + Assistant | Crew + Process | 显式边 |
+| 适合场景 | 对话推演、研究原型 | 企业流程 | 复杂工作流 |
+
+### 对比维度二：能力与生态
+| 维度 | AutoGen | CrewAI | LangGraph |
+| --- | --- | --- | --- |
+| 人机交互 | 内置 user proxy | 通过 human input 工具 | 通过 interrupt |
+| 持久化 | 有限 | 任务级 | Checkpointer |
+| 可视化 | 弱 | 中 | 强（图可视化） |
+| 学习曲线 | 中 | 低 | 中偏高 |
+
+### 优缺点
+- **AutoGen**：对话驱动最灵活，研究与实验最爱；稳定运行需要控制对话收敛。
+- **CrewAI**：角色化最直观，企业流程场景好理解；复杂控制流表达力有限。
+- **LangGraph**：用图表达协作，可视化、可回放；学习成本高于链式对话。
+
+### 何时选哪个
+- 做多 Agent 对话研究/原型 → 选 AutoGen
+- 做"研发团队/营销团队"角色流水线 → 选 CrewAI
+- 做带状态、复杂分支的多 Agent 系统 → 选 LangGraph
+
+### 参考资料
+- AutoGen 仓库：https://github.com/microsoft/autogen
+- CrewAI 仓库：https://github.com/crewAIInc/crewAI
+- LangGraph 仓库：https://github.com/langchain-ai/langgraph
