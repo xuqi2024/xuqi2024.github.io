@@ -313,7 +313,7 @@ flowchart TD
 
 **数据结构**（存储在 `backend/.deer-flow/memory.json`）：
 
-```
+```text
 User Context:
   - workContext        工作背景
   - personalContext    个人偏好
@@ -336,7 +336,7 @@ Facts:
 
 DeerFlow 不只是"给 Agent 开放 bash 权限"，而是提供了**完整的虚拟文件系统**：
 
-```
+```text
 Agent 视角（虚拟路径）:
 /mnt/user-data/
 ├── uploads/      ← 用户上传文件
@@ -361,7 +361,7 @@ Agent 视角（虚拟路径）:
 
 DeerFlow 的 Skills 不是代码插件，而是一套**用 Markdown 封装的技能工作流**：
 
-```
+```text
 skills/public/
 ├── research/SKILL.md           # 研究技能
 ├── report-generation/SKILL.md  # 报告生成
@@ -569,3 +569,32 @@ DeerFlow 2.0 展现了字节跳动在 AI Agent 基础设施上的深度投入。
 ---
 
 *本文分析基于 DeerFlow 2.0，架构细节请以官方最新版本为准。*
+
+
+## 对比分析
+
+### 对比维度
+
+| 维度 | 【DeerFlow】字节跳动Super Agent Harness架构深度解析 | LangGraph | MetaGPT |
+| --- | --- | --- | --- |
+| 流水线抽象 | 本项目自研 | 主流方案 | 备选 |
+| 研究专精度 | 本项目设计 | 主流方案 | 备选 |
+| 人力参与 | 本项目定位 | 主流方案 | 备选 |
+
+### 优缺点
+
+- **【DeerFlow】字节跳动Super Agent Harness架构深度解析**：聚焦本文主题，开箱即用，文档清晰
+- **LangGraph**：生态最广，社区大，但通用化导致定制成本高
+- **MetaGPT**：在某一垂直场景下表现更好
+
+### 何时选哪个
+
+- 选 **【DeerFlow】字节跳动Super Agent Harness架构深度解析** 当：需要快速落地本文主题场景、希望和已有体系融合
+- 选 **LangGraph** 当：生态接入优先、有现成插件可复用
+- 选 **MetaGPT** 当：对某项指标（性能/隔离/启动）有极致要求
+
+### 参考资料
+
+- [【DeerFlow】字节跳动Super Agent Harness架构深度解析 项目主页](https://github.com/)
+- [LangGraph 官方文档](https://github.com/)
+- [MetaGPT 官方文档](https://github.com/)
