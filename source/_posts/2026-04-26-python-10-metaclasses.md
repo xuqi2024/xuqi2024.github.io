@@ -141,7 +141,7 @@ print(reasoning.think("Solve this problem"))
 ```
 
 运行输出：
-```
+```text
 Registered Agent: reasoning -> ReasoningAgent
 Registered Agent: creative -> CreativeAgent
 Available agents: ['reasoning', 'creative']
@@ -190,7 +190,7 @@ print(calc.execute("2+2"))
 ```
 
 运行输出：
-```
+```yaml
 Tools: ['calculator', 'search']
 4
 ```
@@ -263,7 +263,6 @@ print(f"User fields: {list(User._fields.keys())}")  # ['name', 'age']
 
 > 描述符让我们控制属性访问，元类让我们控制类创建。两者结合，几乎可以实现任何自定义行为。下一篇文章我们来看 Protocol——Python 的结构化类型系统。
 ---
-
 ## 📚 Python AI教程 系列导航
 
 > 本文是《Python AI教程》系列第 **10/14** 篇。
@@ -292,3 +291,56 @@ print(f"User fields: {list(User._fields.keys())}")  # ['name', 'age']
 14. [（十四）组合模式实战](/2026/04/23/2026-04-27-python-14-composite-ai-agent/)
 
 </details>
+
+## 对比分析
+
+本章核心是 Python 的元类（`metaclass` / `__new__` / `__init__`）。
+
+### 维度一：元类 vs 其他"控制类创建"手段
+
+| 方案 | 触发时机 | 侵入性 | 适合 |
+|------|----------|--------|------|
+| **元类** | `class` 语句执行时 | 高 | 框架级：自动注册、ORM 字段、接口检查 |
+| **类装饰器** | `class` 语句执行后 | 中 | 给单类附加功能 |
+| **`__init_subclass__`**（PEP 487） | 子类创建时 | 低 | 父类想控制子类 |
+| **`__set_name__`** | 描述符绑定到类时 | 低 | 描述符反向引用宿主 |
+| **abc.ABCMeta（元类的典型应用）** | 同元类 | 高 | 抽象基类 |
+| **手动 `type(name, bases, ns)`** | 显式调用 | 高 | 动态创建类 |
+
+### 维度二：与其他语言的"元编程"机制
+
+| 语言 | 元编程机制 | 与 Python 元类对比 |
+|------|------------|----------------------|
+| **Java** | 注解 + 反射 + 字节码库（cglib / ASM） | 注解本身无行为，需运行时织入；Python 元类"创建类时"自动生效 |
+| **C++** | 模板元编程（TMP） + CRTP | 编译期元编程，零运行时；学习曲线极陡 |
+| **Go** | 反射（reflect） | 没有元类；通过 `reflect.Type` 在运行时检查类型 |
+| **Rust** | 宏（macro_rules! / proc-macro） + Trait | 编译期宏扩展，类型安全；比 Python 元类更"声明式" |
+| **Ruby** | `class_eval` / `define_method` / `method_missing` | 元编程更灵活（"打开类"）；Ruby 社区比 Python 更常用 |
+| **JavaScript** | `Proxy` + `Reflect` | Proxy 拦截一切操作；思路最接近 Python 元类但更"运行时" |
+| **Lisp/Clojure** | 宏（macro） | 编译期宏，代码即数据；元编程之王 |
+
+### 维度三：元类 vs 类装饰器 vs `__init_subclass__`
+
+| 维度 | 元类 | 类装饰器 | `__init_subclass__` |
+|------|------|----------|----------------------|
+| 触发点 | 类创建时 | 类创建后 | 子类创建时 |
+| 可影响 `__init_subclass__` | ✅ | ❌ | ❌ |
+| 可被继承 | ✅（子类的 metaclass 必须是父类子类） | ❌ | ✅（自动） |
+| 入侵性 | 高（影响所有子类） | 中（只影响单类） | 低（只在继承时） |
+| 适用 | 框架级（注册、字段系统） | 给单类加方法 | 父类想统一子类行为 |
+
+### 优缺点小结
+
+- **Python 元类**：表达力最强（类即对象）；缺点是难以调试、影响继承链
+- **Rust 宏**：编译期、零运行时开销；缺点是过程宏 API 复杂
+- **Java 注解 + 反射**：生态成熟；缺点是运行期织入有性能损耗
+- **C++ 模板元编程**：零成本；缺点是编译极慢、错误信息灾难
+- **Ruby `method_missing`**：动态派发最自然；缺点是性能、IDE 支持弱
+
+### 何时选
+
+- 选 **`__init_subclass__`**：父类想统一子类（如 `__init_subclass__` 注册子类）— 90% 场景
+- 选 **类装饰器**：单类需要增强（如 `@dataclass` 就是类装饰器 + 元类组合）
+- 选 **元类**：框架级需求（Django ORM / SQLAlchemy / 抽象基类 ABCMeta）
+- 选 **`__set_name__`**：描述符需要知道自己绑定到哪个属性名
+- 避免 **多重继承 + 元类冲突**：metaclass 冲突错误非常难排查
