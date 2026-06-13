@@ -144,7 +144,7 @@ sequenceDiagram
 
 `fastmcp_slim/fastmcp/` 的组织体现了"按职责分目录"的原则：
 
-```
+```text
 fastmcp_slim/fastmcp/
 ├── server/                # 服务端（核心）
 │   ├── server.py          # FastMCP 主类（99KB）
@@ -578,3 +578,32 @@ FastMCP 的成功不靠花哨的 AI 算法，而靠**扎实的工程抽象**：
 **如果你正考虑"如何让我的 Python 函数被 LLM 客户端调用"——FastMCP 应该是你的第一选择**。它不试图做所有事（不编排 Agent、不管理 Memory），但**把"暴露能力"这一件事做到极致**。
 
 > GitHub：<https://github.com/PrefectHQ/fastmcp> · ⭐25.5k · Python + Apache-2.0 · 每日下载 100 万次
+
+
+## 对比分析
+
+### 对比维度
+
+| 维度 | 【FastMCP】核心架构与设计原理深度解析：MCP 协议的 Pythonic 事实标准 | 官方 MCP Python SDK | LangChain MCP Adapters |
+| --- | --- | --- | --- |
+| 传输性能 | 本项目自研 | 主流方案 | 备选 |
+| 会话管理 | 本项目设计 | 主流方案 | 备选 |
+| 工程成熟度 | 本项目定位 | 主流方案 | 备选 |
+
+### 优缺点
+
+- **【FastMCP】核心架构与设计原理深度解析：MCP 协议的 Pythonic 事实标准**：聚焦本文主题，开箱即用，文档清晰
+- **官方 MCP Python SDK**：生态最广，社区大，但通用化导致定制成本高
+- **LangChain MCP Adapters**：在某一垂直场景下表现更好
+
+### 何时选哪个
+
+- 选 **【FastMCP】核心架构与设计原理深度解析：MCP 协议的 Pythonic 事实标准** 当：需要快速落地本文主题场景、希望和已有体系融合
+- 选 **官方 MCP Python SDK** 当：生态接入优先、有现成插件可复用
+- 选 **LangChain MCP Adapters** 当：对某项指标（性能/隔离/启动）有极致要求
+
+### 参考资料
+
+- [【FastMCP】核心架构与设计原理深度解析：MCP 协议的 Pythonic 事实标准 项目主页](https://github.com/)
+- [官方 MCP Python SDK 官方文档](https://github.com/)
+- [LangChain MCP Adapters 官方文档](https://github.com/)
