@@ -298,3 +298,40 @@ python 02_conditional_graph.py
 ---
 
 > **一句话总结**：LangGraph 把 AI 工作流从"一问一答"升级为"有记忆、能循环、按规则走"的状态机——这才是真正 Agent 的样子。现在就去跑一跑配套代码，感受循环审核的魔力吧。
+
+---
+
+## 对比分析
+
+LangGraph 把 Agent 抽象为带状态的有向图。下面与同样面向"多步/多 Agent 工作流"的两个框架对比：AutoGen（对话驱动）和 CrewAI（角色流水线）。
+
+### 对比维度一：表达力
+| 维度 | LangGraph | AutoGen | CrewAI |
+| --- | --- | --- | --- |
+| 表达模型 | 图节点 + 边 + 状态 | 对话 | 角色 + 任务 |
+| 循环与人机交互 | 原生支持 | 需自实现 | 通过工具 |
+| 复杂分支 | 任意 | 有限 | 有限 |
+| 可视化 | 内置 | 弱 | 中 |
+
+### 对比维度二：生产与持久化
+| 维度 | LangGraph | AutoGen | CrewAI |
+| --- | --- | --- | --- |
+| 持久化 | Checkpointer | 有限 | 任务级 |
+| 时间旅行/回放 | 支持 | 弱 | 弱 |
+| 调试工具 | Studio | print 调试 | 内置日志 |
+| 生态 | LangChain 全栈 | 微软 | 自有生态 |
+
+### 优缺点
+- **LangGraph**：表达力最强，适合复杂生产工作流；学习曲线在三者中最高。
+- **AutoGen**：对话灵活、研究友好；复杂生产流程需要外搭不少东西。
+- **CrewAI**：最易上手、角色模型直观；表达力弱于图模型。
+
+### 何时选哪个
+- 复杂业务流、需要可视化与回放 → 选 LangGraph
+- 多 Agent 对话推演/研究 → 选 AutoGen
+- 简单业务流水线，团队偏业务 → 选 CrewAI
+
+### 参考资料
+- LangGraph 仓库：https://github.com/langchain-ai/langgraph
+- AutoGen 仓库：https://github.com/microsoft/autogen
+- CrewAI 仓库：https://github.com/crewAIInc/crewAI
