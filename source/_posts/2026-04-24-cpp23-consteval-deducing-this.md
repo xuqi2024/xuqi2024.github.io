@@ -180,7 +180,7 @@ int main() {
 ```
 
 **输出：**
-```
+```yaml
 Widget: 100
 value: 200
 ```
@@ -265,3 +265,71 @@ struct Data {
 4. [（四）Ranges 增强](/2026/04/23/2026-04-24-cpp23-ranges-enhancement/)
 
 </details>
+
+## 语法/控制流可视化
+
+下面是一张马卡龙色 Mermaid 图，帮你从图形角度把握本章涉及的语法与控制流。
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#FFE5EC', 'primaryTextColor': '#5D5D5D', 'primaryBorderColor': '#FFB3C6', 'lineColor': '#B5EAD7', 'secondaryColor': '#C7CEEA', 'tertiaryColor': '#FFDAC1'}}}%%
+flowchart TD
+    CALL["📞 foo(x)"] --> DT{"🪄 deducing this<br/>推导 Self"}
+    DT --> S1["Self = Foo"]
+    DT --> S2["Self = const Foo"]
+    DT --> S3["Self = Foo&"]
+
+    S1 --> BODY["🧩 进入函数体<br/>self.member"]
+    S2 --> BODY
+    S3 --> BODY
+
+    BODY --> CV{"🤔 if consteval?"}
+    CV -- "编译期调用" --> CE["⚙️ 编译期分支<br/>编译期求值"]
+    CV -- "运行期调用" --> RE["🏃 运行期分支<br/>运行时执行"]
+
+    style CALL fill:#FFE5EC,stroke:#FFB3C6,color:#5D5D5D
+    style DT fill:#FFDAC1,stroke:#FFB3C6,color:#5D5D5D
+    style S1 fill:#C7CEEA,stroke:#A8DADC,color:#5D5D5D
+    style S2 fill:#C7CEEA,stroke:#A8DADC,color:#5D5D5D
+    style S3 fill:#C7CEEA,stroke:#A8DADC,color:#5D5D5D
+    style BODY fill:#B5EAD7,stroke:#A8DADC,color:#5D5D5D
+    style CV fill:#FFDAC1,stroke:#FFB3C6,color:#5D5D5D
+    style CE fill:#FFE5EC,stroke:#FFB3C6,color:#5D5D5D
+    style RE fill:#C7CEEA,stroke:#A8DADC,color:#5D5D5D
+```
+
+本章讲 C++23 的 if consteval 与 deducing this，对比维度：本特性 vs C++17/20 旧写法 vs 其他语言对应特性。
+
+## 对比分析
+
+### 一、本特性 vs 旧写法
+
+| 维度 | C++23 写法 | C++20 写法 | 影响 |
+|------|------------|-------------|------|
+| 编译期函数与运行期分支 | `if consteval { ... } else { ... }` | 需要用 `std::is_constant_evaluated()` | 写法更直白 |
+| 泛型成员函数 | `void foo(this Self& self) {...}` | 需要 CRTP / `std::enable_if` | 不再需要模板也能泛型 |
+| 与 lambda 结合 | deducing this lambda | 模板 lambda | 统一 |
+
+### 二、对比其他语言
+
+| 语言 | 编译期与运行期分支 | 泛型方法 | 备注 |
+|------|--------------------|----------|------|
+| C++23 | `if consteval` | deducing this | 显式 |
+| Rust | `const fn` + 调用点分析 | trait + Self | 不同思路 |
+| Java | ❌ | bounded generics | 受限 |
+| Python | ❌ | duck typing | 运行时 |
+| C# | ❌ | generic methods | 较受限 |
+
+### 三、优缺点
+
+优点：
+- `if consteval` 终于比 `is_constant_evaluated()` 更优雅
+- deducing this 把"成员函数当模板"标准化
+
+缺点：
+- 编译器支持普及度仍需观察
+- 与既有 CRTP 代码如何迁移需谨慎
+
+### 四、何时选
+
+- 写库代码：直接用 deducing this 替代 CRTP
+- 工具函数：if consteval 让意图明确
