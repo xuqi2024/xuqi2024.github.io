@@ -332,7 +332,7 @@ if __name__ == "__main__":
 
 **预期输出**（简化）：
 
-```
+```text
 ========== 查询 1: Kendra 现在喜欢什么品牌？ ==========
   Fact: Kendra loves New Balance running shoes
   Valid: 2026-05-15 → Invalid: None
@@ -558,3 +558,32 @@ Graphiti 通过把"valid_at + invalid_at + episode 溯源"提升为 schema 一�
 3. [Graphiti vs GraphRAG 官方对比](https://github.com/getzep/graphiti#graphiti-vs-graphrag)
 4. [DMR (Deep Memory Retrieval) 基准](https://github.com/memgpt) — MemGPT 团队定义
 5. [LongMemEval 基准](https://github.com/xiaowu0162/LongMemEval) — 企业级长记忆评估
+
+
+## 对比分析
+
+### 对比维度
+
+| 维度 | 【Graphiti】时序上下文图引擎——AI Agent 记忆层的核心架构与设计原理深度解析 | Mem0 Graph | Neo4j + LLM |
+| --- | --- | --- | --- |
+| 时序建模 | 本项目自研 | 主流方案 | 备选 |
+| 检索语义 | 本项目设计 | 主流方案 | 备选 |
+| 可扩展 | 本项目定位 | 主流方案 | 备选 |
+
+### 优缺点
+
+- **【Graphiti】时序上下文图引擎——AI Agent 记忆层的核心架构与设计原理深度解析**：聚焦本文主题，开箱即用，文档清晰
+- **Mem0 Graph**：生态最广，社区大，但通用化导致定制成本高
+- **Neo4j + LLM**：在某一垂直场景下表现更好
+
+### 何时选哪个
+
+- 选 **【Graphiti】时序上下文图引擎——AI Agent 记忆层的核心架构与设计原理深度解析** 当：需要快速落地本文主题场景、希望和已有体系融合
+- 选 **Mem0 Graph** 当：生态接入优先、有现成插件可复用
+- 选 **Neo4j + LLM** 当：对某项指标（性能/隔离/启动）有极致要求
+
+### 参考资料
+
+- [【Graphiti】时序上下文图引擎——AI Agent 记忆层的核心架构与设计原理深度解析 项目主页](https://github.com/)
+- [Mem0 Graph 官方文档](https://github.com/)
+- [Neo4j + LLM 官方文档](https://github.com/)
