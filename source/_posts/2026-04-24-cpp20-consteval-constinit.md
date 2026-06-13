@@ -216,3 +216,40 @@ int main() {
 7. [（七）Ranges 库](/2026/04/23/2026-04-24-cpp20-ranges/)
 
 </details>
+
+本章讲 C++20 的 consteval / constinit，对比维度：本特性 vs C++17 constexpr 旧写法 vs 其他语言编译期常量机制。
+
+## 对比分析
+
+### 一、本特性 vs 旧写法
+
+| 维度 | C++20 写法 | C++17 写法 | 影响 |
+|------|------------|-------------|------|
+| 强制编译期函数 | `consteval int f(){return 42;}` | `constexpr`（调用方可能运行时求值） | 立即函数 |
+| 强制静态初始化 | `constinit int x = 42;` | 普通 `static` 可能动态初始化顺序混乱 | 解决 SIOF 问题 |
+| constexpr 改进 | C++20 允许 constexpr 虚函数、union、try | C++17 已支持 if/switch 等 | 范围进一步扩大 |
+
+### 二、对比其他语言
+
+| 语言 | 编译期函数 | 静态初始化保证 | 备注 |
+|------|------------|----------------|------|
+| C++20 | `consteval` | `constinit` | 显式分类 |
+| Rust | `const fn` | `static` 默认 | 编译期强 |
+| Java | ❌ | static initializer | 运行时 |
+| Python | ❌ | 无 | 解释型 |
+| Haskell | ✅ | ✅ | 全编译期 |
+
+### 三、优缺点
+
+优点：
+- 把"立即求值"和"保证静态初始化"标准化
+- 编译期可写代码越来越多
+
+缺点：
+- `consteval` 限制较多，不能随意改成普通函数
+- 编译器错误信息仍偶有不足
+
+### 四、何时选
+
+- 编译期常量计算：consteval
+- 全局静态变量想保证无 SIOF：constinit
