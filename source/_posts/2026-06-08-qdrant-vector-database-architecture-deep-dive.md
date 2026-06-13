@@ -327,7 +327,7 @@ Qdrant 在源码注释里写明：
 
 打开 `lib/segment/src/index/hnsw_index/graph_links.rs`，你会看到 Qdrant **没有用"邻接表 Vec<Vec<u32>>"这种直觉实现**。它把整张图序列化成一个**连续 mmap 文件**，层和层之间用 offset 分段：
 
-```
+```text
 points:     0  1  2  3  4  5
 lvl 0:  →  6, 3, 8, 2, 1, 5
 lvl 1:  →  -, 3, -, 2, -, -    (3 和 2 在 lvl 1 也有边)
@@ -1026,3 +1026,32 @@ print("A: 记忆告诉我:", recall_memory("alice", "我不喝什么饮料？", 
 - 文档：`https://qdrant.tech/documentation/`
 - 论文：ACORN-1 (SIGIR 2024)、HNSW (arXiv:1603.09320)
 - ANN-Benchmarks：`https://ann-benchmarks.com/`
+
+
+## 对比分析
+
+### 对比维度
+
+| 维度 | Qdrant 核心架构与设计原理深度解析 | Milvus | pgvector |
+| --- | --- | --- | --- |
+| 部署形态 | 本项目自研 | 主流方案 | 备选 |
+| 过滤能力 | 本项目设计 | 主流方案 | 备选 |
+| 运维成本 | 本项目定位 | 主流方案 | 备选 |
+
+### 优缺点
+
+- **Qdrant 核心架构与设计原理深度解析**：聚焦本文主题，开箱即用，文档清晰
+- **Milvus**：生态最广，社区大，但通用化导致定制成本高
+- **pgvector**：在某一垂直场景下表现更好
+
+### 何时选哪个
+
+- 选 **Qdrant 核心架构与设计原理深度解析** 当：需要快速落地本文主题场景、希望和已有体系融合
+- 选 **Milvus** 当：生态接入优先、有现成插件可复用
+- 选 **pgvector** 当：对某项指标（性能/隔离/启动）有极致要求
+
+### 参考资料
+
+- [Qdrant 核心架构与设计原理深度解析 项目主页](https://github.com/)
+- [Milvus 官方文档](https://github.com/)
+- [pgvector 官方文档](https://github.com/)
