@@ -294,7 +294,7 @@ python example_tradingagents.py
 
 预期输出（节选）：
 
-```
+```text
 ============================================================
 Final Trade Decision: **Rating**: Overweight
 ============================================================
@@ -621,3 +621,58 @@ TradingAgents 是一个 **"领域协议 > 通用框架"** 的典型范例。它�
 > 📌 仓库地址：[github.com/TauricResearch/TradingAgents](https://github.com/TauricResearch/TradingAgents)
 > 📄 论文地址：[arxiv.org/abs/2412.20138](https://arxiv.org/abs/2412.20138)
 > 🏷️ 当前版本：v0.2.5（2026-05-11）
+
+## 对比分析
+
+TradingAgents 的核心特征是"用多 Agent 模拟真实交易公司 + LangGraph 编排 + 辩论协议"。在"多 Agent 决策系统"这个大类下，跟它定位最像、且社区讨论最多的项目是 CrewAI、AutoGen 和 MetaGPT。下面对它们做一次横向对比。
+
+### 维度一：领域定位
+
+| 项目 | 目标场景 | 领域专用 vs 通用 | Agent 数量 | 协作模式 |
+|------|----------|------------------|------------|----------|
+| **TradingAgents** | 金融交易决策 | 领域专用（金融） | 9 个固定角色 + 辩论 | 角色分工 + 双向辩论 |
+| **CrewAI** | 通用业务流程 | 通用（角色 + 任务） | 用户自定义（一般 2–6） | 顺序/层级/共识 |
+| **AutoGen (Microsoft)** | 通用对话/任务 | 通用 + 学术 | 用户自定义（GroupChat） | 多轮对话 + 群聊 |
+| **MetaGPT** | 软件开发团队 | 领域专用（软件工程） | 角色化（产品/架构/工程师/QA） | SOP 流水化 |
+
+### 维度二：编排与可解释性
+
+- **TradingAgents**：基于 LangGraph 显式 DAG，每个 Agent 节点、辩论轮次都可追溯；输出天然可解释（"为什么买/卖"）
+- **CrewAI**：Task + Agent 的轻量抽象，上手快，但可解释性依赖用户自己设计
+- **AutoGen**：GroupChat 模式灵活，但流程控制需要更多人工
+- **MetaGPT**：用"软件公司 SOP"约束流程，输出结构化（PRD/设计/代码），但对金融等非软件领域不直接适用
+
+### 维度三：可移植性
+
+- TradingAgents：领域专用，9 个角色和"投资辩论"协议移植到其它领域需要重构 Agent 角色
+- CrewAI：通用性最强，角色和任务可任意拼装
+- AutoGen：通用，但工程化体验较 AutoGen 0.2/0.4 之间有过大改动
+- MetaGPT：核心抽象可借鉴到任何"团队 SOP"场景，但默认 prompt 强绑定软件开发
+
+**优缺点小结**
+
+- **TradingAgents**：领域深度 + 辩论协议是它的杀手锏；缺点是迁移到非金融场景需要重写角色
+- **CrewAI**：通用 + 低代码体验好；缺点是复杂决策（多轮辩论/多层级）需要绕路
+- **AutoGen**：学术研究标杆、灵活度高；缺点是工程化体验较一般
+- **MetaGPT**：把"软件团队 SOP"做到极致；缺点是默认强绑定软件开发
+
+**何时选 TradingAgents**
+
+- 你正在做"金融决策辅助 / 投资研究 / 风险分析"类产品
+- 你需要"多 Agent 辩论 + 风控对抗"的可解释输出
+- 你能接受 LangGraph 作为底层编排依赖
+
+**何时不选 TradingAgents**
+
+- 你想做的是"通用业务流自动化"——CrewAI 上手更快
+- 你的领域是"纯对话/纯研究"——AutoGen 更灵活
+- 你的领域是"软件开发团队"——MetaGPT 的 SOP 更贴
+
+**参考资料**
+
+- TradingAgents GitHub：<https://github.com/TauricResearch/TradingAgents>
+- TradingAgents 论文：<https://arxiv.org/abs/2412.20138>
+- CrewAI：<https://github.com/crewAIInc/crewAI>
+- AutoGen：<https://github.com/microsoft/autogen>
+- MetaGPT：<https://github.com/geekan/MetaGPT>
+- LangGraph：<https://langchain-ai.github.io/langgraph/>
