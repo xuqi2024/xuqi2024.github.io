@@ -78,7 +78,7 @@ print(room.temperature)  # 30
 ```
 
 运行输出：
-```
+```text
 25
 30
 ```
@@ -194,7 +194,7 @@ print(agent.summary)    # 缓存命中，不再计算
 ```
 
 运行输出：
-```
+```text
 Agent created
 [Computing summary for Alice...]
 Agent Alice summary
@@ -247,7 +247,7 @@ print(f"temp={config.temperature}, tokens={config.max_tokens}")
 ```
 
 运行输出：
-```
+```text
 temp=0.7, tokens=2048
 ```
 
@@ -284,7 +284,6 @@ class Logged:
 
 > 下一步：尝试结合元类（下一篇）和描述符，实现一个完整的 ORM 字段系统。
 ---
-
 ## 📚 Python AI教程 系列导航
 
 > 本文是《Python AI教程》系列第 **9/14** 篇。
@@ -313,3 +312,53 @@ class Logged:
 14. [（十四）组合模式实战](/2026/04/23/2026-04-27-python-14-composite-ai-agent/)
 
 </details>
+
+## 对比分析
+
+本章核心是 Python 的描述符协议（`__get__/__set__/__delete__`）。
+
+### 维度一：描述符 vs 其他"属性控制"手段
+
+| 方案 | 触发时机 | 可复用性 | 适合场景 |
+|------|----------|----------|----------|
+| **描述符协议** | `obj.attr` 时自动触发 | ✅ 类级别复用 | 跨实例共享属性逻辑 |
+| **@property** | `obj.attr` 时自动触发 | ❌ 单类内 | 单类内简单计算属性 |
+| **`__getattr__` / `__getattribute__`** | 属性查找失败 / 每次 | 类内 | 代理、动态属性 |
+| **`__setattr__`** | 每次赋值 | 类内 | 全局拦截 |
+| **普通方法** | 显式调用 | ✅ | 行为，不适合做属性包装 |
+| **外部包装函数** | 显式 `wrap(x)` | 临时 | 一次性变换 |
+
+### 维度二：与其他语言的属性 / 拦截机制
+
+| 语言 | 属性机制 | 与 Python 描述符对比 |
+|------|----------|------------------------|
+| **Java** | getter/setter 约定 + Lombok | 约定驱动，需要 IDE 配合；没有语言级"协议" |
+| **C#** | Property（`get { } set { }`） | 语言级一等公民；底层是字段 + 访问器；比 Python 描述符更"声明式" |
+| **Kotlin** | `val` / `var` + 自定义 getter/setter | 编译期生成，比 C# 更简洁；与 `@property` 思路类似 |
+| **C++** | 成员函数 + 运算符重载 | 没有"统一拦截点"；模板 + CRTP 可模拟但繁琐 |
+| **Go** | Struct 字段 + 方法 | 没有属性拦截；要"计算属性"得写方法 |
+| **Rust** | 字段 + impl + Getter/Setter 方法 | 零成本；Trait 提供扩展点但不像描述符那样"挂到类上" |
+| **JavaScript** | `Object.defineProperty` 的 getter/setter | 思路最像；区别在 JS 是对象级，Python 描述符是类级 |
+
+### 维度三：Data Descriptor vs Non-Data Descriptor
+
+| 类型 | 定义 | 优先级 | 例子 |
+|------|------|--------|------|
+| **Data Descriptor** | 同时定义 `__set__` 或 `__delete__` | 覆盖实例 `__dict__` | `property`、`__set_name__` 描述符 |
+| **Non-Data Descriptor** | 只定义 `__get__` | 被实例 `__dict__` 覆盖 | 函数（`method`）、`classmethod` 的旧实现 |
+
+### 优缺点小结
+
+- **Python 描述符**：协议完整、组合性强（`property` / `classmethod` / `staticmethod` 都基于它）；缺点是学习曲线陡、易与 MRO 冲突
+- **C# Property**：语言级、IDE 支持最好；缺点是只能针对单类
+- **Kotlin val/var**：语法最简洁；缺点是 JVM 平台限制
+- **JS Object.defineProperty**：对象级灵活；缺点是没有类级复用
+
+### 何时选
+
+- 选 **@property**：单类内简单计算属性（如 `obj.full_name`）
+- 选 **描述符**：跨实例复用同一逻辑（如 ORM 字段、统一类型转换）
+- 选 **`__getattr__`**：代理类（包装另一个对象）
+- 选 **`__set_name__`**（PEP 487）：描述符需要知道宿主类名字
+- 选 **functools.cached_property**：惰性缓存 + 自动失效
+- 不推荐 **重写 `__getattribute__`**：性能损耗大、副作用难调试
