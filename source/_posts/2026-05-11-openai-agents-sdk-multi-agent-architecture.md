@@ -520,7 +520,7 @@ async def main():
 
 ### 4.1 目录结构
 
-```
+```text
 src/agents/
 ├── __init__.py              # 公共 API 导出
 ├── agent.py                 # Agent 类定义
@@ -941,3 +941,45 @@ OpenAI Agents SDK 的设计理念可以总结为：
 **项目链接**：[openai/openai-agents-python](https://github.com/openai/openai-agents-python)
 
 **推荐指数**：⭐⭐⭐⭐（适合需要多 Agent 协作和安全保障的生产项目）
+---
+
+## 对比分析
+
+OpenAI Agents SDK 主张 Handoff + Guardrails + MCP，与 LangGraph 状态图、AutoGen 群聊在多 Agent 协作模型上风格迥异。
+
+### 维度对比表
+
+| 维度 | OpenAI Agents SDK | LangGraph | AutoGen |
+|------|-------------------|-----------|---------|
+| 协作模型 | Handoff（移交式） | 状态图节点切换 | 群聊（GroupChat） |
+| 安全护栏 | 内置 Input/Output Guardrails | 需自行实现 | 需自行实现 |
+| 沙箱执行 | 内置（隔离环境） | 通过外部实现 | 通过外部实现 |
+| MCP 支持 | 一等公民 | 社区 | 社区 |
+| 适合场景 | 客服/工单等流水线化多 Agent | 复杂状态、长流程 | 灵活对话协作 |
+| 模型绑定 | OpenAI 为主，多 Provider 扩展 | 模型无关 | 模型无关 |
+
+### 优缺点
+
+OpenAI Agents SDK
+- 优点：Handoff 模型直观、安全护栏内建、沙箱即基础设施、MCP 原生；上手快、文档清晰。
+- 缺点：与 OpenAI 模型绑定最深；复杂状态/长流程表达力弱于 LangGraph；生态规模较小。
+
+LangGraph
+- 优点：状态图表达力极强；持久化、human-in-loop 成熟；模型无关。
+- 缺点：Guardrails 需自行实现；学习曲线取决于图论概念。
+
+AutoGen
+- 优点：群聊模式灵活、研究社区大；微软支持。
+- 缺点：Guardrails/沙箱需自行实现；结果可预测性弱于状态机模型。
+
+### 何时选
+
+- 选 OpenAI Agents SDK：客服/工单等流水线化多 Agent、关注安全与 MCP、生产项目。
+- 选 LangGraph：复杂状态、长流程、模型无关。
+- 选 AutoGen：灵活多 Agent 对话、研究场景。
+
+### 参考资料
+
+- OpenAI Agents SDK GitHub：https://github.com/openai/openai-agents-python
+- LangGraph：https://langchain-ai.github.io/langgraph/
+- AutoGen：https://microsoft.github.io/autogen/
