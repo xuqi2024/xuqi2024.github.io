@@ -359,7 +359,7 @@ print("AI:", reply)
 
 预期输出（实际由 LLM 决定）：
 
-```
+```text
   - 用户是一名 Python 后端工程师  [type=fact]
   - 用户习惯使用 FastAPI 框架   [type=preference]
   - 用户希望沟通简洁，少客套   [type=preference]
@@ -368,7 +368,7 @@ from fastapi import FastAPI
 app = FastAPI()
 @app.get("/")
 def hello(): return {"msg": "hi"}
-```
+```text
 ```
 
 如果想用**树形记忆 + 自演化**模式，只需把 `text_mem` 切换为 `tree_text`：
@@ -507,3 +507,58 @@ MemOS 给出了一个**完整、清晰、工程化、学术化**的"AI 记忆操
 > 论文：<https://arxiv.org/abs/2507.03724>
 > 文档：<https://memos-docs.openmem.net/>
 > Star：9.5k+ · License：Apache 2.0
+
+## 对比分析
+
+MemOS 的定位是"LLM 的记忆操作系统"——强调跨模态、跨任务、跨用户的"自演化"。在"长期记忆 / 记忆操作系统"这个赛道里，跟它最常被对比的项目是 Mem0、Letta（MemGPT）和 Graphiti。下面对它们做一次横向对比。
+
+### 维度一：抽象层级
+
+| 项目 | 抽象单位 | 调度机制 | 跨模态/跨用户 |
+|------|----------|----------|----------------|
+| **MemOS** | MemCube + MemScheduler | 显式调度器主动编排 | ✅ 多模态 + 跨用户 |
+| **Mem0** | Memory Record（单层抽象） | 被动 LLM 抽取/合并 | ⚠️ 偏文本 |
+| **Letta (MemGPT)** | Core Memory + Archival | 工具调用型（context 分页） | ❌ 主要单用户文本 |
+| **Graphiti (Zep)** | 时序上下文图（节点/边） | 增量更新 + 双时态 | ⚠️ 偏文本事实 |
+
+### 维度二：自演化能力
+
+- **MemOS**：L1（用户输入）→ L2（领域结构化）→ L3（抽象知识）→ Skills 三层演化路径，MemScheduler 主动 push 记忆
+- **Mem0**：靠 LLM 异步 ADD/UPDATE/DELETE，没有显式"演化调度"
+- **Letta**：依赖 Agent 主动通过 tool 调用读写 Core/Archival；没有"系统级主动演化"
+- **Graphiti**：把记忆建模成"时序图"，每次新事件触发增量更新，演化由"图结构自然产生"
+
+### 维度三：存储后端
+
+- MemOS：MemCube 抽象支持向量库、KV、文件、知识图谱多种后端
+- Mem0：可插拔后端（Qdrant、pgvector、Chroma、Redis 等）
+- Letta：内置 PostgreSQL + pgvector + 关系表，自带管理 UI
+- Graphiti：Neo4j（默认）+ 向量索引（自实现/HNSW）
+
+**优缺点小结**
+
+- **MemOS**：唯一把"跨模态 + 跨用户 + 主动调度 + 自演化"做齐的开源项目；缺点是复杂度高、文档分散、模型/调度仍在快速演进
+- **Mem0**：最易集成、生态最广；缺点是没有"自演化"与"调度器"
+- **Letta**：理论清晰、自带 UI；缺点是单用户、文本为主
+- **Graphiti**：时序事实追踪强项突出（合规、客服、医疗）；缺点是构建图成本高
+
+**何时选 MemOS**
+
+- 你需要"AI 跨任务、跨用户、长期学习"的产品级记忆系统
+- 你愿意接受一定复杂度换取"自演化 + 主动调度"能力
+- 你的记忆载体需要"多模态 / 多后端"组合
+
+**何时不选 MemOS**
+
+- 只想做轻量"记忆层 SDK"——Mem0 几行代码搞定
+- 你的核心是"单 Agent 单用户对话系统"——Letta 更轻
+- 你的核心是"时序事实追踪 / 知识图谱"——Graphiti 更对路
+
+**参考资料**
+
+- MemOS GitHub：<https://github.com/MemTensor/MemOS>
+- MemOS 论文：<https://arxiv.org/abs/2507.03724>
+- Mem0：<https://github.com/mem0ai/mem0>
+- Letta：<https://github.com/letta-ai/letta>
+- Graphiti：<https://github.com/getzep/graphiti>
+- "Memory for LLM Agents" 综述：<https://arxiv.org/abs/2406.01564>
