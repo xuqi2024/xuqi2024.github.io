@@ -317,6 +317,23 @@ docker run --gpus all -it \
     3d-speaker:latest
 ```
 
+### 整体部署架构
+
+```mermaid
+graph LR
+    A[音频输入]:::input --> B[ASR 引擎]:::process
+    B --> C[文本输出]:::output
+    A --> D[3D-Speaker]:::agent
+    D --> E[声纹特征]:::output
+    D --> F[说话人日志]:::output
+    E --> G[比对数据库]:::process
+    G --> H[身份判定]:::output
+    classDef input fill:#FFE5E5,stroke:#FF9AA2,color:#333
+    classDef process fill:#E5F3FF,stroke:#A0C4FF,color:#333
+    classDef agent fill:#FFF4E5,stroke:#FFD6A0,color:#333
+    classDef output fill:#E5FFE5,stroke:#B5EAD7,color:#333
+```
+
 ## 完整使用示例
 
 ### 示例 1：会议录音分析
@@ -443,3 +460,46 @@ ffmpeg -i input.wav -ar 16000 -ac 1 output.wav
 - ModelScope: [预训练模型集合](https://www.modelscope.cn/models?page=1&tasks=speaker-verification&type=audio)
 - 数据集: [3D-Speaker-Dataset](https://3dspeaker.github.io/)
 - 论文: [3D-Speaker arXiv](https://arxiv.org/pdf/2306.15354.pdf)
+---
+
+## 对比分析
+
+3D-Speaker 是阿里达摩院开源的说话人识别工具集，与同样在 ModelScope 上的同类项目（如 Wespeaker、NeMo Speaker）以及商业云服务对比。
+
+### 维度对比表
+
+| 维度 | 3D-Speaker (ModelScope) | WeSpeaker | NVIDIA NeMo (Speaker) |
+|------|--------------------------|-----------|------------------------|
+| 任务覆盖 | 验证 + 分割 + 语种识别 + Overlap | 验证 + 分割 | 验证 + 分割 + 多任务 |
+| 训练数据 | 3D-Speaker-Dataset（含中文/英文） | VoxCeleb 为主 | VoxCeleb + 内部数据 |
+| 部署友好度 | 高（ModelScope pipeline + ONNX + Docker） | 中（PyTorch 原生） | 中（依赖 NeMo 框架） |
+| 中文支持 | 强（EER 0.52% 中文场景） | 中 | 中 |
+| 集成性 | 与 FunASR 同一生态 | 独立 | 与 NeMo 整体框架绑定 |
+| 开源协议 | Apache 2.0 | Apache 2.0 | Apache 2.0 |
+
+### 优缺点
+
+3D-Speaker
+- 优点：中文场景表现优异；功能全面（验证/分割/语种/Overlap）；部署形式多样（Python/ONNX/Docker）；与 FunASR 同生态，便于 ASR+说话人联合。
+- 缺点：模型体积相对较大；英文场景略弱于 VoxCeleb 训练的专项模型；社区相比 PyTorch 原生项目稍小。
+
+WeSpeaker
+- 优点：PyTorch 原生，易于研究；VoxCeleb 上的基准表现稳定。
+- 缺点：中文场景支持弱；功能相对单一（验证 + 分割）。
+
+NeMo Speaker
+- 优点：与 NVIDIA NeMo 框架集成，多任务统一；GPU 训练效率高。
+- 缺点：依赖较重（NeMo 全套）；对中文/小语种覆盖有限；部署复杂度高。
+
+### 何时选
+
+- 选 3D-Speaker：中文/中英混合场景、想一站式搞定验证+分割+语种、计划与 FunASR 联合部署。
+- 选 WeSpeaker：纯英文 VoxCeleb 基准、研究导向。
+- 选 NeMo Speaker：已在使用 NeMo 训练/部署其他语音任务、需要 GPU 集群训练。
+
+### 参考资料
+
+- 3D-Speaker GitHub：https://github.com/modelscope/3D-Speaker
+- WeSpeaker GitHub：https://github.com/wenet-e2e/wespeaker
+- NVIDIA NeMo：https://github.com/NVIDIA/NeMo
+- 3D-Speaker 论文：https://arxiv.org/pdf/2306.15354.pdf
