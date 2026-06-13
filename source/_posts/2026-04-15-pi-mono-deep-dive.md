@@ -125,7 +125,7 @@ graph TB
 
 **最值得关注的是 Agent 核心层只有 4 个工具：**
 
-```
+```text
 read   → 读取文件内容
 write  → 写入/创建文件
 edit   → 精准修改文件的某个片段
@@ -427,3 +427,40 @@ pi
 > - [真实开发会话数据集（Hugging Face）](https://huggingface.co/datasets/badlogicgames/pi-mono)
 > - [openclaw：基于 pi SDK 构建的真实产品](https://github.com/openclaw/openclaw)
 > - [Discord 社区](https://discord.com/invite/3cU7Bz4UPx)
+
+---
+
+## 对比分析
+
+pi-mono 强调"4 个工具搞定一切"的极简编程 Agent。下面与同样极简风格的两个 Agent 项目做对比：Agno（Python 极简框架）和 Smolagents（HuggingFace 轻量框架）。
+
+### 对比维度一：抽象与体积
+| 维度 | pi-mono | Agno | Smolagents |
+| --- | --- | --- | --- |
+| 语言 | Rust | Python | Python |
+| 抽象哲学 | 工具即一切 | 模型即一切 | Agent + Tools |
+| 启动体积 | 单二进制 | pip 包 | pip 包 |
+| 核心依赖 | 极少量 | 中等 | 依赖 transformers/transformers ecosystem |
+
+### 对比维度二：开发体验
+| 维度 | pi-mono | Agno | Smolagents |
+| --- | --- | --- | --- |
+| 上手时间 | 分钟级 | 分钟级 | 分钟级 |
+| 多模态 | 文本为主 | 原生多模态 | 文本为主，可扩视觉 |
+| 工具生态 | 自定义注册 | 丰富内置工具 | HuggingFace 工具集 |
+| 生产部署 | 最简单 | 较简单 | 中（依赖较重） |
+
+### 优缺点
+- **pi-mono**：单二进制 + Rust 性能 + 极简哲学；AI SDK 生态需要自封装。
+- **Agno**：Python 多模态 + 模型覆盖最广；抽象仍然封装了不少"魔法"。
+- **Smolagents**：HF 生态背书，紧跟模型前沿；依赖链较重。
+
+### 何时选哪个
+- 要极致性能、零依赖部署 → 选 pi-mono
+- 写 Python 多模态应用、模型切换频繁 → 选 Agno
+- 想紧跟 HF 生态 + 简单工具调用 → 选 Smolagents
+
+### 参考资料
+- pi-mono 仓库：https://github.com/malcolmyu/pi-mono
+- Agno 仓库：https://github.com/agno-agi/agno
+- Smolagents 仓库：https://github.com/huggingface/smolagents
