@@ -346,3 +346,78 @@ int main() {
 8. [（八）Attribute 新增](/2026/04/23/2026-04-24-cpp17-attributes/)
 
 </details>
+
+## 语法/控制流可视化
+
+下面是一张马卡龙色 Mermaid 图，帮你从图形角度把握本章涉及的语法与控制流。
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#FFE5EC', 'primaryTextColor': '#5D5D5D', 'primaryBorderColor': '#FFB3C6', 'lineColor': '#B5EAD7', 'secondaryColor': '#C7CEEA', 'tertiaryColor': '#FFDAC1'}}}%%
+flowchart TD
+    P["📂 std::filesystem::path"] --> OP{"🛠️ 执行操作"}
+    OP -- "exists / is_directory" --> Q["🔎 查询状态"]
+    OP -- "create_directory / remove" --> R["✏️ 修改文件系统"]
+    OP -- "directory_iterator" --> I["🔁 惰性遍历"]
+    OP -- "file_size / last_write_time" --> M["📊 元数据"]
+
+    Q --> ERR{"❓ 出错?"}
+    R --> ERR
+    I --> ERR
+    M --> ERR
+    ERR -- "是" --> E["💥 抛出<br/>filesystem_error"]
+    ERR -- "否" --> OK["✅ 返回结果"]
+    E --> H["🧯 try/catch<br/>或 error_code 重载"]
+    OK --> DONE["🎯 继续业务流程"]
+    H --> DONE
+
+    style P fill:#FFE5EC,stroke:#FFB3C6,color:#5D5D5D
+    style OP fill:#FFDAC1,stroke:#FFB3C6,color:#5D5D5D
+    style Q fill:#C7CEEA,stroke:#A8DADC,color:#5D5D5D
+    style R fill:#B5EAD7,stroke:#A8DADC,color:#5D5D5D
+    style I fill:#C7CEEA,stroke:#A8DADC,color:#5D5D5D
+    style M fill:#FFDAC1,stroke:#FFB3C6,color:#5D5D5D
+    style ERR fill:#FFE5EC,stroke:#FF9AA2,color:#5D5D5D
+    style E fill:#FFDAC1,stroke:#FF9AA2,color:#5D5D5D
+    style H fill:#C7CEEA,stroke:#A8DADC,color:#5D5D5D
+    style OK fill:#B5EAD7,stroke:#A8DADC,color:#5D5D5D
+    style DONE fill:#FFE5EC,stroke:#FFB3C6,color:#5D5D5D
+```
+
+本章讲 C++17 的 std::filesystem，对比维度：本特性 vs C / POSIX 旧写法 vs 其他语言文件 API。
+
+## 对比分析
+
+### 一、本特性 vs 旧写法
+
+| 维度 | C++17 写法 | C / POSIX 写法 | 影响 |
+|------|------------|----------------|------|
+| 路径 | `std::filesystem::path p("a/b.txt");` | `char*` / `std::string` | 类型化、自动归一化 |
+| 检查存在 | `fs::exists(p)` | `access(p.c_str(), F_OK)` | 可读性 |
+| 创建目录 | `fs::create_directories(p)` | `mkdir(...)`（需多级递归） | 一行 |
+| 列目录 | `for (auto& e : fs::directory_iterator(p))` | `opendir/readdir/closedir` | RAII + 异常 |
+| 文件大小 | `fs::file_size(p)` | `stat(...)` | 跨平台 |
+
+### 二、对比其他语言
+
+| 语言 | 文件系统库 | 风格 |
+|------|------------|------|
+| C++17 | `std::filesystem` | 面向对象 + RAII |
+| Python | `pathlib` / `os` | OO / 函数式混搭 |
+| Java | `java.nio.file.Files` | 静态方法 + Path |
+| Rust | `std::fs` | Result + 强类型 |
+| Go | `os` / `filepath` | 函数式 + error |
+
+### 三、优缺点
+
+优点：
+- 跨平台统一 API
+- 与 STL 风格一致：迭代器、异常、类型化
+
+缺点：
+- 异常 / 错误码两种风格混用，调用前需选好策略
+- 在某些嵌入式平台支持有限
+
+### 四、何时选
+
+- 新项目：直接使用 std::filesystem
+- 维护老代码：可逐步替换关键路径
