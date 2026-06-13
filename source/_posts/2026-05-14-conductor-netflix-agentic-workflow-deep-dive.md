@@ -796,3 +796,53 @@ mindmap
 3. **向量数据库深度集成**：RAG 任务与 pgvector/Pinecone/MongoDB Atlas 的集成正在从"能用"走向"好用"
 
 Conductor 代表了一类不同于 LangChain/AutoGen 的 AI Agent 基础设施思路——**它不追求"让 AI 帮你写代码"，而是追求"让 AI 工作流在生产环境中可靠运行"**。这种务实的设计哲学，是它能在 Netflix、Tesla 等公司经受住十年生产验证的根本原因。
+
+## 对比分析
+
+把 Conductor 放进更广阔的"工作流编排 / Agent 基础设施"坐标里，差异才能被看清。下面选取最常被拿来对比的三个项目，从定位、架构范式、生态适配三个维度展开。
+
+### 维度一：项目定位与抽象层级
+
+| 项目 | 核心抽象 | 目标场景 | 持久化模型 | AI 任务一等公民 |
+|------|----------|----------|------------|----------------|
+| Conductor (Netflix) | Workflow + Task + JSON DSL | 跨服务编排 + Agent 工作流 | 内置 RDBMS/Cassandra/SQLite | ✅（LLM_CHAT_COMPLETE/MCP_TOOL） |
+| Temporal | Workflow + Activity + Type-safe SDK | 长生命周期业务工作流 | 自带持久化 + Visibility DB | ⚠️ 需自行封装 Activity |
+| Apache Airflow | DAG + Operator + Task | 批处理 ETL 调度 | Metadata DB（MySQL/Postgres） | ❌ 需 Operator 自定义 |
+
+### 维度二：执行模型与可靠性
+
+- ✅ **Conductor**：轮询 + ACK 模型，任务级幂等、retries、rateLimit、timeout 全在 DSL 显式声明；适合"高并发 + 长时间 + 多类型任务"
+- ✅ **Temporal**：事件溯源 + 确定性重放（deterministic replay），SDK 强类型，最适合"业务核心长事务"；但 AI 调用是 side effect，需要把 LLM 调用包成 Activity
+- ⚠️ **Airflow**：调度器（Scheduler）+ 执行器（Executor）分离，DAG 静态解析，无法承载秒级以下动态分支；Agent 场景需要写 Custom Operator，改造成本高
+
+### 维度三：生态与多语言
+
+- Conductor：Java 为主，Python/JS/Go SDK 持续完善；原生支持 MCP、RAG、Vector DB
+- Temporal：Go/Java/Python/TypeScript/.NET/PHP/Ruby 全语言 SDK，企业版（Temporal Cloud）成熟
+- Airflow：Python 一家独大，Operator 生态丰富但其它语言 Worker 几乎为零
+
+**优缺点小结**
+
+- Conductor：开源 + 自带 AI 任务类型 + 多存储后端 + 不绑定云的"中间路线"；缺点是 UI/运维体系不如 Temporal Cloud 商业版精致，文档对新人不算友好
+- Temporal：可靠性与可观测性工业级标杆；缺点是自托管（Self-hosted）运维复杂，对 AI 原生场景需要做额外封装
+- Airflow：批处理调度的事实标准，社区/插件最多；缺点是动态工作流支持弱，不适合"边走边决策"的 Agent 场景
+
+**何时选 Conductor**
+
+- 多团队、多租户、需要把 LLM/MCP/RAG 任务与微服务调用统一编排
+- 希望"开源 + 多种存储后端（Postgres/MySQL/Cassandra/SQLite）+ 多队列（Redis/SQS/Kafka）"可热插拔
+- 不希望被单一云厂商绑定
+
+**何时不选 Conductor**
+
+- 业务核心是"强一致、长事务、跨年"——Temporal 更稳
+- 只是跑定时 ETL 批处理——Airflow 生态更厚
+- 完全不需要持久化编排，临时搭个脚本即可——任何引擎都过重
+
+**参考资料**
+
+- Conductor GitHub：<https://github.com/conductor-oss/conductor>
+- Temporal 官方文档：<https://temporal.io/blog/temporal-vs-conductor>
+- Apache Airflow：<https://airflow.apache.org/>
+- Netflix Tech Blog：<https://netflixtechblog.com/netflix-conductor-a-microservices-orchestrator-32e8c7f3cc0>
+- "Conductor vs Airflow vs Temporal" 社区对比：<https://orkes.io/blog/conductor-vs-airflow-vs-temporal/>
