@@ -762,3 +762,40 @@ OpenClaw是一个功能丰富的AI Agent平台，本文覆盖了它最核心的�
 ---
 
 *如有疑问，欢迎交流。*
+
+---
+
+## 对比分析
+
+OpenClaw 是 Hermes Agent 的生产部署形态。下面与同样关注"长会话节点编排"的两个开源项目做对比：pi-mono（编排调度）和 LangGraph（节点编排框架）。
+
+### 对比维度一：节点与会话模型
+| 维度 | OpenClaw | pi-mono | LangGraph |
+| --- | --- | --- | --- |
+| 会话抽象 | 节点（Node）+ 心跳（Heartbeat） | 任务循环 + 工具列表 | 图节点 + 边 + Checkpointer |
+| 持久化 | 内置节点状态持久 | 不强制持久 | 需要外接 Checkpointer |
+| 编排方式 | 显式声明式 | 命令式 | 声明式 |
+| 多人协作 | 通过节点共享 | 否 | 共享同一图 |
+
+### 对比维度二：生产部署适配
+| 维度 | OpenClaw | pi-mono | LangGraph |
+| --- | --- | --- | --- |
+| 自托管成本 | 低 | 低 | 中（需要服务化） |
+| 监控与重试 | 内置心跳 | 自实现 | 框架支持 |
+| 模型选择 | 多模型混合 | 任意 LLM | 任意 LLM |
+| 适合场景 | 7×24 个人助手 | 一次性编程任务 | 复杂业务工作流 |
+
+### 优缺点
+- **OpenClaw**：会话 + 心跳模型贴合长期 Agent；生态主要围绕 Hermes，扩展主要靠自己。
+- **pi-mono**：轻量、命令式、单二进制；缺乏持久化和多节点调度能力。
+- **LangGraph**：图模型表达力强、适合业务流程；需要自己补运行/调度层。
+
+### 何时选哪个
+- 想做 7×24 长期运行的 Agent → 选 OpenClaw
+- 写单进程编程 Agent、不需要长会话 → 选 pi-mono
+- 业务流复杂，需要可视化编排 → 选 LangGraph
+
+### 参考资料
+- OpenClaw 仓库：https://github.com/NousResearch/openclaw
+- pi-mono 仓库：https://github.com/malcolmyu/pi-mono
+- LangGraph 仓库：https://github.com/langchain-ai/langgraph
