@@ -810,3 +810,46 @@ nanobot 代表了一种**"做减法"**的 Agent 设计哲学。在各大框架�
 ---
 
 *本文基于 nanobot v0.1.5.post2 版本编写，代码分析基于 GitHub 最新源码。*
+---
+
+## 对比分析
+
+nanobot 强调"小而可读"的 Agent 核心循环，与同样轻量的 smolagents、AutoGen 在定位上形成对比。
+
+### 维度对比表
+
+| 维度 | nanobot | smolagents (HuggingFace) | AutoGen (基础 Agent) |
+|------|---------|-------------------------|----------------------|
+| 核心代码量 | 极小（核心循环百行级） | 较小（库设计紧凑） | 较大（多模块） |
+| 语言 | Python | Python | Python |
+| MCP 支持 | 原生 MCP 客户端 | 通过工具扩展 | 通过工具扩展 |
+| 多模态 | 文本 + 图像 + 音频 | 文本为主 | 文本 + 视觉 |
+| 多 Agent | 较弱（轻量定位） | 支持 | 强（群聊模式） |
+| 学习价值 | 极高（核心循环易读） | 高 | 中（抽象较多） |
+| 适合场景 | 个人/轻量 Agent 定制、教学 | 研究 + 快速实验 | 企业级多 Agent 协作 |
+
+### 优缺点
+
+nanobot
+- 优点：核心代码极简、易读、易定制；MCP 原生；个人 AI Agent / 教学场景极友好；HKUDS 团队维护，社区质量高。
+- 缺点：企业级特性（权限、审计、多租户）尚未完善；多 Agent 协作能力有限；WebUI 仍在完善中。
+
+smolagents
+- 优点：HF 生态加持，模型集成方便；库设计紧凑；适合研究。
+- 缺点：生产特性较弱；多 Agent 能力不强；抽象仍在演进。
+
+AutoGen
+- 优点：微软支持、多 Agent 群聊模式成熟；企业级特性多。
+- 缺点：抽象层多，学习曲线较陡；核心循环对学习者不友好。
+
+### 何时选
+
+- 选 nanobot：你想学习 Agent 核心循环的"最小可用实现"，或在个人/小团队项目中定制轻量 Agent。
+- 选 smolagents：你是 HF 生态研究者，需要快速实验。
+- 选 AutoGen：你构建企业级多 Agent 协作系统，需要成熟的群聊/工作流模式。
+
+### 参考资料
+
+- nanobot GitHub：https://github.com/HKUDS/nanobot
+- smolagents GitHub：https://github.com/huggingface/smolagents
+- AutoGen GitHub：https://github.com/microsoft/autogen
