@@ -57,7 +57,7 @@ print(msg)
 ```
 
 输出：
-```
+```text
 Message(role='user', content='Hello', timestamp=1745312400.123)
 ```
 
@@ -322,7 +322,7 @@ print(agent.execute_tool("calculator", {"expr": "2+2"}))
 ```
 
 **输出**：
-```
+```yaml
 Context: [{'role': 'user', 'content': "What's 2+2?"}]
 Executed calculator: {'expr': '2+2'}
 ```
@@ -434,7 +434,6 @@ graph TB
 
 *代码已通过 Python 3.11+ 验证。*
 ---
-
 ## 📚 Python AI教程 系列导航
 
 > 本文是《Python AI教程》系列第 **5/14** 篇。
@@ -463,3 +462,58 @@ graph TB
 14. [（十四）组合模式实战](/2026/04/23/2026-04-27-python-14-composite-ai-agent/)
 
 </details>
+
+## 对比分析
+
+本章核心是 `@dataclass`（PEP 557）与 `attrs` 库。
+
+### 维度一：数据类方案 vs 旧写法（手写 `__init__/__repr__/__eq__`）
+
+| 方案 | 样板代码 | 类型提示 | 不变性 | 验证 |
+|------|----------|----------|--------|------|
+| **手写类** | 大量 | 手动写 | ❌ 默认 | 手动 |
+| **@dataclass** | 一行 | 原生支持 | `frozen=True` 可选 | `__post_init__` |
+| **@dataclass(slots=True)**（3.10+） | 一行 + slots 加速 | 原生 | 同上 | 同上 |
+| **attrs** | 一行 + 装饰器 | 第三方支持 | `frozen=True` | 内置 validators |
+| **Pydantic BaseModel** | 一行 | 原生 | ❌ | 强大（带类型转换） |
+| **NamedTuple** | 类型注解中写 | 原生 | ✅ 天然不可变 | ❌ |
+
+### 维度二：与其他语言的数据类
+
+| 语言 | 类似特性 | 与 Python `@dataclass` 对比 |
+|------|----------|------------------------------|
+| **Java** | `record`（Java 14+） | 语法最像，编译期生成 `equals/hashCode/toString`；Python `@dataclass` 灵感正来源于此 |
+| **C++** | `struct` + 聚合初始化 | C++ 结构体默认公开，但需要手写 operator== 等 |
+| **Go** | `struct` | 没有自动生成 `Equal/Hash`，需要手写或用第三方 |
+| **Rust** | `struct` + `derive(Debug, Clone, PartialEq)` | 编译期生成，零运行时；可派生 Trait 是核心优势 |
+| **Kotlin** | `data class` | 几乎与 `@dataclass` 同语义，区别在平台生态 |
+| **Scala** | `case class` | 模式匹配 + 不可变 + 自动 equals；功能更丰富 |
+| **TypeScript** | `class` + 第三方 `class-validator` | 没有语言级支持，靠装饰器 + 反射 |
+
+### 维度三：`@dataclass` vs `attrs` vs `Pydantic`
+
+| 维度 | `@dataclass` | `attrs` | `Pydantic` |
+|------|--------------|---------|------------|
+| 依赖 | 标准库 | 第三方 | 第三方 |
+| 性能 | 中 | 中（带 `slots` 快） | 慢（运行时校验） |
+| 验证 | 无 | 内置 | 强大 |
+| 序列化 | 无 | `cattrs` 库 | 内置（JSON / dict） |
+| 不可变 | `frozen=True` | `frozen=True` | 不支持 |
+| 适用 | 内部 DTO、配置 | 复杂数据类 | API 边界、配置文件 |
+
+### 优缺点小结
+
+- **@dataclass**：零依赖、官方支持、社区最广；缺点是无验证、无 slots（3.10 前）
+- **attrs**：功能最丰富（validators / converters / slots / 演进支持）；缺点是需第三方依赖
+- **Pydantic**：验证 + 序列化一把梭；缺点是性能开销、对不可变性不友好
+- **Java record**：编译期保证、零运行时；缺点是 Java 生态绑定
+- **Rust struct + derive**：零成本抽象、Trait 派生灵活；缺点是所有权语义
+
+### 何时选
+
+- 选 **@dataclass**：默认推荐（标准库、AI 内部数据传递）
+- 选 **@dataclass(slots=True)**：需要大量实例（性能敏感）
+- 选 **attrs**：需要 validators / converters，但又不想要 Pydantic 的重量
+- 选 **Pydantic**：API 边界、外部输入（HTTP / 文件）
+- 选 **NamedTuple**：需要不可变 + 元组解包
+- 选 **TypedDict**：数据更像字典而非对象
