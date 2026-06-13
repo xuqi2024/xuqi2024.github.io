@@ -373,3 +373,40 @@ python -m spacy download en_core_web_sm
 > - [新算法迁移指南](https://docs.mem0.ai/migration/oss-v2-to-v3)
 > - [AWS 集成实践：用 Valkey + Neptune 构建持久记忆](https://aws.amazon.com/blogs/database/build-persistent-memory-for-agentic-ai-applications-with-mem0-open-source-amazon-elasticache-for-valkey-and-amazon-neptune-analytics/)
 > - [开源记忆基准测试框架](https://github.com/mem0ai/memory-benchmarks)
+
+---
+
+## 对比分析
+
+mem0 定位为"LLM 应用的记忆层"。下面与同样面向记忆层的两个项目做对比：Letta（前 MemGPT，记忆型 Agent 框架）和 MemMachine（学术研究向记忆库）。
+
+### 对比维度一：抽象层级
+| 维度 | mem0 | Letta | MemMachine |
+| --- | --- | --- | --- |
+| 抽象层级 | 记忆中间件 | Agent + 记忆一体 | 通用记忆库 |
+| 记忆类型 | 用户/会话/Agent | core/recall/archival | episodic/semantic/procedural |
+| 是否带 Agent | 否 | 是 | 否 |
+| 多语言 SDK | Python/JS | Python | Python |
+
+### 对比维度二：易用性
+| 维度 | mem0 | Letta | MemMachine |
+| --- | --- | --- | --- |
+| 上手时间 | 分钟级 | 小时级 | 小时级 |
+| 概念负担 | 低 | 中偏高 | 中 |
+| 后端替换 | 向量库可插拔 | Postgres/SQLite | Postgres |
+| 适合谁 | LLM 应用开发者 | Agent 产品开发者 | 研究者 |
+
+### 优缺点
+- **mem0**：作为"中间件"最易塞进既有应用；记忆结构相对固定，复杂策略要自实现。
+- **Letta**：把记忆与 Agent 一起做，长期 Agent 产品首选；不适合"只想要记忆"的项目。
+- **MemMachine**：学术范式最全；工程化封装少，需要更多自研工作。
+
+### 何时选哪个
+- 想给现有 LLM 应用加"用户记忆" → 选 mem0
+- 想做一个带长期记忆的 Agent 产品 → 选 Letta
+- 做记忆机制的学术研究 → 选 MemMachine
+
+### 参考资料
+- mem0 仓库：https://github.com/mem0ai/mem0
+- Letta 仓库：https://github.com/letta-ai/letta
+- MemMachine 仓库：https://github.com/MemMachine/MemMachine
