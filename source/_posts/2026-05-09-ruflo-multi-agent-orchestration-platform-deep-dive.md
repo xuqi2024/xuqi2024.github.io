@@ -121,7 +121,7 @@ graph TB
 
 ### 2.2 核心目录结构
 
-```
+```text
 ruflo/
 ├── v3/                          # V3 核心实现 (TypeScript)
 │   ├── src/
@@ -315,7 +315,7 @@ export class AgentDBBackend implements MemoryBackend {
 
 ### 4.3 自学习流程
 
-```
+```text
 1. 任务执行完成
 2. 提取成功模式（Pattern Extraction）
 3. 生成向量嵌入（Embedding）
@@ -445,7 +445,7 @@ Ruflo 的 Hook 系统是其"神经中枢"，通过预置的钩子点实现任务
 
 ### 7.2 路由决策流程
 
-```
+```text
 PreToolUse (Bash 命令)
     ↓
 Hook 拦截分析命令模式
@@ -513,7 +513,7 @@ export interface Plugin {
 
 ### 8.3 插件生命周期
 
-```
+```text
 Load → Validate Config → Check Dependencies → Initialize → Register Extension Points
                                                               ↓
                                               Shutdown ← Unregister ← Remove Extension Points
@@ -704,3 +704,45 @@ Ruflo 成功地将**多智能体协作**从理论带入生产环境。它的核�
 - GitHub：https://github.com/ruvnet/ruflo
 - 官网：https://flo.ruv.io/
 - 目标规划：https://goal.ruv.io/
+---
+
+## 对比分析
+
+Ruflo（来自 ruvnet）是多 Agent 编排平台，主打"自学习 + 联邦通信 + 插件化"，与 Microsoft AutoGen、OpenAI Agents SDK 在编排架构与目标用户上差异较大。
+
+### 维度对比表
+
+| 维度 | Ruflo | Microsoft AutoGen | OpenAI Agents SDK |
+|------|-------|-------------------|--------------------|
+| 编排模型 | 工作流引擎 + 自学习 + 联邦 | 群聊 + 用户代理 | Handoff + Guardrails |
+| 自学习 | 内置（Self-Learning / SPADE） | 较弱 | 不涉及 |
+| 联邦/分布式 | 设计目标 | 不强调 | 不涉及 |
+| 目标用户 | 企业级 + 复杂工作流 | 企业级 / 研究 | 生产项目 |
+| 协议支持 | MCP + 自有 | MCP + A2A | MCP + 自有 |
+| 稳定性 | Alpha，Breaking Changes 多 | 较稳定 | 稳定 |
+
+### 优缺点
+
+Ruflo
+- 优点：插件化架构；自学习能力；联邦通信设计；适合复杂工作流与跨机器协作。
+- 缺点：Alpha 阶段，Breaking Changes 较多；学习曲线陡；不适合轻量场景。
+
+AutoGen
+- 优点：微软支持、群聊模式成熟；企业级特性多。
+- 缺点：自学习能力弱；联邦/分布式非核心。
+
+OpenAI Agents SDK
+- 优点：Handoff 模式直观；MCP 原生；安全护栏内建；上手快。
+- 缺点：聚焦 OpenAI 模型；自学习/联邦不在范围。
+
+### 何时选
+
+- 选 Ruflo：跨机器/跨团队的复杂工作流编排、愿意承受 Alpha 不稳定性。
+- 选 AutoGen：企业级多 Agent 对话、研究/灵活协作。
+- 选 OpenAI Agents SDK：需要 Handoff + Guardrails 的生产项目，OpenAI 生态。
+
+### 参考资料
+
+- Ruflo GitHub：https://github.com/ruvnet/ruflo
+- AutoGen 文档：https://microsoft.github.io/autogen/
+- OpenAI Agents SDK：https://github.com/openai/openai-agents-python
