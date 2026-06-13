@@ -641,7 +641,7 @@ asyncio.run(main())
 
 ### 运行结果
 
-```
+```text
 响应: 北京今天天气怎么样？
 根据查询，北京今天的天气是：
 
@@ -685,3 +685,45 @@ Google ADK 是一款**设计精良**的 Agent 开发框架：
 - GitHub: https://github.com/google/adk-python
 - 文档: https://google.github.io/adk-docs/
 - 示例: https://github.com/google/adk-samples
+---
+
+## 对比分析
+
+Google ADK 是大厂出品的 Agent 框架，与 LangGraph（状态图）、CrewAI（角色驱动）在设计哲学与生态策略上有明显区别。
+
+### 维度对比表
+
+| 维度 | Google ADK | LangGraph | CrewAI |
+|------|------------|-----------|--------|
+| 核心理念 | 代码优先 + 六层架构 + A2A | 状态图（StateGraph） | 角色驱动流水线 |
+| 多 Agent 模式 | 内置 Sequential / Parallel / Loop | 通过图编排 | Crew + Task |
+| 协议支持 | A2A + MCP | MCP（社区） | MCP（社区） |
+| 调试/可观测 | 内置 trace、eval | LangSmith | 较弱 |
+| 生态阶段 | 较新（Google 持续投入） | 成熟（LangChain 子项目） | 成熟 |
+| 适合场景 | Google 生态团队、生产级 | 复杂状态、长流程 | 角色化内容流水线 |
+
+### 优缺点
+
+Google ADK
+- 优点：代码优先理念调试简单；六层架构清晰；内置多 Agent 模式；A2A 原生；Google 持续投入。
+- 缺点：生态与社区仍在成长；学习成本取决于 Google 生态熟悉度；非 Google 团队收益较小。
+
+LangGraph
+- 优点：状态图表达力极强；持久化、checkpoint、human-in-loop 成熟；LangChain 生态加持。
+- 缺点：需理解图论概念；抽象层相对深。
+
+CrewAI
+- 优点：角色驱动直观、上手最快；Pythonic。
+- 缺点：复杂状态管理与精细流程不如 LangGraph；A2A 等新协议支持依赖社区。
+
+### 何时选
+
+- 选 Google ADK：Google Cloud / Gemini 生态团队、生产级多 Agent、关注 A2A 互联。
+- 选 LangGraph：复杂状态、长流程、强 human-in-loop、跨 Python/TS 团队。
+- 选 CrewAI：角色化内容流水线、原型优先。
+
+### 参考资料
+
+- Google ADK 文档：https://google.github.io/adk-docs/
+- LangGraph：https://langchain-ai.github.io/langgraph/
+- CrewAI：https://docs.crewai.com/
