@@ -512,3 +512,44 @@ Cognee 代表了 Agent Memory 领域的一个重要方向：**从扁平的向量
 **项目链接**：https://github.com/topoteretes/cognee
 **星标数**：17,000+
 **最新活跃**：2026-05-06
+---
+
+## 对比分析
+
+Cognee 用"向量 + 知识图谱"双栈做 Agent 记忆，与纯向量方案（mem0）以及图数据库优先方案（如 Neo4j + LangChain）形成对比。
+
+### 维度对比表
+
+| 维度 | Cognee | mem0 | Neo4j + LangChain |
+|------|--------|------|---------------------|
+| 检索栈 | 向量 + 图谱推理 | 向量为主 + 关键词/时序 | 图谱为主（Cypher 查询） |
+| 数据建模 | 自动抽取实体/关系 → ERL 流水线 | 三层记忆（情景/语义/程序性） | 手动建模图谱或自动抽取 |
+| API 抽象 | remember / recall / forget / improve | add/search/update/delete | Cypher + LangChain Retriever |
+| 可插拔后端 | 向量库 + 图库均可替换 | 向量库可替换 | 图库通常固定 Neo4j |
+| 适合场景 | 结构化推理 + 语义相似性混合 | 通用 Agent 长期记忆 | 关系密集、强结构化查询 |
+
+### 优缺点
+
+Cognee
+- 优点：双栈检索兼顾速度与推理深度；统一 API 简洁；后端可插拔；Pipeline 灵活。
+- 缺点：Pipeline 配置较复杂；图谱抽取质量依赖 LLM；相对年轻，企业案例仍在积累。
+
+mem0
+- 优点：成熟、社区大、云/OSS 双轨；接入简单。
+- 缺点：以向量为主，结构化推理能力弱于图谱方案。
+
+Neo4j + LangChain
+- 优点：图查询表达力强（Cypher）；关系型问题效率高；图数据库生态成熟。
+- 缺点：语义相似性检索弱；建模成本高；图抽取与 LangChain 集成需自行维护。
+
+### 何时选
+
+- 选 Cognee：需要混合语义检索 + 结构化推理、关注后端可插拔。
+- 选 mem0：通用 Agent 记忆、追求生态与上手速度。
+- 选 Neo4j + LangChain：关系密集型应用（如企业知识图谱、欺诈检测关联分析）。
+
+### 参考资料
+
+- Cognee GitHub：https://github.com/topoteretes/cognee
+- mem0 GitHub：https://github.com/mem0ai/mem0
+- Neo4j + LangChain 集成：https://python.langchain.com/docs/integrations/graphs/
