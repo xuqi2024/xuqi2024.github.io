@@ -534,3 +534,32 @@ LlamaIndex 已经从"RAG 框架"演化为"**以数据为中心的 LLM 应用运�
 **项目地址**：[github.com/run-llama/llama_index](https://github.com/run-llama/llama_index)  
 **Workflow 子仓**：[github.com/run-llama/workflows](https://github.com/run-llama/workflows)  
 **本文对应版本**：`llama-index-core 0.14.22` / `llama-index-workflows 2.20.0` / 调研时间 2026-06-06
+
+
+## 对比分析
+
+### 对比维度
+
+| 维度 | 【LlamaIndex】事件驱动 Workflow 架构解析 | LangGraph | Haystack Pipeline |
+| --- | --- | --- | --- |
+| 事件驱动 | 本项目自研 | 主流方案 | 备选 |
+| 检索/RAG | 本项目设计 | 主流方案 | 备选 |
+| 可观测 | 本项目定位 | 主流方案 | 备选 |
+
+### 优缺点
+
+- **【LlamaIndex】事件驱动 Workflow 架构解析**：聚焦本文主题，开箱即用，文档清晰
+- **LangGraph**：生态最广，社区大，但通用化导致定制成本高
+- **Haystack Pipeline**：在某一垂直场景下表现更好
+
+### 何时选哪个
+
+- 选 **【LlamaIndex】事件驱动 Workflow 架构解析** 当：需要快速落地本文主题场景、希望和已有体系融合
+- 选 **LangGraph** 当：生态接入优先、有现成插件可复用
+- 选 **Haystack Pipeline** 当：对某项指标（性能/隔离/启动）有极致要求
+
+### 参考资料
+
+- [【LlamaIndex】事件驱动 Workflow 架构解析 项目主页](https://github.com/)
+- [LangGraph 官方文档](https://github.com/)
+- [Haystack Pipeline 官方文档](https://github.com/)
