@@ -330,3 +330,75 @@ sudo ./install.sh
 13. [第十三章：调试](/2024/03/21/13-调试/)
 
 </details>
+## 对比分析
+
+本章讲述共享库版本管理（SO_NAME、real name、linker name）、soname、`ldconfig` 缓存、`LD_LIBRARY_PATH` 搜索顺序。本节对比 Linux/macOS/Windows 的库管理机制。
+
+### 1. Linux 三种文件名对比
+
+| 名称 | 例子 | 作用 | 谁创建 |
+|:--|:--|:--|:--|
+| 真实名（real name） | libfoo.so.1.2.3 | 磁盘上真正文件 | 编译时 |
+| SO_NAME | libfoo.so.1 | 符号链接，标记 ABI 主版本 | 编译时 -Wl,-soname |
+| 链接名（linker name） | libfoo.so | 编译时 -lfoo 查找 | 发行包 / ldconfig |
+
+### 2. 库搜索路径优先级对比
+
+| Linux | macOS | Windows |
+|:--|:--|:--|
+| LD_LIBRARY_PATH | DYLD_LIBRARY_PATH | PATH |
+| DT_RUNPATH / DT_RPATH | LC_LOAD_DYLIB rpath | DLL 搜索路径 |
+| /etc/ld.so.cache | dyld shared cache | Known DLLs |
+| /lib, /usr/lib, /usr/local/lib | /usr/lib | System32 |
+
+### 3. 缓存机制对比
+
+| 工具 | 缓存内容 | 触发时机 | 失效处理 |
+|:--|:--|:--|:--|
+| ldconfig | SONAME → 真实路径映射 | 安装/系统启动 | 自动重建 |
+| dyld shared cache | 预链接的所有 .dylib | OS 升级 | OS 工具重建 |
+| ld.so.cache | 同上 | ldconfig 写入 | 程序启动时 mmap 读取 |
+
+### 4. 版本号规范对比
+
+| 规范 | 来源 | 含义 |
+|:--|:--|:--|
+| libtool 版本（current:revision:age） | GNU libtool | 兼容性计算 |
+| SemVer（major.minor.patch） | 业界惯例 | 主版本 = ABI 破坏 |
+| PE VERSIONINFO | Windows | 资源段中 |
+| Apple compat_version | Mach-O | 二级兼容号 |
+
+### 5. 优缺点
+
+- 优点：soname + 符号链接构成清晰版本契约；ldconfig 缓存让启动飞快。
+- 缺点：发行版之间 ABI 漂移历史问题多（glibc 兼容性闻名）；`LD_LIBRARY_PATH` 滥用导致测试与生产不一致。
+
+### 6. 何时选
+
+- 写库：发版即改 SO_NAME，遵循 SemVer；提供 `.pc` 给 pkg-config。
+- 部署：用 `patchelf --set-rpath '$ORIGIN/../lib'` 嵌入 RPATH，避免 `LD_LIBRARY_PATH`。
+- 排错：`readelf -d prog | grep -E 'NEEDED|RUNPATH'` 看清依赖。
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#C8E6C9','primaryTextColor':'#2E5D3A','primaryBorderColor':'#A5D6A7','lineColor':'#B39DDB','secondaryColor':'#FFD6E0','tertiaryColor':'#CDE7FF'}}}%%
+flowchart LR
+    REAL["libfoo.so.1.2.3<br/>(真实名)"] -->|soname 链| SO["libfoo.so.1<br/>(SO_NAME)"]
+    SO -->|ldconfig| LINK["libfoo.so<br/>(链接名)"]
+    LINK -->|-lfoo| CC["编译时查找"]
+
+    REAL -.DT_NEEDED.-> PROG["可执行文件"]
+    SO -.DT_SONAME.-> PROG
+
+    PROG -->|启动时| LDSO["ld.so"]
+    LDSO -->|查 /etc/ld.so.cache| CACHE["缓存映射"]
+    LDSO -->|查 RPATH/RUNPATH| RPATH["嵌入路径"]
+    LDSO -->|查 LD_LIBRARY_PATH| LP
+    LDSO -->|默认| SYS["/lib, /usr/lib"]
+
+    classDef real fill:#C8E6C9,stroke:#A5D6A7,color:#2E5D3A
+    classDef prog fill:#FFE0B2,stroke:#FFCC80,color:#6B4A1F
+    classDef search fill:#CDE7FF,stroke:#A8C5E0,color:#2A4A6B
+    class REAL,SO,LINK real
+    class PROG,LDSO,CACHE,RPATH,LP,SYS search
+    class CC prog
+```
