@@ -41,7 +41,7 @@ tags:
 
 图书馆的解决方案是**索引卡**：每个关键词一张卡片，卡片上记录"这个词出现在哪些书的哪些页"。
 
-```
+```text
 词条(Term)   →   文档列表(Posting List)
 ──────────────────────────────────────
 "quickwit"  →  [doc_3, doc_17, doc_892]
@@ -76,7 +76,7 @@ graph LR
 
 "Quickwit的架构设计很精妙"在建索引前会先被**分词器（Tokenizer）**拆解：
 
-```
+```text
 原文：Quickwit的架构设计很精妙
 ↓ 分词
 词条：["quickwit", "架构", "设计", "精妙"]
@@ -179,7 +179,7 @@ Quickwit 底层使用 **Tantivy**，这是 Rust 生态中最成熟的全文搜�
 
 Tantivy 对数值型和时间型字段提供**列存储（Columnar Store）**，称为 Fast Fields：
 
-```
+```text
 行存储（Row Store）— 传统方式：
 Doc1: {timestamp: 1713200000, level: "ERROR", message: "disk full"}
 Doc2: {timestamp: 1713200001, level: "INFO",  message: "startup ok"}
@@ -243,7 +243,7 @@ flowchart TD
 
 Quickwit 继承了 Tantivy 的 BM25（Best Matching 25）算法进行相关性打分，公式简化为：
 
-```
+```text
 Score(doc, query) = Σ IDF(term) × TF(term, doc) / (TF + k₁ × (1 - b + b × |doc|/avgdl))
 ```
 
@@ -410,7 +410,7 @@ curl -X POST "http://localhost:7280/api/v1/my-logs/search" \
 
 ### 成本对比（10 TB 日志，保存 90 天）
 
-```
+```text
 Elasticsearch（3节点 × 16核 64GB，每节点挂 4TB SSD）：
   计算：3 × $3,000/月 = $9,000/月
   存储：12TB SSD ≈ $1,200/月
@@ -474,3 +474,39 @@ Quickwit 不是 Elasticsearch 的全面替代，而是一个**更专注的工具
 ---
 
 > 搜索引擎的核心竞争力不在于代码写得有多炫，而在于有没有把数据放在"最省力气就能找到"的地方。Quickwit 做到了这一点。
+
+---
+
+## 对比分析
+
+Quickwit 主打云原生日志/全文检索。下面与同样面向"低成本全文检索"的两个真实开源项目做对比：Tantivy（Quickwit 的底层引擎，也独立可用）和 Meilisearch（轻量级搜索引擎）。
+
+### 对比维度一：架构与部署
+| 维度 | Quickwit | Tantivy | Meilisearch |
+| --- | --- | --- | --- |
+| 形态 | 分布式检索服务 | Rust 全文索引库 | 单二进制搜索引擎 |
+| 部署方式 | 集群 + 对象存储 | 嵌入进程 | 单节点/集群 |
+| 索引存储 | S3/本地 + 分片 | 本地 MMap | 本地文件 |
+
+### 对比维度二：能力侧重
+| 维度 | Quickwit | Tantivy | Meilisearch |
+| --- | --- | --- | --- |
+| 查询语言 | 类 ES query DSL | 自定义代码 | 简单 JSON 查询 |
+| 写入吞吐 | 高（append-only） | 取决于宿主进程 | 中等 |
+| 即时搜索 | 准实时 | 取决于实现 | 毫秒级 |
+| 适合场景 | 日志/可观测/日志归档 | 自建搜索引擎 | 应用内搜索框 |
+
+### 优缺点
+- **Quickwit**：S3 原生 + 分片让它适合海量低成本日志；不适合做低延迟应用搜索。
+- **Tantivy**：性能最强的 Rust 引擎；需要自己写服务封装。
+- **Meilisearch**：小项目搜索框的"开箱即用之王"；分布式能力有限。
+
+### 何时选哪个
+- 跑日志/可观测 + 想省钱 → 选 Quickwit
+- 想在 Rust 应用内嵌入一个搜索引擎 → 选 Tantivy
+- 想给中小网站/应用加即时搜索 → 选 Meilisearch
+
+### 参考资料
+- Quickwit 仓库：https://github.com/quickwit-oss/quickwit
+- Tantivy 仓库：https://github.com/quickwit-oss/tantivy
+- Meilisearch 仓库：https://github.com/meilisearch/meilisearch
