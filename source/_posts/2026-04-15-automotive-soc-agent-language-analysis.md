@@ -250,3 +250,40 @@ timeline
 ---
 
 *本文会持续更新，欢迎通过GitHub Issues交流讨论*
+
+---
+
+## 对比分析
+
+本文讨论车端 SOC 上 Agent 开发语言的选择。下面选取两个典型"AI Agent + 嵌入式 / 车机"风格的真实项目做参照：一个是使用 Rust 的 pi-mono，一个是使用 Python 的 Hermes Agent，对照点放在"语言 + Agent 栈"组合上。
+
+### 对比维度一：语言与运行时特性
+| 维度 | 本文 SOC Agent 路线 | pi-mono（Rust） | Hermes Agent（Python） |
+| --- | --- | --- | --- |
+| 主语言 | 通常 C/C++ + 桥接脚本 | Rust | Python |
+| 启动体积 | 受车机限制 | 极小，单二进制 | 需 Python 运行时 + 依赖 |
+| 性能 | 最高，可控 | 高 | 中等 |
+| 安全边界 | 进程隔离 + 域控 | 类型 + 借用检查保证 | 靠 sandbox 与权限设计 |
+
+### 对比维度二：Agent 工具链成熟度
+| 维度 | 本文 SOC Agent 路线 | pi-mono | Hermes Agent |
+| --- | --- | --- | --- |
+| LLM SDK 生态 | 通常通过 C++ 包装 | Rust 生态较薄，需自封装 | 生态最丰富（OpenAI/Anthropic 等） |
+| 工具调用协议 | 自定义 | 自定义精简 | MCP / 函数调用 |
+| 调试与可观测 | 难度高，需配合仿真器 | CLI + 日志清爽 | CLI/TUI + FTS5 检索 |
+| 跨平台部署 | 受 BSP 限制 | 编译产物直接跑 | 容器或本地脚本 |
+
+### 优缺点
+- **本文 SOC 路线**：性能与可控性最好，但要兼顾车机 BSP 与 AI 生态"语言鸿沟"。
+- **pi-mono（Rust）**：单二进制、内存安全、最适合工具密集型 Agent；AI SDK 还不够丰富。
+- **Hermes Agent（Python）**：生态最完整、迭代最快；运行时偏重，不直接进 SOC。
+
+### 何时选哪个
+- 真正落地车机/座舱 Agent 内核 → 走本文 C/C++ 主 + 脚本桥接路线
+- 写桌面/开发机端通用 Agent 工具 → 选 Rust 路线 pi-mono
+- 写 Python 实验型长期助手 → 选 Hermes Agent 路线
+
+### 参考资料
+- pi-mono 仓库：https://github.com/malcolmyu/pi-mono
+- Hermes Agent 仓库：https://github.com/NousResearch/Hermes-Agent
+- AUTOSAR Adaptive / Classic 平台文档
