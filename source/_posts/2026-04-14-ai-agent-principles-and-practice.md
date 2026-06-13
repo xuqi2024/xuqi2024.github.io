@@ -689,7 +689,7 @@ class AutoGPTAgent:
 ```
 Thought: <你的思考>
 Action: <工具名>(<参数>)
-```
+```python
 """
     
     def run(self, initial_task: str) -> str:
@@ -1586,3 +1586,40 @@ Agent 能够自主完成复杂任务，并与人类或其他 Agent 协作。
 *本文档会持续更新，欢迎提出建议和补充。*
 
 *最后更新：2026 年 4 月*
+
+---
+
+## 对比分析
+
+本文作为入门总览，下面对比两个常被同时提及的入门级 Agent 编排框架：LangChain（Agents 模块）和 LangGraph，前者偏链式工具调用，后者偏有状态工作流。
+
+### 对比维度一：编程模型与抽象
+| 维度 | 本文思路（ReAct + 工具） | LangChain Agent | LangGraph |
+| --- | --- | --- | --- |
+| 抽象方式 | 手写 ReAct 循环 | AgentExecutor 封装 ReAct / OpenAI Tools | 图节点 + 边 + 状态 |
+| 状态管理 | 消息列表手动维护 | 内置 memory 抽象 | 内置 State / Checkpointer |
+| 控制流 | 串行循环 | 串行 + 简单分支 | 任意 DAG / 循环 / 人机交互 |
+| 可调试性 | 直接看 prompt | verbose 日志 | 图可视化 + 时间旅行 |
+
+### 对比维度二：上手门槛与生产路径
+| 维度 | 本文思路 | LangChain Agent | LangGraph |
+| --- | --- | --- | --- |
+| 学习曲线 | 低，自己能看清每一步 | 中，封装多概念多 | 中偏高，需要理解图论 |
+| 适合教学 | 最合适，零黑盒 | 一般 | 不适合第一课 |
+| 适合生产 | 不推荐直接照搬 | 简单场景够用 | 复杂流程首选 |
+| 生态绑定 | 无 | LangChain 全家桶 | LangChain 全家桶 |
+
+### 优缺点
+- **本文手写 ReAct**：最透明，便于理解 Agent 本质；不适合复杂多分支业务。
+- **LangChain Agent**：生态最广、教程最多；抽象层多，调试时容易陷入"黑盒"。
+- **LangGraph**：用图描述工作流，对循环与人机交互天然友好；学习成本高于链式调用。
+
+### 何时选哪个
+- 教学、自学、第一份 Agent 代码 → 选本文手写 ReAct 路线
+- 想快速搭一个能跑的聊天/工具 Agent → 选 LangChain Agent
+- 流程复杂、需要人机协作、可视化追踪 → 选 LangGraph
+
+### 参考资料
+- ReAct 论文：https://arxiv.org/abs/2210.03629
+- LangChain Agents 文档：https://python.langchain.com/docs/modules/agents/
+- LangGraph 仓库：https://github.com/langchain-ai/langgraph
