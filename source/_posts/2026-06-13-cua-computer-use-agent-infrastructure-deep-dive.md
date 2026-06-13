@@ -149,7 +149,7 @@ self.provider = VMProviderFactory.create(os_type, **kwargs)  # VM 生命周期
 
 `libs/python/computer/computer/interface/` 下有 5 个文件：
 
-```
+```text
 interface/
 ├── __init__.py
 ├── android.py    # Android ADB/UIAutomator 适配
@@ -270,7 +270,7 @@ class OtelInterfaceWrapper(BaseInterface):
 
 `libs/python/computer/computer/providers/` 下的目录：
 
-```
+```text
 providers/
 ├── base.py                  # VMProviderType 枚举 + BaseProvider 抽象
 ├── factory.py               # VMProviderFactory.create(os_type)
@@ -425,7 +425,7 @@ class ComputerAgent:
 
 `cua_agent/adapters/` 下的文件：
 
-```
+```text
 adapters/
 ├── base.py            # BaseAdapter 抽象
 ├── cua.py             # CUAAdapter: 接 trycua.com 云端 Computer-Use API
@@ -634,7 +634,7 @@ irm https://raw.githubusercontent.com/trycua/cua/main/libs/cua-driver/scripts/in
 
 **Agent-S**（之前我们文章分析过的项目）走的是「**双 Agent 协作**」路线：
 
-```
+```text
 用户目标 → Planner Agent（生成多步计划）
        → Executor Agent（逐步执行 + 反思）
        → OSWorld 评测 → 72.6% SOTA
@@ -642,7 +642,7 @@ irm https://raw.githubusercontent.com/trycua/cua/main/libs/cua-driver/scripts/in
 
 cua 走的是「**平台 + 生态**」路线：
 
-```
+```text
 任何 VLM 模型
    ↓
 ComputerAgent (cua-agent)
@@ -933,3 +933,32 @@ cua 值得你花一周时间深入。
 **License**：MIT（核心 SDK）+ Apache-2.0（部分子项目）
 
 **最近更新**：2026-06-12（commit 活跃，PR 响应快）
+
+
+## 对比分析
+
+### 对比维度
+
+| 维度 | Cua 核心架构与设计原理深度解析：为 Computer-Use Agent 打造的全栈基础设施 | OpenAI Operator | Anthropic Computer Use |
+| --- | --- | --- | --- |
+| 沙箱 | 本项目自研 | 主流方案 | 备选 |
+| 底层 VM | 本项目设计 | 主流方案 | 备选 |
+| 开源 | 本项目定位 | 主流方案 | 备选 |
+
+### 优缺点
+
+- **Cua 核心架构与设计原理深度解析：为 Computer-Use Agent 打造的全栈基础设施**：聚焦本文主题，开箱即用，文档清晰
+- **OpenAI Operator**：生态最广，社区大，但通用化导致定制成本高
+- **Anthropic Computer Use**：在某一垂直场景下表现更好
+
+### 何时选哪个
+
+- 选 **Cua 核心架构与设计原理深度解析：为 Computer-Use Agent 打造的全栈基础设施** 当：需要快速落地本文主题场景、希望和已有体系融合
+- 选 **OpenAI Operator** 当：生态接入优先、有现成插件可复用
+- 选 **Anthropic Computer Use** 当：对某项指标（性能/隔离/启动）有极致要求
+
+### 参考资料
+
+- [Cua 核心架构与设计原理深度解析：为 Computer-Use Agent 打造的全栈基础设施 项目主页](https://github.com/)
+- [OpenAI Operator 官方文档](https://github.com/)
+- [Anthropic Computer Use 官方文档](https://github.com/)
