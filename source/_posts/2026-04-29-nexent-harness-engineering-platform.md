@@ -207,11 +207,15 @@ def parse_code_blobs(text: str) -> str:
         search_pos = end + len("```")
 
     if run_matches:
-        return "\n\n".join(match.strip() for match in run_matches)
+        return "
+
+
+
+".join(match.strip() for match in run_matches)
 
     # 最后降级到标准 python 代码块
     # ...
-```
+```text
 
 这种设计的好处是：
 - **安全**：代码在沙箱中执行，不会污染主进程
@@ -264,7 +268,7 @@ class NexentAgent:
         if tool_class is None:
             raise ValueError(f"{class_name} not found in local")
         # 实例化工具类...
-```
+```text
 
 关键设计：**工具通过字符串类名动态实例化**，这是零代码平台的核心——配置驱动，而非硬编码。
 
@@ -297,7 +301,7 @@ async def get_memory_instance(memory_config: Dict[str, Any]) -> AsyncMemory:
         memory_obj.embedding_model = EmbedderAdaptor(memory_config["embedder"]["config"])
         _MEMORY_CACHE[cache_key] = memory_obj
         return memory_obj
-```
+```text
 
 #### 4.2.1 四级记忆隔离
 
@@ -311,7 +315,7 @@ def _filter_by_memory_level(memory_level: str, raw_results: List[Dict]) -> List[
     elif memory_level in {"agent", "user_agent"}:
         # Agent 级或用户+Agent 级：有 agent_id
         return [r for r in raw_results if r.get("agent_id")]
-```
+```text
 
 | 记忆级别 | 说明 | 典型场景 |
 |---------|------|---------|
@@ -346,7 +350,7 @@ async def add_memory(
         return await memory.add(messages, user_id=mem_user_id, infer=infer)
     elif memory_level in {"agent", "user_agent"}:
         return await memory.add(messages, agent_id=agent_id, user_id=mem_user_id, infer=infer)
-```
+```text
 
 `infer=True` 时，mem0 会自动从消息中提取关键信息并结构化存储，而不仅仅是原始文本存储。
 
@@ -377,7 +381,7 @@ graph LR
     C --> F
     E --> F
     F --> G
-```
+```text
 
 #### 4.3.1 内置工具集
 
@@ -415,7 +419,7 @@ __all__ = [
     "read_skill_md",
     "read_skill_config"
 ]
-```
+```text
 
 #### 4.3.2 MCP 工具集成
 
@@ -430,7 +434,7 @@ MCP（Model Context Protocol）是 Anthropic 提出的工具标准化协议。Ne
 # MCP Server 注册与管理
 
 # sdk/nexent/core/tools/ 下的工具可以调用 MCP 工具
-```
+```text
 
 Nexent 支持将 MCP 工具**无缝桥接**到 Agent 的工具集中，这意味着：
 - Agent 可以使用任何符合 MCP 规范的第三方工具
@@ -464,7 +468,7 @@ class ExternalA2AAgentProxy:
             skills = self.raw_card.get("skills", [])
         capability_names = [s.get("name", "") for s in skills if s.get("name")]
         return f"External A2A agent: {self.name} [Capabilities: {', '.join(capability_names)}]"
-```
+```text
 
 A2A 协议的三种传输类型：
 - **JSONRPC**：标准 JSON-RPC 2.0
@@ -502,7 +506,7 @@ class AgentRunManager:
             agent_run_info.stop_event.set()
             return True
         return False
-```
+```text
 
 关键设计：**单例模式 + 线程安全**的运行管理器，确保同一 conversation_id 在同一时刻只有一个活跃 Agent 实例。
 
@@ -580,7 +584,7 @@ git clone https://github.com/ModelEngine-Group/nexent.git
 cd nexent/docker
 cp .env.example .env  # 填写必要的配置
 bash deploy.sh
-```
+```text
 
 访问 `http://localhost:3000` 即可使用 Web UI。
 
@@ -655,3 +659,45 @@ Nexent 的最大创新在于**将"Harness Engineering"理念落地**——不是
 - 官网: [https://nexent.tech](https://nexent.tech)
 - 文档: [https://modelengine-group.github.io/nexent](https://modelengine-group.github.io/nexent)
 - Discord: [https://discord.gg/tb5H3S3wyv](https://discord.gg/tb5H3S3wyv)
+---
+
+## 对比分析
+
+Nexent 是"低代码 AI Agent 平台"，与传统自动化平台（n8n、Make）以及开源 Agent 框架（LangChain）在目标用户与定位上区别明显。
+
+### 维度对比表
+
+| 维度 | Nexent | n8n | LangChain |
+|------|--------|-----|-----------|
+| 目标用户 | 非技术 + 半技术业务用户 | 半技术用户、运营/产品 | 开发者 |
+| 交互形态 | 可视化拖拽 + 代码双模式 | 可视化工作流 | 代码（Python/JS） |
+| Agent 能力 | 内置多模型/多工具/MCP | 通过 LangChain 节点集成 | 一等公民 |
+| 数据/知识库 | 内置知识库 + RAG | 通过节点 | 通过组件 |
+| 部署方式 | 自托管 / 企业版 | 自托管 + 云 | 自托管（库） |
+| 适合场景 | 企业内部 AI 平台、SaaS | 跨系统自动化（不只是 AI） | 自定义 LLM 应用 |
+
+### 优缺点
+
+Nexent
+- 优点：低代码可视化 + 代码双模式；多租户、权限、审计等企业特性内置；知识库/RAG 内置；适合业务团队快速搭建。
+- 缺点：高度定制化场景灵活性低于纯代码框架；性能极端优化受限；复杂 Agent 行为调试需深入平台。
+
+n8n
+- 优点：通用自动化能力极强；300+ 系统集成；非 AI 场景也极好用。
+- 缺点：原生 AI 能力弱于 Nexent（需借助 LangChain 节点）；复杂 AI 编排表达力有限。
+
+LangChain
+- 优点：完全代码化、灵活度最高、生态丰富。
+- 缺点：纯开发者向，非技术用户无法直接使用；缺少企业级治理开箱即用。
+
+### 何时选
+
+- 选 Nexent：企业内多部门 AI 平台，非技术用户要能参与搭建，治理与多租户重要。
+- 选 n8n：跨 SaaS/数据库自动化为主，AI 只是其中一环。
+- 选 LangChain：开发者构建高度定制化 LLM 应用。
+
+### 参考资料
+
+- Nexent GitHub：https://github.com/ModelEngine-Group/nexent
+- n8n 官网：https://n8n.io/
+- LangChain 文档：https://python.langchain.com/
