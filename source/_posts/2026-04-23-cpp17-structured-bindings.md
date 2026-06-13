@@ -270,3 +270,41 @@ if (ok) {
 8. [（八）Attribute 新增](/2026/04/23/2026-04-24-cpp17-attributes/)
 
 </details>
+
+本章讲 C++17 的 Structured Bindings（结构化绑定），对比维度：本特性 vs 旧写法 vs 其他语言解构语法。
+
+## 对比分析
+
+### 一、本特性 vs 旧写法
+
+| 维度 | C++17 写法 | 旧写法 | 影响 |
+|------|------------|--------|------|
+| 解析 pair | `auto [k, v] = m.insert({1,2});` | `auto p = m.insert({1,2}); auto& k = p.first; ...` | 简洁 |
+| 遍历 map | `for (auto& [k, v] : m)` | 迭代器 + `it->first/second` | 可读性大幅提升 |
+| 解构 tuple | `auto [a, b, c] = std::tuple{1,2,3};` | `std::get<0>(t), std::get<1>(t)...` | 直观 |
+| 解构结构体 | `auto [x, y] = point;` | `p.x, p.y` | 适用于所有聚合类型 |
+
+### 二、对比其他语言
+
+| 语言 | 解构语法 | 备注 |
+|------|----------|------|
+| C++17 | `auto [a, b] = expr;` | 仅绑定，不允许跳过中间元素 |
+| Python | `a, b = expr` / `a, *rest, b = expr` | 可部分解构 + 嵌套 |
+| Rust | `let (a, b) = expr;` | 模式匹配 + 引用 |
+| JavaScript | `const [a, b] = arr;` / `const {x, y} = obj;` | 数组 / 对象双解构 |
+| Java | ❌（record 出现后有 record patterns 提案） | 滞后 |
+
+### 三、优缺点
+
+优点：
+- 让"成对 / 成组数据"在代码中更自然
+- 配合 range-for 写遍历极其干净
+
+缺点：
+- 不能跳过中间元素（需要 `_` 占位也无能为力）
+- 绑定的是引用还是副本容易看错
+
+### 四、何时选
+
+- 任何"返回 pair / tuple / 聚合类型"的场景：用结构化绑定
+- 需要复杂解构：考虑自己写 helper
