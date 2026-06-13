@@ -185,7 +185,7 @@ int main() {
 ```
 
 **输出：**
-```
+```text
 Hello World!
 int=42, hex=0x2a, float=3.14
 Error occurred
@@ -229,3 +229,72 @@ found
 4. [（四）Ranges 增强](/2026/04/23/2026-04-24-cpp23-ranges-enhancement/)
 
 </details>
+
+## 语法/控制流可视化
+
+下面是一张马卡龙色 Mermaid 图，帮你从图形角度把握本章涉及的语法与控制流。
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#FFE5EC', 'primaryTextColor': '#5D5D5D', 'primaryBorderColor': '#FFB3C6', 'lineColor': '#B5EAD7', 'secondaryColor': '#C7CEEA', 'tertiaryColor': '#FFDAC1'}}}%%
+flowchart TD
+    NEED["🎯 编程需求"] --> PICK{"选哪个工具?"}
+    PICK -- "错误传递" --> A["std::expected&lt;T,E&gt;"]
+    PICK -- "缓存友好容器" --> B["std::flat_map / flat_set"]
+    PICK -- "调用栈" --> C["std::stacktrace"]
+    PICK -- "字符串构建" --> D["resize_and_overwrite"]
+    PICK -- "范围工具" --> E["ranges::repeat_view<br/>iota_view"]
+
+    A --> Z["✅ 现代化 C++23 代码"]
+    B --> Z
+    C --> Z
+    D --> Z
+    E --> Z
+
+    style NEED fill:#FFE5EC,stroke:#FFB3C6,color:#5D5D5D
+    style PICK fill:#FFDAC1,stroke:#FFB3C6,color:#5D5D5D
+    style A fill:#C7CEEA,stroke:#A8DADC,color:#5D5D5D
+    style B fill:#B5EAD7,stroke:#A8DADC,color:#5D5D5D
+    style C fill:#FFDAC1,stroke:#FFB3C6,color:#5D5D5D
+    style D fill:#C7CEEA,stroke:#A8DADC,color:#5D5D5D
+    style E fill:#B5EAD7,stroke:#A8DADC,color:#5D5D5D
+    style Z fill:#FFE5EC,stroke:#FFB3C6,color:#5D5D5D
+```
+
+本章讲 C++23 的若干 Utilities（含 expected、flat_map、stacktrace 等，按文章实际范围定），对比维度：本特性 vs C++17/20 旧写法 vs 其他语言对应库。
+
+## 对比分析
+
+### 一、本特性 vs 旧写法
+
+| 维度 | C++23 utility | C++17/20 替代 | 影响 |
+|------|---------------|----------------|------|
+| 错误传递 | `std::expected<T,E>` | optional + 自定义错误码 | 类型化 |
+| 容器适配 | `std::flat_map<K,V>` | `std::map`（红黑树） / `std::unordered_map`（哈希） | 缓存友好 |
+| 栈追踪 | `std::stacktrace` | 平台 API（backtrace 等） | 可移植 |
+| 字符串拼接 | `std::string::resize_and_overwrite` | 手写 reserve + append | 减少分配 |
+| 范围整数类型 | `std::ranges::repeat_view` 等 | 手写生成器 | 表达力 |
+
+### 二、对比其他语言
+
+| 语言 | 错误类型 | 高性能容器 | 栈追踪 | 备注 |
+|------|----------|------------|--------|------|
+| C++23 | expected | flat_map 等 | stacktrace | 标准库现代化 |
+| Rust | Result | BTreeMap / HashMap | backtrace | 生态成熟 |
+| Java | Optional | 第三方 fastutil | Throwable | 库生态丰富 |
+| Python | Union | dict | traceback | 动态 |
+| Go | 多返回值 + error | 内置 map | runtime.Stack | 简洁 |
+
+### 三、优缺点
+
+优点：
+- 把常见痛点（错误、容器、调试）一次性补齐
+- 与既有类型（variant、optional）风格一致
+
+缺点：
+- 编译器支持仍在追赶
+- 各 utility 单独看价值，组合起来需要消化
+
+### 四、何时选
+
+- 新代码：直接采用
+- 老代码：按 utility 单独评估迁移收益
