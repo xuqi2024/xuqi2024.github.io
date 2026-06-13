@@ -303,7 +303,7 @@ LobeHub 的 `parallel_call_agents` 和 `batch_exec_async_tasks` 原生支持这�
 
 ## 八、源码结构一览
 
-```
+```text
 lobehub/
 ├── packages/
 │   ├── agent-runtime/          # Agent 运行时核心
@@ -362,3 +362,45 @@ lobehub/
 ---
 
 > 💡 **行动建议**：如果你在构建多 Agent 系统，推荐先用 LobeHub 的 `GroupOrchestrationRuntime` 理解其状态机模型——即使你用 Python 实现类似逻辑，这个模式也值得借鉴。
+---
+
+## 对比分析
+
+LobeHub 在多 Agent 编排上以 Supervisor-Executor 状态机为核心，与 CrewAI、AutoGen 在协作机制与生态上各有侧重。
+
+### 维度对比表
+
+| 维度 | LobeHub | CrewAI | AutoGen |
+|------|---------|--------|---------|
+| 语言 | TypeScript | Python | Python |
+| 编排模型 | Supervisor-Executor 状态机（GroupOrchestrationRuntime） | 角色委派（Crew + Agent + Task） | 群聊 + 用户代理 |
+| MCP 支持 | 一等公民 | 通过工具 | 通过工具 |
+| 工作流可视化 | 有（lobe-ui） | 中等 | 较弱 |
+| 多 Agent 状态管理 | 强（显式状态机） | 中（任务流式） | 中（对话历史） |
+| 适合场景 | TS 栈多 Agent、需要 MCP 工具生态 | Python 角色驱动流水线 | 灵活多 Agent 协作/研究 |
+
+### 优缺点
+
+LobeHub
+- 优点：Supervisor-Executor 状态机使多 Agent 协作可预测；TypeScript 原生；MCP 工具生态完善；可视化好。
+- 缺点：Python 生态资源少于 CrewAI/AutoGen；状态机模型需要学习成本；单 Agent 场景反而显重。
+
+CrewAI
+- 优点：角色驱动直观；Pythonic 上手快；研究/写作类流水线成熟。
+- 缺点：复杂状态管理弱于 LobeHub；TS 栈支持弱。
+
+AutoGen
+- 优点：微软支持；群聊模式灵活；研究社区活跃。
+- 缺点：结果可预测性弱于状态机模型；学习曲线陡。
+
+### 何时选
+
+- 选 LobeHub：TypeScript 团队、需要 MCP 生态、关注可预测状态机协作。
+- 选 CrewAI：Python 团队、角色驱动流水线、原型优先。
+- 选 AutoGen：研究/灵活协作场景、对结果可预测性不敏感。
+
+### 参考资料
+
+- LobeHub GitHub：https://github.com/lobehub/lobe-chat
+- CrewAI 文档：https://docs.crewai.com/
+- AutoGen GitHub：https://github.com/microsoft/autogen
