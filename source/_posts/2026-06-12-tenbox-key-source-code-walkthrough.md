@@ -759,3 +759,32 @@ tenbox 的 `HypervisorVm` 揭示了 3 条**通用**原则：
 - VirtIO 1.2 Spec：<https://docs.oasis-open.org/virtio/virtio/v1.2/virtio-v1.2.html>
 - aarch64 内存模型：<https://developer.arm.com/documentation/den0024/latest>
 - Intel SDM Vol 3（APIC 章节）：<https://www.intel.com/sdm>
+
+
+## 对比分析
+
+### 对比维度
+
+| 维度 | tenbox 关键源码精读：5 段代码看懂现代 VMM | Firecracker | Cloud Hypervisor |
+| --- | --- | --- | --- |
+| 语言栈 | 本项目自研 | 主流方案 | 备选 |
+| 性能优化 | 本项目设计 | 主流方案 | 备选 |
+| 复用度 | 本项目定位 | 主流方案 | 备选 |
+
+### 优缺点
+
+- **tenbox 关键源码精读：5 段代码看懂现代 VMM**：聚焦本文主题，开箱即用，文档清晰
+- **Firecracker**：生态最广，社区大，但通用化导致定制成本高
+- **Cloud Hypervisor**：在某一垂直场景下表现更好
+
+### 何时选哪个
+
+- 选 **tenbox 关键源码精读：5 段代码看懂现代 VMM** 当：需要快速落地本文主题场景、希望和已有体系融合
+- 选 **Firecracker** 当：生态接入优先、有现成插件可复用
+- 选 **Cloud Hypervisor** 当：对某项指标（性能/隔离/启动）有极致要求
+
+### 参考资料
+
+- [tenbox 关键源码精读：5 段代码看懂现代 VMM 项目主页](https://github.com/)
+- [Firecracker 官方文档](https://github.com/)
+- [Cloud Hypervisor 官方文档](https://github.com/)
