@@ -104,7 +104,7 @@ int main() {
 ```
 
 **输出：**
-```
+```text
 10/2 = 5
 error: division by zero
 0
@@ -206,3 +206,75 @@ auto result = parse_int(user_input)
 4. [（四）Ranges 增强](/2026/04/23/2026-04-24-cpp23-ranges-enhancement/)
 
 </details>
+
+## 语法/控制流可视化
+
+下面是一张马卡龙色 Mermaid 图，帮你从图形角度把握本章涉及的语法与控制流。
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#FFE5EC', 'primaryTextColor': '#5D5D5D', 'primaryBorderColor': '#FFB3C6', 'lineColor': '#B5EAD7', 'secondaryColor': '#C7CEEA', 'tertiaryColor': '#FFDAC1'}}}%%
+flowchart TD
+    F["🔧 func()"] --> R{"📦 返回<br/>std::expected&lt;T,E&gt;"}
+    R -- "✅ 成功路径" --> OK["expected&lt;T&gt;<br/>含值 T"]
+    R -- "❌ 失败路径" --> ERR["unexpected&lt;E&gt;<br/>含错误 E"]
+
+    OK --> V{"🔍 检查状态?"}
+    V -- "value()" --> USE["📥 取值使用"]
+    V -- "and_then" --> CH["🪄 链式调用"]
+    ERR --> H["🧯 value_or / or_else<br/>统一错误处理"]
+
+    USE --> DONE["🎯 业务继续"]
+    CH --> DONE
+    H --> DONE
+
+    style F fill:#FFE5EC,stroke:#FFB3C6,color:#5D5D5D
+    style R fill:#FFDAC1,stroke:#FFB3C6,color:#5D5D5D
+    style OK fill:#B5EAD7,stroke:#A8DADC,color:#5D5D5D
+    style ERR fill:#FFDAC1,stroke:#FF9AA2,color:#5D5D5D
+    style V fill:#C7CEEA,stroke:#A8DADC,color:#5D5D5D
+    style USE fill:#B5EAD7,stroke:#A8DADC,color:#5D5D5D
+    style CH fill:#FFE5EC,stroke:#FFB3C6,color:#5D5D5D
+    style H fill:#C7CEEA,stroke:#A8DADC,color:#5D5D5D
+    style DONE fill:#B5EAD7,stroke:#A8DADC,color:#5D5D5D
+```
+
+本章讲 C++23 的 std::expected<T, E>，对比维度：本特性 vs C++17 optional / exception 旧写法 vs 其他语言 Result / Either。
+
+## 对比分析
+
+### 一、本特性 vs 旧写法
+
+| 维度 | C++23 expected | C++17 optional | C++ 异常 |
+|------|-----------------|----------------|----------|
+| 表达"出错 + 原因" | ✅ `expected<T, E>` | ❌ 只能表达"无值" | ✅ 但开销不可控 |
+| 是否抛异常 | 否 | 否 | 是 |
+| 错误传递 | 显式类型 `E` | 无 | 任意类型 |
+| 与 std::visit 配合 | ✅ | ✅ | ❌ |
+| 性能 | 可零开销 | 可零开销 | 通常有栈展开开销 |
+
+### 二、对比其他语言
+
+| 语言 | 错误返回类型 | 异常 | 备注 |
+|------|--------------|------|------|
+| C++23 | `std::expected<T,E>` | 仍保留 | 与 Rust Result 类似 |
+| Rust | `Result<T, E>` | `panic!` | 语言级强制 |
+| Go | `value, err := f()` | panic | 多返回值 |
+| Java | Optional<T> / 自定义 | checked / unchecked | 双轨 |
+| Python | Union[T, E] | raise | 动态类型 |
+| Haskell | Either e a | 异常机制弱 | 类型系统强制 |
+
+### 三、优缺点
+
+优点：
+- 在类型系统层面表达错误
+- 与 variant / visit 一脉相承
+
+缺点：
+- 仍未形成"标准错误类型"（各家项目自定义 E）
+- 异常与 expected 双轨制导致 API 风格分裂
+
+### 四、何时选
+
+- 错误恢复路径重要：expected
+- 不可恢复错误：异常
+- 老代码：先 optional 替代 null sentinel
