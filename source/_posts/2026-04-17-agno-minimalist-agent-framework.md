@@ -238,3 +238,40 @@ python 01_simple_agent.py
 **第四步**：查阅 [Agno 官方文档](https://docs.agno.com)，探索 Team（多 Agent 协作）和 Workflow（工作流编排）等进阶能力。
 
 > **一句话结论：** Agno 不是生态最丰富的框架，但它是**让你最快写出第一个真实可用 Agent** 的框架。如果你还没有写过 Agent，从这里开始——是个好主意。
+
+---
+
+## 对比分析
+
+Agno 强调"5 行代码"的极简 Python 体验。下面与同属"极简系"的两大框架对比：Smolagents（HuggingFace）和 LangChain 的 AgentExecutor（同样 Python、同样轻）。
+
+### 对比维度一：抽象与体积
+| 维度 | Agno | Smolagents | LangChain Agent |
+| --- | --- | --- | --- |
+| 抽象核心 | Agent + Tools + Models | CodeAgent / ToolCallingAgent | AgentExecutor + Tools |
+| 模型支持 | 23+ 家提供商 | HF 生态为主 | 数十家 |
+| 多模态 | 原生 | 可扩展 | 可扩展 |
+| 启动时间/内存 | 官方基准：~2μs/6.5KB | 取决于 HF 模型 | 一般偏重 |
+
+### 对比维度二：开发体验
+| 维度 | Agno | Smolagents | LangChain Agent |
+| --- | --- | --- | --- |
+| 上手难度 | 极低 | 低 | 中 |
+| 工具生态 | 内置丰富 | HF 工具集 | 全栈最多 |
+| 多 Agent | Team + Workflow | 不强调 | 通过 LangGraph |
+| 文档/教程 | 中 | 中 | 极多 |
+
+### 优缺点
+- **Agno**：极简 + 多模态 + 多模型，体验最清爽；高级能力相对克制。
+- **Smolagents**：紧跟 HF 生态、Code Agent 范式有意思；和 HF 绑定较深。
+- **LangChain Agent**：生态最厚，几乎所有问题都有现成工具；概念多、抽象层多。
+
+### 何时选哪个
+- 第一次写 Agent、想 5 行跑通 → 选 Agno
+- 想紧跟 HF 生态 + Code Agent 风格 → 选 Smolagents
+- 复杂业务 + 多工具 + 多模型 → 选 LangChain Agent
+
+### 参考资料
+- Agno 仓库：https://github.com/agno-agi/agno
+- Smolagents 仓库：https://github.com/huggingface/smolagents
+- LangChain Agents 文档：https://python.langchain.com/docs/modules/agents/
