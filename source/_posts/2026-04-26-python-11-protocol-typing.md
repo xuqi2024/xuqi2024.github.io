@@ -75,7 +75,7 @@ print(f"Calculator is Tool: {isinstance(calc, Tool)}")  # True
 ```
 
 运行输出：
-```
+```text
 OpenAI is LLM: True
 Calculator is LLM: False
 Calculator is Tool: True
@@ -195,7 +195,7 @@ print(agent.run("What is 2+2?"))
 ```
 
 运行输出：
-```
+```text
 Mock response to: What is 2+2?
 ```
 
@@ -228,7 +228,6 @@ Protocol 让"鸭子类型"在静态类型检查时代依然焕发活力。它不
 
 > 下一步：尝试用 Protocol 定义你 Agent 系统的核心接口，然后分别实现 OpenAI 版本和 Anthropic 版本，验证它们可以互换使用。
 ---
-
 ## 📚 Python AI教程 系列导航
 
 > 本文是《Python AI教程》系列第 **11/14** 篇。
@@ -257,3 +256,55 @@ Protocol 让"鸭子类型"在静态类型检查时代依然焕发活力。它不
 14. [（十四）组合模式实战](/2026/04/23/2026-04-27-python-14-composite-ai-agent/)
 
 </details>
+
+## 对比分析
+
+本章核心是 Python 的 `typing.Protocol`（PEP 544），结构化子类型。
+
+### 维度一：Protocol vs 其他接口抽象
+
+| 方案 | 子类型规则 | 是否需要显式继承 | 鸭子类型支持 | 运行期检查 |
+|------|------------|------------------|--------------|------------|
+| **typing.Protocol** | 结构化（只要方法签名匹配） | ❌ 隐式 | ✅ | `@runtime_checkable` |
+| **abc.ABC** | 名义（必须 `class X(ABC)`） | ✅ 强制 | ❌ | `isinstance(x, ABC)` |
+| **普通基类** | 名义 | ✅ | ❌ | `isinstance` |
+| **鸭子类型（无基类）** | 结构化（运行时） | ❌ | ✅ | `hasattr` |
+| **Zope Interface** | 显式声明 + 适配器 | ✅ 显式 `implements` | ✅ | 显式 |
+
+### 维度二：与其他语言的接口 / 结构化类型
+
+| 语言 | 接口机制 | 与 Python `Protocol` 对比 |
+|------|----------|--------------------------|
+| **Java** | `interface`（Java 8+ 可有 default 方法） | 名义子类型，必须 `implements`；与 Protocol 的"结构化"思路相反 |
+| **C#** | `interface` | 同 Java；C# 8+ 默认接口方法与 Java default 类似 |
+| **C++** | 纯虚函数（abstract class） | 编译期强制；模板 + Concept（C++20）实现"结构化约束" |
+| **Go** | `interface{}` | 隐式满足，思路最像 Protocol；区别是 Go 是"方法集"，Protocol 还有泛型支持 |
+| **Rust** | Trait | 隐式实现（orphan rule 限制）+ 默认方法；表达力最强（关联类型、Trait bound） |
+| **TypeScript** | `interface` / `type` | TS 编译器就是结构化类型系统，**整个语言就是 Protocol** |
+| **Kotlin** | `interface` | 默认名义，结构化需要额外库 |
+
+### 维度三：Protocol vs ABC 选型
+
+| 场景 | 推荐 | 原因 |
+|------|------|------|
+| 已有大量类，无意改其继承链 | **Protocol** | 不破坏现有代码 |
+| 框架要强制子类实现某些方法 | **ABC** | 显式约束更好 |
+| 第三方类想"接入"自己的接口 | **Protocol** | 鸭子类型友好 |
+| 需要 `isinstance` 检查 | **ABC** 或 `@runtime_checkable Protocol** | 都需要显式元数据 |
+| 性能敏感（运行时检查） | **ABC** | ABC 是 metaclass，Protocol 默认无运行时成本 |
+
+### 优缺点小结
+
+- **Python Protocol**：与鸭子类型哲学一致、零侵入、可后向兼容；缺点是运行时检查有限
+- **Java/C# interface**：类型系统强制约束；缺点是破坏"鸭子类型"
+- **Go interface**：隐式满足最优雅；缺点是没有泛型参数化的 interface
+- **Rust Trait**：编译期检查、零运行时；缺点是孤儿规则
+- **TypeScript**：语言级结构化类型；缺点是运行期无校验
+
+### 何时选
+
+- 选 **Protocol**：库作者定义"期望接口"、不强迫用户继承、跨框架解耦
+- 选 **ABC**：框架内部抽象基类、需要在 `isinstance` 中识别
+- 选 **泛型 Protocol**（`T = TypeVar("T", bound=Protocol[X])`）：实现通用工具
+- 选 **`@runtime_checkable`**：仅在调试/边界检查用（性能差）
+- 选 **Go interface**：如果你能换语言，Go interface 是最像 Protocol 的设计
