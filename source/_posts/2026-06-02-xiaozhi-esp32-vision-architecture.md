@@ -469,3 +469,57 @@ camera->SetExplainUrl(
 - [SSCMA (SenseCraft Model Assistant) 文档](https://github.com/Seeed-Studio/SSCMA)
 - [MCP (Model Context Protocol) 规范](https://modelcontextprotocol.io/)
 - [ESP-IDF JPEG 解码 API](https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32s3/api-reference/peripherals/jpeg.html)
+
+## 对比分析
+
+小智 ESP32 的设计哲学是"算力卸载 + 双路径感知"——边缘做轻量检测，云端做 VLM 解释。在"MCU 级视觉感知"这个细分领域，跟它定位最像的开源项目是 OpenCV 的 OAK-D Lite、Espressif 自己推出的 esp-who，以及 Seeed 的 SenseCAP Watcher 固件。下面对它们做一次横向对比。
+
+### 维度一：硬件与算力
+
+| 项目 | 主控 | 本地推理能力 | 视觉模型 |
+|------|------|----------------|----------|
+| **小智 ESP32** | ESP32-S3 (240 MHz, 8MB PSRAM) | 轻量检测（人脸/运动） | 边缘 CNN + 云端 VLM |
+| **esp-who (Espressif 官方)** | ESP32-S3 / ESP32-P4 | 人脸检测 + 识别 | ESP-DL / 量化模型 |
+| **OAK-D Lite (OpenCV)** | Myriad X VPU | 完整 CV pipeline | 多种 YOLO/MobileNet |
+| **OpenMV Cam H7** | STM32H7 (480 MHz) | 传统 CV + 小型 CNN | Haar/HOG/简单网络 |
+
+### 维度二：协议与云端协作
+
+- **小智 ESP32**：通过 MCP/WebSocket 把"检测事件"和"截图解释"暴露给云端 Agent
+- **esp-who**：本地实时检测为主，云端协作需要自己实现
+- **OAK-D Lite**：本地即出检测结果，云端仅做"结果再分析"
+- **OpenMV**：本地脚本式处理，无内置云端协议
+
+### 维度三：开发体验
+
+- 小智 ESP32：完整双层架构、官方文档友好、参考实现完整
+- esp-who：Espressif 官方，但需要自己写云端集成
+- OAK-D Lite：OpenCV 生态整合度高，硬件成本较贵
+- OpenMV：MicroPython 脚本式，入门简单但能力受限
+
+**优缺点小结**
+
+- **小智 ESP32**：把"边缘检测 + 云端 VLM"做成端到端参考实现；缺点是只支持 ESP32-S3，模型生态较窄
+- **esp-who**：官方原生，稳定性强；缺点是云端集成需要 DIY
+- **OAK-D Lite**：算力强、支持复杂模型；缺点是硬件贵（~$100+），体积大
+- **OpenMV**：上手简单、MicroPython 友好；缺点是算力有限、不能跑现代 VLM
+
+**何时选小智 ESP32**
+
+- 你在做"电池供电、低成本、需上云的视觉 IoT"产品
+- 你的场景是"被动感知 + 用户主动拍图解释"两种混合
+- 你想要"端-云协议化协作"参考实现
+
+**何时不选小智 ESP32**
+
+- 需要本地实时做复杂模型推理——OAK-D Lite 更合适
+- 只想做纯本地检测、不上云——esp-who 更原生
+- 想用 MicroPython 快速原型——OpenMV 体验更顺
+
+**参考资料**
+
+- 小智 ESP32 GitHub：<https://github.com/78/xiaozhi-esp32>
+- esp-who：<https://github.com/espressif/esp-who>
+- OpenCV OAK-D Lite：<https://docs.luxonis.com/>
+- OpenMV Cam：<https://openmv.io/>
+- ESP-DL：<https://github.com/espressif/esp-dl>
