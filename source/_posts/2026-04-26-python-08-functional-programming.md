@@ -628,7 +628,6 @@ print(f"\nCache stats: {cached_llm_call.cache_info()}")
 
 > **下期预告**：Python 面向对象进阶——元类（Metaclass）、协议（Protocol）与类型注解（Type Hint），打造 AI 框架的核心抽象层。
 ---
-
 ## 📚 Python AI教程 系列导航
 
 > 本文是《Python AI教程》系列第 **8/14** 篇。
@@ -657,3 +656,58 @@ print(f"\nCache stats: {cached_llm_call.cache_info()}")
 14. [（十四）组合模式实战](/2026/04/23/2026-04-27-python-14-composite-ai-agent/)
 
 </details>
+
+## 对比分析
+
+本章核心是 Python 的函数式编程工具（`lambda` / `map` / `filter` / `reduce` / `itertools` / `functools`）。
+
+### 维度一：函数式 vs 命令式（for 循环）
+
+| 方案 | 可读性 | 性能 | 副作用 | 适用 |
+|------|--------|------|--------|------|
+| **map / filter / 推导式** | 高 | 高（C 实现） | 无 | 简单变换 |
+| **reduce / itertools.accumulate** | 中 | 高 | 无 | 累积 / 折叠 |
+| **for 循环** | 中 | 中 | 可有 | 复杂流程 |
+| **lambda** | 低（嵌套多难读） | 中 | 无 | 一行小函数 |
+| **`operator` / `functools.partial`** | 中 | 高 | 无 | 函数适配 |
+
+### 维度二：与其他语言的函数式特性
+
+| 语言 | 函数式特性 | 与 Python 对比 |
+|------|------------|----------------|
+| **Haskell** | 纯函数式，列表推导、`mapM` | 最纯粹；副作用通过 monad 管理 |
+| **Scala** | 集合的 `map/filter/reduce` + for 推导 | 风格与 Python itertools 高度一致 |
+| **Clojure** | 惰性序列、transducer | 比 Python 更彻底；transducer 解决了"组合后失去融合优化"问题 |
+| **Java 8+ Stream** | `.map().filter().collect()` | API 相似；并行流开箱即用（但有坑） |
+| **Rust Iterator** | `.iter().map().filter().collect()` | 零成本抽象；惰性 + 融合（fusion）由编译器优化 |
+| **JavaScript** | Array 的 `map/filter/reduce` | 与 Python 几乎同名同义；ES6+ 箭头函数类似 lambda |
+| **C++** | `<algorithm>` + STL + ranges（C++20） | ranges 让管道更优雅；性能最强 |
+
+### 维度三：Python 函数式 vs 工具
+
+| 工具 | 是否惰性 | 内存 | 推荐 |
+|------|----------|------|------|
+| **列表推导 `[f(x) for x in xs]`** | ❌ | O(N) | 默认首选 |
+| **生成器表达式 `(f(x) for x in xs)`** | ✅ | O(1) | 大数据 / 流式 |
+| **map(f, xs)** | ✅（Python 3+） | O(1) | 与 `functools.reduce` 配合 |
+| **itertools.chain / starmap** | ✅ | O(1) | 组合多个迭代器 |
+| **functools.reduce / fold** | ❌ | O(N) | 累积求和、累积拼接 |
+| **operator.add / itemgetter** | — | — | 替代 lambda |
+
+### 优缺点小结
+
+- **Python 函数式**：语法轻、与 C 库互操作好、`itertools` 工具最丰富；缺点是 lambda 只能表达式、纯度依赖自觉
+- **Haskell**：纯度由编译器保证；缺点是 IO monad 学习曲线
+- **Rust Iterator**：零成本 + 编译期融合；缺点是生命周期标注
+- **Java Stream**：并行流开箱即用；缺点是"一次性消费 + 调试难"
+- **JavaScript Array**：语法最简单；缺点是单线程 + 内存占用大
+
+### 何时选
+
+- 选 **列表推导**：默认、简单变换
+- 选 **生成器表达式**：数据量大、需要惰性
+- 选 **map/filter**：函数已是 named function、避免 lambda
+- 选 **itertools**：组合多个数据源、滑动窗口、分组
+- 选 **functools.reduce**：累积 / 折叠（如字符串拼接、数值累计）
+- 选 **functools.partial + operator**：函数适配（避免重复传参）
+- 避免 **嵌套 lambda**：可读性灾难，改写为 `def`
