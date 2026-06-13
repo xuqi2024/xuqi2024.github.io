@@ -510,7 +510,6 @@ print(f"Pipeline: {len(results)} items in {time.perf_counter() - start:.2f}s")
 
 > **下期预告**：函数式编程三剑客——`map/reduce/filter` + `functools` + `itertools`，教你用声明式思维处理 AI 数据清洗与批量转换 pipeline。
 ---
-
 ## 📚 Python AI教程 系列导航
 
 > 本文是《Python AI教程》系列第 **7/14** 篇。
@@ -539,3 +538,55 @@ print(f"Pipeline: {len(results)} items in {time.perf_counter() - start:.2f}s")
 14. [（十四）组合模式实战](/2026/04/23/2026-04-27-python-14-composite-ai-agent/)
 
 </details>
+
+## 对比分析
+
+本章核心是 Python 的 `threading` / `multiprocessing` / `concurrent.futures`。
+
+### 维度一：threading / multiprocessing vs 旧写法
+
+| 方案 | 写法 | 抽象层次 | 推荐指数 |
+|------|------|----------|----------|
+| **concurrent.futures（PEP 3148）** | `ThreadPoolExecutor` / `ProcessPoolExecutor` | 高（future + map） | ⭐⭐⭐ 首选 |
+| **threading.Thread** | 直接 `t = Thread(target=f)` | 中 | ⭐⭐ |
+| **multiprocessing.Process** | 直接 `p = Process(target=f)` | 中 | ⭐⭐ |
+| **asyncio** | 关键字 + event loop | 高 | ⭐⭐⭐ 适合 I/O |
+| **os.fork / subprocess** | 底层系统调用 | 低 | ⭐ 特殊场景 |
+
+### 维度二：GIL 下的并发策略
+
+| 场景 | 推荐方案 | 原因 |
+|------|----------|------|
+| 网络 I/O（HTTP、DB） | `asyncio` 或 `ThreadPoolExecutor` | GIL 会释放 |
+| 文件 I/O | `ThreadPoolExecutor` | GIL 释放 |
+| CPU 密集（numpy / pandas） | `ProcessPoolExecutor` | 需绕开 GIL；库本身已释放 GIL |
+| CPU 密集（纯 Python） | `multiprocessing` / C 扩展 | 纯 Python 不释放 GIL |
+| GPU 推理（PyTorch） | 单进程异步 + CUDA streams | GIL 几乎无影响，瓶颈在 GPU |
+
+### 维度三：与其他语言的并发模型
+
+| 语言 | 并发原语 | 与 Python 对比 |
+|------|----------|----------------|
+| **Java** | `Thread` + `ExecutorService` + `ForkJoinPool` | 线程是真并行（无 GIL）；`CompletableFuture` 类似 `Future` |
+| **C++** | `std::thread` / `std::async` | 真并行；需手动管理线程生命周期 |
+| **Go** | goroutine + channel | 开箱即用几万并发、调度器更智能；语法上"自动并行" |
+| **Rust** | `std::thread` + `tokio::spawn` | 零成本抽象；`Send/Sync` 标记保证线程安全 |
+| **C#** | `Task` + `ThreadPool` + TPL Dataflow | 与 `concurrent.futures` 思路最像 |
+| **Erlang/Elixir** | 进程 + 消息传递 | 百万级进程；面向"全分布式"场景 |
+
+### 优缺点小结
+
+- **Python threading**：API 简单；缺点是 GIL 限制 + 锁地狱
+- **Python multiprocessing**：真并行；缺点是 IPC 开销、不能共享复杂对象
+- **concurrent.futures**：高层抽象、跨线程/进程统一 API；缺点是不支持取消
+- **Go goroutine**：最易用、调度器最强；缺点是没有"线程 vs 协程" 选择
+- **Rust std::thread + Send/Sync**：编译期保证线程安全；缺点是生命周期标注
+
+### 何时选
+
+- 选 **ThreadPoolExecutor**：阻塞 I/O 库（`requests` / 同步 ORM）
+- 选 **ProcessPoolExecutor**：CPU 密集任务
+- 选 **asyncio**：能改写为 async 的 I/O 库
+- 选 **multiprocessing.Manager / Queue**：需要跨进程共享数据
+- 选 **subprocess**：启动独立可执行程序
+- 不推荐 **裸线程 + 全局锁**：尽量用高层抽象（Queue / Lock 上下文管理器）
