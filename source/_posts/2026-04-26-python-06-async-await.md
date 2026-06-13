@@ -41,25 +41,7 @@ asyncio.run(main())
 
 ### 事件循环原理
 
-```
-┌─────────────────────────────────────────────┐
-│              事件循环 (Event Loop)           │
-│                                             │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐     │
-│  │ Task 1  │  │ Task 2  │  │ Task 3  │     │
-│  │(coro)   │  │(coro)   │  │(coro)   │     │
-│  └────┬────┘  └────┬────┘  └────┬────┘     │
-│       │            │            │           │
-│       └────────────┼────────────┘           │
-│                    ▼                          │
-│            ┌─────────────┐                    │
-│            │  Task Queue │                    │
-│            └─────────────┘                    │
-└─────────────────────────────────────────────┘
-        │
-        ▼ I/O 操作完成时
-    调度下一个 Task
-```
+
 
 ## 基本协程：async def + await
 
@@ -434,6 +416,19 @@ async def good_async():
 > **下一章**：【Python AI教程】（七）Threading 与 Multiprocessing：并发三剑客——深入理解 GIL，学习何时该用线程、何时该用进程。
 ---
 
+```mermaid
+graph LR
+    A[async def]:::input --> B[协程对象]:::process
+    B --> C[事件循环]:::process
+    C --> D[await 挂起]:::process
+    D --> E{I/O 就绪?}:::decision
+    E -->|是| F[恢复执行]:::output
+    E -->|否| G[等待其他任务]:::process
+    classDef input fill:#FFE5E5,stroke:#FF9AA2,color:#333
+    classDef process fill:#E5F3FF,stroke:#A0C4FF,color:#333
+    classDef decision fill:#FFF4E5,stroke:#FFD6A0,color:#333
+    classDef output fill:#E5FFE5,stroke:#B5EAD7,color:#333
+```
 ## 📚 Python AI教程 系列导航
 
 > 本文是《Python AI教程》系列第 **6/14** 篇。
@@ -462,3 +457,56 @@ async def good_async():
 14. [（十四）组合模式实战](/2026/04/23/2026-04-27-python-14-composite-ai-agent/)
 
 </details>
+
+## 对比分析
+
+本章核心是 Python 的 `async/await` 协程（PEP 492 / 525 / 654）。
+
+### 维度一：async/await vs 旧写法
+
+| 方案 | 写法 | 性能 | 可读性 | 生态 |
+|------|------|------|--------|------|
+| **async/await（PEP 492）** | 关键字 | 高 | 高 | 标准库 + 第三方齐全 |
+| **生成器协程（`@asyncio.coroutine`，3.4）** | `yield from` | 中 | 中 | 已被 `async/await` 替代 |
+| **gevent（猴子补丁）** | 同步写法 | 高 | 高 | 单线程、隐式切换 |
+| **twisted（回调）** | 回调链 | 中 | 低（callback hell） | 老牌框架 |
+| **线程池** | `concurrent.futures.ThreadPoolExecutor` | 中 | 中 | 简单并发 |
+
+### 维度二：与其他语言的异步模型
+
+| 语言 | 异步模型 | 与 Python `async/await` 对比 |
+|------|----------|------------------------------|
+| **JavaScript** | `Promise` + `async/await` | 几乎完全相同的语法；区别在事件循环由 V8 提供，Python 需 `asyncio.run` |
+| **TypeScript** | 同 JS，但带类型 | `Promise<T>` 对应 `Awaitable[T]`；类型推导略胜 Python |
+| **Go** | goroutine + channel | CSP 模型，结构化并发（`errgroup` / `context`）；语法比 async/await 更"过程式" |
+| **Rust** | `async/await` + `tokio/async-std` | 几乎同样的关键字；Future 是惰性的，需要显式 `.await` |
+| **Java** | `CompletableFuture` / `Reactor` / `Loom`（虚拟线程） | Project Loom 之前生态割裂；Loom 之后与 async/await 殊途同归 |
+| **C#** | `async/await`（最早实现者） | C# 2012 年就引入；语法几乎相同；`Task<T>` 类型系统集成更好 |
+| **Kotlin** | `suspend` + 协程 | 结构化并发、取消传播（`Job`）；语法比 Python 更丰富 |
+| **Swift** | `async/await`（5.5+） | 后入场者；`Task` + 结构化并发，API 较新 |
+
+### 维度三：asyncio vs 多线程 vs 多进程
+
+| 维度 | asyncio | threading | multiprocessing |
+|------|---------|-----------|-----------------|
+| 并发模型 | 协作式（单线程） | 抢占式 | 多进程 |
+| 适合 | 高 I/O、低 CPU | I/O 阻塞可接受 GIL | CPU 密集 |
+| 内存 | 极低（每 task ~几 KB） | 较高（每线程 ~8 MB 栈） | 高（每进程独立） |
+| 切换开销 | 极低 | 中（系统调用） | 高（IPC） |
+| 适合场景 | LLM 流式、HTTP、WebSocket | 阻塞 I/O 库无法改写 | 数据预处理、模型推理 |
+
+### 优缺点小结
+
+- **Python asyncio**：库生态丰富（aiohttp / asyncpg / httpx）；缺点是"一旦 await 必须一路 await"
+- **JavaScript async/await**：V8 内置、语言级一等公民；缺点是单线程下 CPU 密集任务仍卡 UI
+- **Go goroutine**：开箱即用几万并发、结构化并发；缺点是没有 async/await 关键字
+- **Rust async/await**：零成本抽象、Tokio 生态强；缺点是生命周期标注、Pin/Box 复杂
+- **C# async/await**：类型系统集成最好（`ValueTask<T>`）；缺点是历史包袱（同步方法混用）
+
+### 何时选
+
+- 选 **asyncio**：高并发 I/O（Web 服务、爬虫、LLM 流式 API）
+- 选 **线程池**：库是阻塞 I/O、无法改成 async
+- 选 **多进程**：CPU 密集（数据预处理、模型推理）
+- 选 **gevent**：老项目不想大改、能接受 monkey patch
+- 不推荐 **裸 twisted 回调**：已被 async/await 取代
