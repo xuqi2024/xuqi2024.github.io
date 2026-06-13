@@ -553,14 +553,14 @@ class MSAEngine:
 #### MSA vs 标准 RAG
 
 **RAG** 的检索与生成是两个完全独立的系统：
-```
+```text
 Query → Vector Search → Top-k Chunks → Prompt组装 → LLM生成
               ↑                              ↑
          独立优化                      独立优化
 ```
 
 **MSA** 将检索内化为注意力层的稀疏选择：
-```
+```text
 Query → 路由投影 → Top-k文档选择 → 稀疏注意力 → 直接生成
               ↑                            ↑
          与 LLM 联合训练              端到端可微
@@ -696,3 +696,58 @@ MSA 让我想起了当年 ResNet 带给视觉领域的感觉——不是在小�
 ---
 
 *本文由 AI 自动生成，调研时间：2026-05-16*
+
+## 对比分析
+
+MSA 不是"又一个长上下文方案"——它把"可训练隐式记忆 + 端到端稀疏注意力"做成了一个独立框架。放在更大的"突破 100M Token"技术坐标里，它的相对位置需要看几个真正在生产或论文里验证过的同类工作。
+
+### 维度一：核心机制
+
+| 项目 | 记忆实现 | 注意力模式 | 端到端可训练 |
+|------|----------|------------|--------------|
+| **MSA (EverMind-AI)** | 可训练隐式 memory tokens（prefix + 拼接） | 全局 token-mem 稀疏注意力 | ✅ |
+| **Mamba / SSM** | 状态空间隐状态（hidden state） | O(L) 线性递归，无 attention | ✅（序列建模端到端） |
+| **InfLLM / StreamingLLM** | KV Cache 滑窗 + attention sink | 局部 attention + 显式 cache 管理 | ❌（推理时策略） |
+| **RAG（长文档外挂）** | 外部向量库召回 chunk | 原模型短 attention + 检索结果 | ❌（检索管线外置） |
+
+### 维度二：长上下文能力 & 退化
+
+- ✅ **MSA**：论文报告 16K → 100M Token 性能下降 < 9%，长文档 RAG 任务上显著优于 sliding window / RAG
+- ⚠️ **Mamba**：理论上可处理任意长度序列，但在检索/精确回忆类任务上仍弱于 attention-based 方案；Mamba-2 在混合架构上有所补强
+- ⚠️ **InfLLM / StreamingLLM**：通过 KV 压缩把有效上下文推到 1M+，但对"中间段信息"召回衰减明显
+- ❌ **RAG**：根本上受 chunk 切分和检索质量限制，无法做到"看见全文"
+
+### 维度三：工程化与适用场景
+
+- MSA：开源 4B 权重 + HuggingFace 集成，门槛低，适合"长文档 RAG、超长代码库分析、长视频/音频转录后的全文推理"
+- Mamba：需要重新训练/微调，推理引擎（JAX/PyTorch 原生）支持在快速完善；适合"对吞吐/时延敏感、序列极长、且能容忍一定精度损失"的场景
+- InfLLM/StreamingLLM：纯推理时优化，零训练成本；适合"快速给现成 LLM 续命到 1M+"
+- RAG：成熟稳定、可解释，但无法替代"真·长上下文"
+
+**优缺点小结**
+
+- **MSA**：唯一把"长上下文"和"可训练"结合的开源方案；缺点是依赖持续预训练/Instruct-tuning 才能发挥上限，社区生态尚处早期
+- **Mamba**：架构层面的范式突破；缺点是检索类任务弱、生态仍在追赶 Transformer
+- **InfLLM/StreamingLLM**：工程实用主义首选；缺点是"伪长上下文"，对中段信息不友好
+- **RAG**：最成熟、最易集成；缺点是天花板受限于检索质量与 chunk 切分
+
+**何时选 MSA**
+
+- 需要"百万级 Token 级 + 端到端可训练"的工业场景（法律/医学/科研长文档推理）
+- 想在 HuggingFace 一行代码加载预训练 checkpoint 做长文档 RAG
+- 已有 4B–13B 基础模型，希望加上隐式记忆而不是外挂向量库
+
+**何时不选 MSA**
+
+- 资源只够跑 1B 级别小模型——Mamba/SSM 更轻
+- 业务只关心"几条相关文档"——RAG + 短上下文已足够
+- 需要零成本复用现成 LLM——选 InfLLM 这类推理时方案
+
+**参考资料**
+
+- MSA GitHub：<https://github.com/EverMind-AI/MSA>
+- MSA HuggingFace：<https://huggingface.co/EverMind-AI/MSA-4B>
+- MSA 论文：<https://arxiv.org/abs/2603.23516>
+- Mamba 论文：<https://arxiv.org/abs/2312.00752>
+- StreamingLLM：<https://arxiv.org/abs/2309.17453>
+- "Long Context RAG Bench"：<https://huggingface.co/datasets/EverMind-AI/MSA-RAG-BENCHMARKS>
