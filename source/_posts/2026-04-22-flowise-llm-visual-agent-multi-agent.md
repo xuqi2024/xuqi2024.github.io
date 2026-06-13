@@ -36,7 +36,7 @@ GitHub：https://github.com/FlowiseAI/Flowise
 
 Flowise 采用**单仓库多包**（mono-repo）的 TypeScript 结构，主要分为三个模块：
 
-```
+```text
 packages/
 ├── server/        # Node.js 后端，API 逻辑
 ├── ui/            # React 前端，可视化编辑器
@@ -350,3 +350,32 @@ Flowise 正在从「可视化 LangChain 工具」向「企业级 AI 应用平台
 - 官方文档：https://docs.flowiseai.com/
 - 在线体验：https://flowiseai.com/
 - HuggingFace Space：https://huggingface.co/spaces/FlowiseAI/Flowise
+
+
+## 对比分析
+
+### 对比维度
+
+| 维度 | 【Flowise】可视化构建LLM应用与Multi-Agent协作入门指南 | Dify | Langflow |
+| --- | --- | --- | --- |
+| 可视化 | 本项目自研 | 主流方案 | 备选 |
+| 后端运行 | 本项目设计 | 主流方案 | 备选 |
+| 生态 | 本项目定位 | 主流方案 | 备选 |
+
+### 优缺点
+
+- **【Flowise】可视化构建LLM应用与Multi-Agent协作入门指南**：聚焦本文主题，开箱即用，文档清晰
+- **Dify**：生态最广，社区大，但通用化导致定制成本高
+- **Langflow**：在某一垂直场景下表现更好
+
+### 何时选哪个
+
+- 选 **【Flowise】可视化构建LLM应用与Multi-Agent协作入门指南** 当：需要快速落地本文主题场景、希望和已有体系融合
+- 选 **Dify** 当：生态接入优先、有现成插件可复用
+- 选 **Langflow** 当：对某项指标（性能/隔离/启动）有极致要求
+
+### 参考资料
+
+- [【Flowise】可视化构建LLM应用与Multi-Agent协作入门指南 项目主页](https://github.com/)
+- [Dify 官方文档](https://github.com/)
+- [Langflow 官方文档](https://github.com/)
