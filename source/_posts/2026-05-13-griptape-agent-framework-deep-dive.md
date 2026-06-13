@@ -423,7 +423,7 @@ class ActionsSubtask(BaseSubtask[ListArtifact | ErrorArtifact]):
 
 LLM 输出格式要求：
 
-```
+```yaml
 Thought: 我需要搜索最新的 AI 新闻
 Actions: [
   {
@@ -541,7 +541,7 @@ ruleset = Ruleset(
 
 ### 5.3 设计差异总结
 
-```
+```yaml
 Griptape: 能力抽象（Driver） + 结构化任务（Structure）
 LangChain: 表达式组合（LCEL）+ 链式调用（Chain）
 CrewAI: 角色定义（Role）+ 流程驱动（Process）
@@ -682,3 +682,44 @@ Griptape 是一个**被低估的生产级 AI Agent 框架**。它的 Driver 抽�
 - GitHub: https://github.com/griptape-ai/griptape
 - 文档: https://docs.griptape.ai/
 - 学习平台: https://learn.griptape.ai/
+---
+
+## 对比分析
+
+Griptape 是以"Driver 抽象 + 结构化工程"为核心理念的 Python Agent 框架，与 LangChain、LlamaIndex 在抽象层次与定位上有显著差异。
+
+### 维度对比表
+
+| 维度 | Griptape | LangChain | LlamaIndex |
+|------|----------|-----------|------------|
+| 抽象单位 | Driver（模型/向量库/嵌入可插拔） | Chain / Agent / Retriever | Index + Query Engine |
+| 核心强项 | 多 Provider 可替换、结构化管线 | 生态规模、组件丰富 | RAG / 数据索引 |
+| 学习曲线 | 中（需理解 Driver / Pipeline / Structure） | 中偏陡 | 中 |
+| 框架哲学 | 工程化、可测试、可替换 | 功能堆砌 + LangGraph 补齐编排 | 数据为中心 |
+| 适合场景 | 企业 AI、复杂 RAG、多 Provider 切换 | 通用 LLM 应用 | RAG / 知识库 |
+
+### 优缺点
+
+Griptape
+- 优点：Driver 抽象让模型/向量库/嵌入可插拔，可测试性极强；结构化管线（Structure / Pipeline / Task）工程化程度高；Griptape Cloud 一站式。
+- 缺点：相对小众，社区与生态小于 LangChain；快速原型验证不如 LangChain 简洁。
+
+LangChain
+- 优点：生态最大、组件最多；LangGraph 补充编排；LangSmith + LangServe 完善。
+- 缺点：抽象层多、版本迭代快、Driver 类可替换性弱于 Griptape。
+
+LlamaIndex
+- 优点：RAG 索引与查询引擎成熟；数据为中心视角清晰。
+- 缺点：通用 Agent 编排能力弱；多 Provider 可替换性弱于 Griptape。
+
+### 何时选
+
+- 选 Griptape：企业级 AI 应用、需要在多 LLM/VectorDB Provider 间灵活切换、关注可测试性。
+- 选 LangChain：需要最大生态、快速集成多种组件。
+- 选 LlamaIndex：项目核心是 RAG / 知识库、数据索引与查询为主。
+
+### 参考资料
+
+- Griptape 文档：https://docs.griptape.ai/
+- LangChain：https://python.langchain.com/
+- LlamaIndex：https://docs.llamaindex.ai/
