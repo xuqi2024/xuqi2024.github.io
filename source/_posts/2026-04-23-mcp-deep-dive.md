@@ -300,7 +300,7 @@ mcp_servers:
 
 重启 Hermes Agent 后，工具自动注册，命名遵循 `mcp_{server}_{tool}` 模式：
 
-```
+```text
 mcp_time_get_current_time    # 获取当前时间
 mcp_filesystem_read_file     # 读文件
 mcp_github_list_issues      # 查 GitHub Issues
