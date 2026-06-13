@@ -14,7 +14,7 @@ description: "头文件里定义一个 const 变量就 ODR violation？模板静
 
 你是否见过这样的错误？
 
-```
+```text
 undefined reference to 'Config::version'
 multiple definition of 'Config::version'
 ```
@@ -318,3 +318,39 @@ int main() {
 8. [（八）Attribute 新增](/2026/04/23/2026-04-24-cpp17-attributes/)
 
 </details>
+
+本章讲 C++17 的 inline variables 与 constexpr 加强，对比维度：本特性 vs 旧写法 vs 其他语言常量定义。
+
+## 对比分析
+
+### 一、本特性 vs 旧写法
+
+| 维度 | C++17 写法 | C++11/14 写法 | 影响 |
+|------|------------|----------------|------|
+| constexpr 变量 | `inline constexpr int kMax = 100;`（头文件直接定义） | 头文件外声明 `extern const`，在 .cpp 定义 | 多翻译单元不再重复定义 |
+| constexpr 函数 | `constexpr int square(int x){return x*x;}` C++14 起支持循环 / 多语句 | C++11 仅支持单 return | 算法能力扩展 |
+| 字面类型放宽 | C++17 起更多类型可 constexpr | 限制较多 | 写编译期容器更容易 |
+
+### 二、对比其他语言
+
+| 语言 | 编译期常量定义 | 备注 |
+|------|----------------|------|
+| C++17 | ✅ `inline constexpr` | 头文件友好 |
+| Java | ✅ `static final` | 行为类似 |
+| Rust | ✅ `const` / `static` | 区分编译期 vs 运行期 |
+| Python | ❌ 无真正编译期 | 无 |
+
+### 三、优缺点
+
+优点：
+- 头文件常量不再需要"声明 + 实现"两段式
+- constexpr 函数能写更复杂逻辑
+
+缺点：
+- 不能替代宏的所有用法
+- 调试期 vs constexpr 行为差异仍需注意
+
+### 四、何时选
+
+- 头文件常量 / 配置：直接用 `inline constexpr`
+- 编译期数值计算：用 constexpr 函数
