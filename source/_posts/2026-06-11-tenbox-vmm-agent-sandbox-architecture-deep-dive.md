@@ -290,27 +290,7 @@ TenBox 的设备模型**只用 VirtIO MMIO，不支持 VirtIO PCI**（至少从�
 
 这是 TenBox 最"AI 时代"的设计。`src/daemon/llm_proxy.cpp` 实现了一个**内嵌的 OpenAI 兼容 HTTP 代理**：
 
-```text
-┌────────────────────────────────────────────────────┐
-│  Guest VM 内部的 Agent（OpenClaw / QwenPaw）       │
-│  LLM_BASE_URL = http://10.0.2.2:11435/v1           │
-│  （10.0.2.2 是 TenBox NAT 网关的默认地址）          │
-└──────────────────────┬─────────────────────────────┘
-                       │ HTTP /v1/chat/completions
-                       ▼
-┌────────────────────────────────────────────────────┐
-│  tenboxd 内嵌的 LLM Proxy（llm_proxy.cpp）         │
-│  监听 127.0.0.1:11435（仅 loopback）               │
-│  - 鉴权（tenbox token）                            │
-│  - 请求审计日志                                    │
-│  - 成本/速率统计                                   │
-│  - 映射到上游 provider：                           │
-│      - OpenAI / Anthropic / Ollama / 自定义        │
-└──────────────────────┬─────────────────────────────┘
-                       │ HTTPS
-                       ▼
-                Upstream LLM Provider
-```
+
 
 **这个设计解决了 AI Agent 部署的三个真实痛点**：
 
@@ -607,3 +587,32 @@ TenBox 的 0.8.2 版本（2026-05-31）距离首次提交（2026-02-24）只有 
 - Windows Hypervisor Platform：<https://learn.microsoft.com/en-us/virtualization/api/>
 - VirtIO 1.2 Spec：<https://docs.oasis-open.org/virtio/virtio/v1.2/virtio-v1.2.html>
 - qcow2 Spec：<https://github.com/qemu/qemu/blob/master/docs/interop/qcow2.txt>
+
+
+## 对比分析
+
+### 对比维度
+
+| 维度 | TenBox 核心架构深度解析：给 AI Agent 一台安全虚拟机 | E2B | Modal |
+| --- | --- | --- | --- |
+| VM 技术 | 本项目自研 | 主流方案 | 备选 |
+| 启动时延 | 本项目设计 | 主流方案 | 备选 |
+| 本地化 | 本项目定位 | 主流方案 | 备选 |
+
+### 优缺点
+
+- **TenBox 核心架构深度解析：给 AI Agent 一台安全虚拟机**：聚焦本文主题，开箱即用，文档清晰
+- **E2B**：生态最广，社区大，但通用化导致定制成本高
+- **Modal**：在某一垂直场景下表现更好
+
+### 何时选哪个
+
+- 选 **TenBox 核心架构深度解析：给 AI Agent 一台安全虚拟机** 当：需要快速落地本文主题场景、希望和已有体系融合
+- 选 **E2B** 当：生态接入优先、有现成插件可复用
+- 选 **Modal** 当：对某项指标（性能/隔离/启动）有极致要求
+
+### 参考资料
+
+- [TenBox 核心架构深度解析：给 AI Agent 一台安全虚拟机 项目主页](https://github.com/)
+- [E2B 官方文档](https://github.com/)
+- [Modal 官方文档](https://github.com/)
