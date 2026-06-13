@@ -445,7 +445,7 @@ LlamaIndex通过`MemoryNode`支持记忆存储，但更像是文档检索的一�
 
 ### 6.3 架构设计差异总结
 
-```
+```text
 LangChain Memory:  Context Window ← 全量注入 ← 无筛选
 mem0:              Context Window ← 精准检索 ← 三层记忆 ← 向量+BM25+Reranker
 LlamaIndex Memory: Context Window ← 索引检索 ← 文档级别 ← 不区分记忆类型
@@ -549,3 +549,46 @@ mem0是目前GitHub上最成熟的AI Agent记忆层开源项目。它通过三�
 **相关对比项目**：
 - [LangChain Memory](https://github.com/langchain-ai/langchain)
 - [LlamaIndex Memory](https://github.com/run-llama/llama_index)
+
+---
+
+## 对比分析
+
+mem0 是 Agent 记忆层最成熟的开源项目之一，与同期的 MemPalace、LangChain Memory 在记忆模型与定位上各有侧重。
+
+### 维度对比表
+
+| 维度 | mem0 | MemPalace | LangChain Memory |
+|------|------|-----------|------------------|
+| 记忆模型 | 三层（情景/语义/程序性）+ 可插拔 LLM 提取 | 三库（精确/索引/上下文）+ 逐字保留 | 模块化（BufferMemory / Summary / VectorStoreMemory…） |
+| 检索策略 | 向量 + 关键词 + 时序混合 | Chroma 向量 + YAML 元数据 + 三库路由 | 主要依赖所挂载的向量库/摘要器 |
+| 持久化 | 多后端（Qdrant、PG、Redis…） | 本地 Chroma + YAML | 由所选 Retriever 决定 |
+| 开箱即用程度 | 高（云服务 + OSS 双轨） | 较高（29 个 MCP 工具） | 中（需自己选型组合） |
+| 适合场景 | 通用 Agent 长期记忆、SaaS 化部署 | 本地优先 / 隐私敏感 / 高精度检索 | 已有 LangChain 项目的快速集成 |
+
+### 优缺点
+
+**mem0**
+- 优点：三层记忆体系成熟、可插拔架构灵活、社区活跃（53k stars）、云服务 + OSS 双轨；适合作为通用 Agent 记忆基础设施。
+- 缺点：抽象较多，对轻量场景偏重；部分高级能力依赖云服务或付费层。
+
+**MemPalace**
+- 优点：完全本地、零摘要、逐字保留原始证据，精度高；提供 29 个 MCP 工具开箱即用；适合隐私敏感场景。
+- 缺点：依赖 Chroma 单后端；benchmark 与生态相比 mem0 较小；学习曲线略陡。
+
+**LangChain Memory**
+- 优点：与 LangChain 生态无缝集成，多种记忆类型可选；上手最快。
+- 缺点：抽象相对零散，跨记忆类型的一致性弱；向量库选型需要自己决定。
+
+### 何时选
+
+- **选 mem0**：你在构建通用 AI Agent，希望记忆层有云/OSS 双模式、社区活跃、可插拔存储后端。
+- **选 MemPalace**：你强隐私场景（医疗、法律、内部合规），需要逐字保真与完全本地部署。
+- **选 LangChain Memory**：你已经在用 LangChain 框架，希望快速集成记忆模块而不引入新依赖。
+
+### 参考资料
+
+- mem0 GitHub：https://github.com/mem0ai/mem0
+- MemPalace GitHub：https://github.com/MemPalace/mempalace
+- LangChain Memory 文档：https://python.langchain.com/docs/modules/memory/
+- LoCoMo 长对话记忆基准：https://github.com/snap-stanford/locomo
