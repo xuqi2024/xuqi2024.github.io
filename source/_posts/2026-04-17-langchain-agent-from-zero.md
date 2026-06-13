@@ -199,7 +199,7 @@ print("\n🤖 最终答案：", response["output"])
 
 运行后你会看到 Agent 的"思考过程"被打印出来，像这样：
 
-```
+```yaml
 Thought: 需要先查北京天气
 Action: get_weather
 Action Input: 北京
@@ -311,3 +311,40 @@ graph TD
 3. **加一个工具**：自己定义一个"查汇率"或"搜索新闻"的 Tool，观察 Agent 怎么学会用它
 
 > LLM 能聊天，Agent 能干活。**你离一个真正会干活的 AI 助手，只差一个 `@tool` 的距离。**
+
+---
+
+## 对比分析
+
+LangChain Agents 是 Agent 入门最常见的路径。下面与同样面向"工具调用 Agent"的两个框架对比：Agno（极简 Python）和 Smolagents（HuggingFace）。
+
+### 对比维度一：抽象与上手
+| 维度 | LangChain Agent | Agno | Smolagents |
+| --- | --- | --- | --- |
+| 抽象层级 | AgentExecutor + Tool | Agent + Tools + Models | CodeAgent / ToolCallingAgent |
+| 上手代码量 | 10+ 行 | 5 行 | 10+ 行 |
+| 模型切换 | 改一行 | 改一行 | HF 接口为主 |
+| 文档与社区 | 最厚 | 中 | 中 |
+
+### 对比维度二：能力与扩展
+| 维度 | LangChain Agent | Agno | Smolagents |
+| --- | --- | --- | --- |
+| 工具生态 | 全栈最多 | 内置丰富 | HF 工具集 |
+| 多 Agent 协作 | 通过 LangGraph | Team + Workflow | 不强调 |
+| 可观测 | LangSmith | 内置 | HF Hub |
+| 适合谁 | 想长期深耕 LLM 应用的人 | 第一次写 Agent 的人 | 紧跟 HF 的人 |
+
+### 优缺点
+- **LangChain Agent**：生态最厚，长期迭代最稳；概念多，入门会有"信息过载"感。
+- **Agno**：极简 5 行，多模态原生；想用高级能力时还是要补别的库。
+- **Smolagents**：紧跟 HF 生态，Code Agent 范式新颖；和 HF 绑定较深。
+
+### 何时选哪个
+- 想系统学 LLM 应用 + 长期迭代 → 选 LangChain Agent
+- 想 5 行代码跑通第一个 Agent → 选 Agno
+- 想用 HF 生态 + Code Agent 范式 → 选 Smolagents
+
+### 参考资料
+- LangChain 仓库：https://github.com/langchain-ai/langchain
+- Agno 仓库：https://github.com/agno-agi/agno
+- Smolagents 仓库：https://github.com/huggingface/smolagents
