@@ -472,4 +472,58 @@ CowAgent 最有价值的设计不是任何一个单点功能，而是**三层记
 
 ---
 
+## 对比分析
+
+CowAgent 的核心差异化是"三层记忆 + Deep Dream 蒸馏 + 24/7 个人助手"的一体化设计。在"长期记忆 / 24/7 助手"赛道里，跟它定位最像、且真正在社区里被讨论的项目是 Mem0、Letta（前身 MemGPT）和 Open Interpreter 的"个人助手模式"。下面对它们做一次横向对比。
+
+### 维度一：记忆架构
+
+| 项目 | 记忆层级 | 存储载体 | 蒸馏/演化机制 |
+|------|----------|----------|----------------|
+| **CowAgent** | Context → Daily → Core | 本地文件 + 索引 | Deep Dream（睡眠式）周期蒸馏 |
+| **Mem0** | 单层抽象 + 可插拔后端 | 向量库（Qdrant/pgvector 等） | LLM 抽取/合并/更新 |
+| **Letta (MemGPT)** | Core + Archival + Recall | 关系/向量混合 | 上下文窗口分页 + 工具调用 |
+| **MemOS** | MemCube + MemScheduler | 多后端（向量/图/文件） | 调度器主动编排 |
+
+### 维度二：Agent 形态
+
+- **CowAgent**：定位是"24/7 个人助手"，one-line 安装、技能用 Markdown 文件组织
+- **Mem0**：定位是"可插拔记忆层 SDK"，要自己选 LLM/工具/前端
+- **Letta**：定位是"有持久记忆的 Agent 运行时"，暴露 REST + Python SDK，自带 Web UI
+- **MemOS**：定位是"记忆操作系统"，强调跨模态、跨任务、跨用户的"自演化"能力
+
+### 维度三：开箱即用程度
+
+- **CowAgent**：✅ 一行安装 + 多渠道 + 文件型技能；最易上手
+- **Mem0**：⚠️ 需要自己组合 LLM/前端/调度
+- **Letta**：✅ 自带 Web UI，但默认模型/前端相对固定
+- **MemOS**：⚠️ 偏底层 SDK，需要较多工程化集成
+
+**优缺点小结**
+
+- **CowAgent**：把"长期记忆 + 24/7 + 技能文件 + 多渠道"做成一站式，最适合非工程用户；缺点是核心创新（Deep Dream 蒸馏）公开评测较少
+- **Mem0**：最像"记忆层的 Stripe"，生态最广；缺点是没有自带 Agent 形态
+- **Letta**：学术背景强，理论清晰；缺点是默认 UI/工作流较固定
+- **MemOS**：自演化机制 + 多模态最完整；缺点是复杂度高，落地成本大
+
+**何时选 CowAgent**
+
+- 想要"一键启动、24/7、能接入微信/钉钉/飞书的个人/团队助手"
+- 喜欢"技能用 Markdown 写"这种低代码方式
+- 不希望自己组合一堆 SDK 拼装
+
+**何时不选 CowAgent**
+
+- 你只想做"记忆层"被其它 Agent 调用——选 Mem0
+- 你想要"理论可证明的记忆分页"——选 Letta
+- 你的业务需要"跨模态、跨用户的强自演化"——选 MemOS
+
+**参考资料**
+
+- CowAgent GitHub：<https://github.com/zhayujie/CowAgent>
+- Mem0：<https://github.com/mem0ai/mem0>
+- Letta：<https://github.com/letta-ai/letta>
+- MemOS 论文：<https://arxiv.org/abs/2507.03724>
+- "Long-term Memory for LLM Agents" 综述：<https://arxiv.org/abs/2406.01564>
+
 > 行动建议：想体验的同学可以跑一行命令 `bash <(curl -fsSL https://cdn.link-ai.tech/code/cow/run.sh)` 快速部署，或直接阅读 `agent/memory/` 目录的源码，感受一个真实的分层记忆系统是如何实现的。
