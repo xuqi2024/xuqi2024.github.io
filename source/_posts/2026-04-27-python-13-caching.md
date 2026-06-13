@@ -111,7 +111,7 @@ def new_cached_func(x):
 
 ### 3.1 TTL 缓存原理
 
-```
+```text
 TTL (Time To Live) = 缓存条目存活时间
 
 存储: {key: (value, expire_time)}
@@ -380,6 +380,20 @@ print(kb_search("Python"))
 > 下节预告：【Python AI 教程】（十四）组合模式实战：构建模块化 AI Agent — 综合运用本系列所有知识，构建一个可扩展的模块化 AI Agent 框架。
 ---
 
+```mermaid
+graph LR
+    A[函数调用]:::input --> B{缓存命中?}:::decision
+    B -->|是| C[返回缓存值]:::output
+    B -->|否| D[执行函数]:::process
+    D --> E[存入 LRU/LFU]:::process
+    E --> F[返回结果]:::output
+    G[TTL 过期]:::warn --> B
+    classDef input fill:#FFE5E5,stroke:#FF9AA2,color:#333
+    classDef decision fill:#FFF4E5,stroke:#FFD6A0,color:#333
+    classDef process fill:#E5F3FF,stroke:#A0C4FF,color:#333
+    classDef output fill:#E5FFE5,stroke:#B5EAD7,color:#333
+    classDef warn fill:#FFD6A0,stroke:#FF9AA2,color:#333
+```
 ## 📚 Python AI教程 系列导航
 
 > 本文是《Python AI教程》系列第 **13/14** 篇。
@@ -408,3 +422,58 @@ print(kb_search("Python"))
 14. [（十四）组合模式实战](/2026/04/23/2026-04-27-python-14-composite-ai-agent/)
 
 </details>
+
+## 对比分析
+
+本章核心是 Python 的缓存机制（`functools.lru_cache` / `ttl_cache` / 自定义缓存）。
+
+### 维度一：缓存方案对比
+
+| 方案 | 淘汰策略 | TTL 支持 | 线程安全 | 持久化 | 适合 |
+|------|----------|----------|----------|--------|------|
+| **`@functools.lru_cache`** | LRU | ❌ | ✅ | ❌ | 进程内、可重入的纯函数 |
+| **`@functools.cache`**（3.9+） | 无界 | ❌ | ✅ | ❌ | 一次性函数（如 LLM embedding） |
+| **`cachetools.LRUCache`** | LRU / LFU | ✅（需包装） | 可选 | ❌ | 需要 TTL 或 maxsize |
+| **`cachetools.TTLCache`** | TTL | ✅ | 可选 | ❌ | 实时数据（如 token 限流） |
+| **Redis 客户端** | 自定义 | ✅ | ✅ | ✅ | 跨进程 / 跨服务 |
+| **diskcache** | LRU | ✅ | ✅ | ✅ 磁盘 | 本地磁盘缓存 |
+| **手写 OrderedDict** | LRU | 需自写 | 自管 | ❌ | 教学 / 特殊需求 |
+
+### 维度二：与其他语言的缓存库
+
+| 语言 | 缓存库 | 与 Python 对比 |
+|------|--------|----------------|
+| **Java** | Caffeine / Guava Cache | Caffeine 是 Java 缓存之王；API 远比 `lru_cache` 丰富（W-TinyLFU 等） |
+| **C#** | `MemoryCache`（System.Runtime.Caching） | 内置、易用；企业级常用 Redis + StackExchange.Redis |
+| **Go** | `go-cache` / `ristretto` | ristretto 是 DGraph 出品、极高并发性能 |
+| **Rust** | `moka` / `cached` | moka 借鉴 Caffeine；类型安全 + 零成本 |
+| **TypeScript / Node** | `node-cache` / `lru-cache` | npm `lru-cache` 与 Python `lru_cache` 思路一致 |
+| **Scala** | Caffeine Scala 包装 | 与 Java Caffeine 共享 |
+
+### 维度三：缓存与 AI 场景的契合
+
+| 场景 | 推荐方案 | 原因 |
+|------|----------|------|
+| LLM 同一问题重复调用 | `lru_cache` / Redis | 完全相同输入可共享结果 |
+| Embedding 计算 | `lru_cache` 或磁盘缓存 | 文本→向量可重入 |
+| Web 搜索结果 | Redis + TTL | 跨进程、过期自动失效 |
+| 数据库查询 | Redis + 失效策略 | 减轻 DB 压力 |
+| Token 限流 / 速率限制 | `TTLCache` 或 Redis | 滑动窗口 |
+| 实时行情 / 监控数据 | 短 TTL 缓存 | 避免雪崩 |
+
+### 优缺点小结
+
+- **`functools.lru_cache`**：标准库、零配置、LRU 淘汰；缺点是不支持 TTL、不能持久化
+- **`cachetools.TTLCache`**：TTL 友好、社区库；缺点是需第三方依赖
+- **Redis**：分布式、TTL 丰富、集群；缺点是引入网络依赖、序列化成本
+- **Caffeine (Java)**：性能最强、淘汰算法最先进；缺点是 JVM 生态
+- **diskcache**：单机大容量；缺点是不能跨机器
+
+### 何时选
+
+- 选 **`@lru_cache(maxsize=128)`**：纯函数 + 进程内 + 调用频繁
+- 选 **`@lru_cache(maxsize=None)`**（3.9+ 用 `@cache`）：一次性函数、结果集有限
+- 选 **`TTLCache`**：需要自动过期（实时数据、限流）
+- 选 **Redis**：多实例部署、需共享缓存
+- 选 **diskcache**：单机大容量（如数据集预处理结果）
+- 不推荐 **裸字典缓存**：无淘汰、无过期、易内存泄漏
