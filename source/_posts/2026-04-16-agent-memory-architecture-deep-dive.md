@@ -148,7 +148,7 @@ DeerFlow 的 Memory 分为两层：
 
 **长期记忆（Long-Term）**：通过 `memory.search()` 从外部向量存储检索相关记忆，在 Middleware 链的 **SummarizationMiddleware** 中自动触发
 
-```
+```text
 用户消息 → SummarizationMiddleware 
          → 查询 Long-Term Memory (向量相似度)
          → 将相关记忆注入上下文 
@@ -303,7 +303,7 @@ def memory.add(messages, user_id):
 
 mem0 支持多种向量数据库作为存储后端：
 
-```
+```text
 支持的 Vector Store:
 ├── Qdrant
 ├── Chroma
@@ -533,7 +533,7 @@ radarChart
 
 ### 4.2 Memory 机制的核心差异
 
-```
+```text
 DeerFlow Memory:
   User Input → SummarizationMiddleware → Vector Search → Inject to Context
   (在推理链路中插入，不改变推理模型)
@@ -593,3 +593,40 @@ AI Agent 的 Memory 问题，本质上是「如何让 AI 记住有用的东西�
 - DeerFlow: https://github.com/bytedance/deer-flow (⭐ 61.8k)
 - mem0: https://github.com/mem0ai/mem0 (⭐ 53.1k)
 - Dify: https://github.com/langgenius/dify (⭐ 137.9k)
+
+---
+
+## 对比分析
+
+本文已对 DeerFlow / mem0 / Dify 做横向比较。下面在"超 Agent + 记忆层"这条赛道上，再选取 LangChain 和 Letta 两个常被同时提及的项目，从架构师视角做补充对比。
+
+### 对比维度一：Agent 编排 + 记忆集成
+| 维度 | DeerFlow | LangChain + mem0 | Letta |
+| --- | --- | --- | --- |
+| 记忆定位 | Harness 内嵌 | 通过外部库接入 | 一等公民 |
+| 多 Agent | 内置角色 + 任务流 | 通过 LangGraph | 通过 block + tool |
+| 记忆 API | 自研检索层 | mem0 add/search | core/recall/archival |
+| 适合场景 | 深度研究 + 报告 | 通用业务 | 长期 Agent SaaS |
+
+### 对比维度二：可扩展性
+| 维度 | DeerFlow | LangChain + mem0 | Letta |
+| --- | --- | --- | --- |
+| 工具扩展 | 注册式 | 工具装饰器 | Tool 函数 |
+| 后端替换 | 抽象较紧 | 全栈可插拔 | Postgres/SQLite 可换 |
+| 可观测 | 内置 trace | LangSmith | 自带 UI |
+| 学习曲线 | 中 | 高（概念多） | 中偏高 |
+
+### 优缺点
+- **DeerFlow**：报告型多 Agent 开箱即用；适合"研究型任务"。
+- **LangChain + mem0**：自由组合能力最强；组合成本高，需自己把概念拼对。
+- **Letta**：把 Agent 当"系统"做，记忆模型一致；上手门槛高于普通框架。
+
+### 何时选哪个
+- 想做"自动研究 + 写报告" → 选 DeerFlow
+- 想自由搭配工具/向量库/记忆 → 选 LangChain + mem0
+- 想把 Agent 当作长期服务来运营 → 选 Letta
+
+### 参考资料
+- DeerFlow 仓库：https://github.com/bytedance/deer-flow
+- LangChain 仓库：https://github.com/langchain-ai/langchain
+- Letta 仓库：https://github.com/letta-ai/letta
