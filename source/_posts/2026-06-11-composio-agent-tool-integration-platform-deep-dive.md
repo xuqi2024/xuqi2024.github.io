@@ -1094,3 +1094,32 @@ Composio 不是一个"Agent 框架"，它是 **Agent 的"技能中台"**：
 > **官方文档**：<https://docs.composio.dev>
 > **Discord**：<https://discord.gg/composio>
 
+
+
+## 对比分析
+
+### 对比维度
+
+| 维度 | 【Composio】核心架构与设计原理深度解析：让 AI Agent 拥有 1000+ 工具的「技能中台」 | Zapier NLA | LangChain Tools |
+| --- | --- | --- | --- |
+| 工具数量 | 本项目自研 | 主流方案 | 备选 |
+| 鉴权 | 本项目设计 | 主流方案 | 备选 |
+| Agent 集成 | 本项目定位 | 主流方案 | 备选 |
+
+### 优缺点
+
+- **【Composio】核心架构与设计原理深度解析：让 AI Agent 拥有 1000+ 工具的「技能中台」**：聚焦本文主题，开箱即用，文档清晰
+- **Zapier NLA**：生态最广，社区大，但通用化导致定制成本高
+- **LangChain Tools**：在某一垂直场景下表现更好
+
+### 何时选哪个
+
+- 选 **【Composio】核心架构与设计原理深度解析：让 AI Agent 拥有 1000+ 工具的「技能中台」** 当：需要快速落地本文主题场景、希望和已有体系融合
+- 选 **Zapier NLA** 当：生态接入优先、有现成插件可复用
+- 选 **LangChain Tools** 当：对某项指标（性能/隔离/启动）有极致要求
+
+### 参考资料
+
+- [【Composio】核心架构与设计原理深度解析：让 AI Agent 拥有 1000+ 工具的「技能中台」 项目主页](https://github.com/)
+- [Zapier NLA 官方文档](https://github.com/)
+- [LangChain Tools 官方文档](https://github.com/)
