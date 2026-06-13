@@ -271,3 +271,41 @@ flowchart LR
 7. [（七）Ranges 库](/2026/04/23/2026-04-24-cpp20-ranges/)
 
 </details>
+
+本章讲 C++20 的 Coroutine（协程），对比维度：本特性 vs 旧 callback / future 写法 vs 其他语言协程。
+
+## 对比分析
+
+### 一、本特性 vs 旧写法
+
+| 维度 | C++20 协程 | 旧 callback | std::future |
+|------|-------------|--------------|-------------|
+| 可读性 | `co_await` / `co_return` 接近同步写法 | 嵌套回调（callback hell） | 链式 .then() |
+| 组合性 | 通过 Awaitable 自定义 | 自己写状态机 | 第三方库 |
+| 性能 | 无栈协程，零开销 | 与回调层数相关 | 通常有线程池调度 |
+| 与 STL 集成 | 标准库未直接提供 Task（仍在演进） | 任意 | 较成熟 |
+
+### 二、对比其他语言
+
+| 语言 | 协程 | 风格 |
+|------|------|------|
+| C++20 | `co_await/co_return/co_yield` | 无栈协程，库自行定义 Promise |
+| Python | `async/await` + asyncio | 有栈协程（基于生成器） |
+| Rust | `async/await` | 无栈协程 |
+| Go | `goroutine` + `chan` | 语言级运行时 |
+| JavaScript | `async/await` | 单线程事件循环 |
+
+### 三、优缺点
+
+优点：
+- 提供异步的"同步写法"
+- 不强制运行时，开销可控
+
+缺点：
+- 标准库未提供完整 Task / Executor，需用第三方（cppcoro、Asio）
+- 学习曲线陡，编译器错误信息可读性一般
+
+### 四、何时选
+
+- 异步 I/O 密集：coroutine
+- 需要广为人知的生态：暂时仍可考虑 callback + libuv
