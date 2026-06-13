@@ -81,7 +81,7 @@ int main() {
 ```
 
 **运行结果**：
-```
+```text
 3
 4
 i
@@ -363,3 +363,41 @@ int main() {
 7. [（七）Ranges 库](/2026/04/23/2026-04-24-cpp20-ranges/)
 
 </details>
+
+本章讲 C++20 的 Concepts（概念），对比维度：本特性 vs C++17 SFINAE 旧写法 vs 其他语言约束 / 接口。
+
+## 对比分析
+
+### 一、本特性 vs 旧写法
+
+| 维度 | C++20 Concepts | C++17 SFINAE | 影响 |
+|------|-----------------|--------------|------|
+| 写法 | `template<std::integral T> void f(T);` | `template<class T, std::enable_if_t<std::is_integral_v<T>, int> = 0> void f(T);` | 可读性 10 倍提升 |
+| 错误信息 | "T 不满足 Integral" | 一长串 enable_if 嵌套 | 调试友好 |
+| 重载 | 按 concept 选择最佳重载 | 部分排序 + 黑魔法 | 直观 |
+| 可命名 | `concept Integral = std::integral<T>;` | 散落各模板 | 可复用 |
+
+### 二、对比其他语言
+
+| 语言 | 类型约束 / 接口 | 备注 |
+|------|-----------------|------|
+| C++20 | Concepts | 编译期 |
+| Rust | Trait bounds | `T: Integral` |
+| Haskell | Type classes | 最强 |
+| Java | Generic bounded type `<T extends Number>` | 较受限 |
+| Python | Protocol / abc | 运行期为主 |
+
+### 三、优缺点
+
+优点：
+- 让模板接口设计第一次像"真正的接口"
+- 错误信息大幅友好
+
+缺点：
+- 编译器支持仍在完善
+- 概念定义的最佳实践尚未收敛
+
+### 四、何时选
+
+- 写公共库 API：必须用 Concepts
+- 内部模板：也建议尽早引入，节省维护成本
