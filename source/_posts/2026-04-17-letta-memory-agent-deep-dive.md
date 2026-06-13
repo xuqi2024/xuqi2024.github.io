@@ -212,14 +212,7 @@ flowchart TB
 
 这是Letta/MemGPT的核心创新。它的原理是：
 
-```
-传统方案：          Letta方案：
-┌─────────────┐    ┌──────────────────────┐
-│  有限上下文   │    │  虚拟无限上下文        │
-│  128K tokens │    │  LLM以为自己能看到全部  │
-│              │    │  实际被分页管理        │
-└─────────────┘    └──────────────────────┘
-```
+
 
 ```mermaid
 flowchart TB
@@ -285,7 +278,7 @@ flowchart TB
 
 **Compaction的判断逻辑**（伪代码）：
 
-```
+```javascript
 function should_compact(core_memory, archival_memory):
     # 判断是否需要压缩
     if core_memory.usage_ratio > 0.8:
@@ -476,18 +469,7 @@ flowchart LR
 
 **Letta vs 传统RAG的本质区别**：
 
-```
-传统RAG：          Letta：
-┌─────────────┐    ┌──────────────────────┐
-│ 用户问问题   │    │ Agent持续运行        │
-│ → 检索向量库 │    │ → 主动管理记忆层级   │
-│ → 拼进上下文 │    │ → 上下文窗口智能调度 │
-│ → 生成回答   │    │ → 回答时动态召回     │
-└─────────────┘    └──────────────────────┘
 
-RAG是被动问答
-Letta是主动记忆管理
-```
 
 ### 5.4 Letta vs AutoGen/MCP
 
@@ -612,7 +594,7 @@ task_result = client.agents.messages.create(
 
 Letta的核心思想可以用一个类比来理解：
 
-```
+```text
 传统LLM的上下文窗口 = 电脑的寄存器
 Letta的分层记忆 = 电脑的RAM + 磁盘 + OS调度
 
@@ -753,7 +735,7 @@ Letta解决的是一个根本性问题：**LLM的上下文窗口有限，但人�
 
 它的解法——**让Agent像操作系统管理内存一样管理记忆**——看似简单，实际上打开了一扇新的大门：
 
-```
+```text
 传统Agent:     每次对话都是新的开始
 Letta Agent:   持续演进的生命体
 ```
@@ -779,3 +761,40 @@ Letta目前仍处于快速发展阶段，它的架构思路正在影响整个Age
 ---
 
 *Letta的思想可以用一句话总结：不是让LLM的上下文窗口变大，而是让它学会像我们一样——记住重要的，忘掉不重要的。*
+
+---
+
+## 对比分析
+
+Letta（前 MemGPT）强调"操作系统级"的分层记忆。下面与同样关注长期记忆的两个项目对比：mem0（记忆中间件）和 Hermes Agent（带 Honcho 用户画像的 Agent）。
+
+### 对比维度一：记忆模型
+| 维度 | Letta | mem0 | Hermes Agent |
+| --- | --- | --- | --- |
+| 记忆分层 | core / recall / archival | 用户/会话/Agent | SQLite + FTS5 + Honcho |
+| 记忆工具调用 | Agent 主动调用 | 客户端 API | 任务后自动写入 |
+| 召回机制 | LLM 工具调用 | 嵌入检索 | FTS5 + LLM 摘要 |
+| 是否有 Agent | 是 | 否 | 是 |
+
+### 对比维度二：定位与使用
+| 维度 | Letta | mem0 | Hermes Agent |
+| --- | --- | --- | --- |
+| 适合产品 | 长期 Agent SaaS | LLM 应用加记忆 | 个人/团队 CLI 助手 |
+| 学习曲线 | 中偏高 | 低 | 中 |
+| 自托管 | Postgres/SQLite | 向量库 | SQLite |
+| 与 LLM 应用关系 | Agent 自带记忆 | 中间件嵌入 | CLI 工具 |
+
+### 优缺点
+- **Letta**：把"分层记忆"做成 Agent 一等公民；上手门槛高于纯中间件方案。
+- **mem0**：作为中间件最易塞进既有 LLM 应用；不做 Agent 业务编排。
+- **Hermes Agent**：CLI 体验 + 长期记忆一体化；不适合直接做云端 SaaS。
+
+### 何时选哪个
+- 想做一个带记忆的 Agent 产品 → 选 Letta
+- 想给现有应用加"用户记忆" → 选 mem0
+- 想做"越用越懂你"的本地 CLI 助手 → 选 Hermes Agent
+
+### 参考资料
+- Letta 仓库：https://github.com/letta-ai/letta
+- mem0 仓库：https://github.com/mem0ai/mem0
+- Hermes Agent 仓库：https://github.com/NousResearch/Hermes-Agent
