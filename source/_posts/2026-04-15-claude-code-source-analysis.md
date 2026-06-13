@@ -410,3 +410,40 @@ Claude Code 泄露事件让整个 AI Agent 社区第一次看到了**工业化�
 最后用源码注释里的一句话收尾：
 
 > *"This isn't a wrapper around an API. It's a full operating system for AI agents."*
+
+---
+
+## 对比分析
+
+本文聚焦 Claude Code 的源码与设计哲学。Claude Code 是 Anthropic 推出的"终端 Agent"，下面与两个同样定位"终端编程 Agent"的开源项目做对比：OpenHands CLI 和 pi-mono。
+
+### 对比维度一：产品形态与权限模型
+| 维度 | Claude Code | OpenHands CLI | pi-mono |
+| --- | --- | --- | --- |
+| 主要场景 | 终端编程 + 长任务 | 终端编程 + 仓库操作 | 终端编程 + 工具编排 |
+| 权限模型 | 工具级 ask / allow | Docker 沙箱为主 | 本地进程级执行 |
+| 是否开源 | 否（闭源 CLI） | 是 | 是 |
+| 部署门槛 | npm 安装即可 | Docker 镜像 | 单二进制 |
+
+### 对比维度二：能力与生态
+| 维度 | Claude Code | OpenHands CLI | pi-mono |
+| --- | --- | --- | --- |
+| 模型绑定 | Anthropic Claude | 任意 LLM | 任意 LLM |
+| 上下文管理 | 自研压缩与摘要 | 工作区快照 | 简洁 message 链 |
+| 工具生态 | 内置 Bash / Edit / Read | 文件 / Shell / 浏览器 | 工具注册表 |
+| 学习价值 | 高，看怎么设计 | 高，看怎么沙箱化 | 高，看怎么最小化 |
+
+### 优缺点
+- **Claude Code**：体验打磨最深，权限模型与压缩策略先进；闭源，模型绑定 Anthropic。
+- **OpenHands CLI**：开源 + 沙箱，可自托管；对个人开发者来说部署略重。
+- **pi-mono**：极简 Rust 实现，单文件即可上手；功能相对克制。
+
+### 何时选哪个
+- 想立刻体验最强闭源体验 → 选 Claude Code
+- 想自托管、可审计 → 选 OpenHands
+- 想读源码、学习 Agent 最小实现 → 选 pi-mono
+
+### 参考资料
+- Claude Code 官方介绍：https://www.anthropic.com/claude-code
+- OpenHands 仓库：https://github.com/All-Hands-AI/OpenHands
+- pi-mono 仓库：https://github.com/malcolmyu/pi-mono
