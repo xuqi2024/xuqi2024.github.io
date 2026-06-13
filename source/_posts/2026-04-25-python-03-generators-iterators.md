@@ -398,7 +398,6 @@ for key, group in itertools.groupby(sorted(data), key=lambda x: x[0]):
 
 *原创于 2026-04-25 | 所属系列：【Python AI教程】*
 ---
-
 ## 📚 Python AI教程 系列导航
 
 > 本文是《Python AI教程》系列第 **3/14** 篇。
@@ -427,3 +426,50 @@ for key, group in itertools.groupby(sorted(data), key=lambda x: x[0]):
 14. [（十四）组合模式实战](/2026/04/23/2026-04-27-python-14-composite-ai-agent/)
 
 </details>
+
+## 对比分析
+
+本章核心是 Python 的迭代器协议与生成器（`yield` / `yield from`）。
+
+### 维度一：生成器 vs 列表（流式 vs 全量）
+
+| 方案 | 内存占用 | 延迟求值 | 适用场景 |
+|------|----------|----------|----------|
+| **生成器 / 生成器表达式** | O(1)（仅保存当前状态） | ✅ 元素按需产出 | 流式 LLM 输出、大文件、无限序列 |
+| **列表 / 列表推导** | O(N)（全部加载到内存） | ❌ 一次性构造 | 需多次遍历、需要 `len()`/索引 |
+| **map / filter 迭代器** | O(1) | ✅ | 简单数据变换 |
+| **itertools 链式迭代器** | O(1) | ✅ | 复杂流式 pipeline |
+
+### 维度二：与其他语言的"惰性序列"
+
+| 语言 | 惰性序列特性 | 与 Python 生成器对比 |
+|------|--------------|------------------------|
+| **Java** | `Stream` API（Java 8+） | 语义最接近，支持 `map/filter/reduce`；缺点是只能消费一次、并行流行为有坑 |
+| **C++** | 范围 for + 自定义迭代器 | 灵活但样板代码多，泛型 lambda 时代稍好 |
+| **Go** | `channel` + goroutine | 通过 CSP 模型实现流式；比生成器更"系统级" |
+| **Rust** | `Iterator` Trait + `iter()`/`into_iter()` | 零成本抽象、组合子丰富（`map`/`filter`/`fold`）；类型系统保证 |
+| **JavaScript** | Generator Function（function\*）+ yield | 语法与 Python 几乎一样；缺点是生态多以 Promise/async 为主 |
+| **Ruby** | `Enumerator` / `Fiber` | 思路相同；`Enumerator::Lazy` 提供惰性链 |
+| **Haskell** | 列表默认就是惰性的 | 语言层面原生支持，无须关键字 |
+
+### 维度三：生成器 vs 协程
+
+- **生成器**（`yield`）：数据生产者，单向拉取
+- **async/await 协程**：任务调度单位，可并发等待 I/O
+- **生成器协程**（`yield` 双向 send/throw）：历史上 Python 2.2–3.3 的协程实现，已被 `async/await` 取代
+
+### 优缺点小结
+
+- **Python 生成器**：语法最轻、状态自动保存、`yield from` 委托优雅；缺点是单次消费、调试栈略长
+- **Java Stream**：并行流开箱即用；缺点是不可复用、调试难
+- **Rust Iterator**：零成本、组合子生态最强；缺点是生命周期标注对新手不友好
+- **JavaScript Generator**：与 Python 高度相似；缺点是多数场景已被 async/await 替代
+- **Haskell 列表**：语言级惰性、最纯粹；缺点是栈溢出风险
+
+### 何时选
+
+- 选 **生成器**：流式数据（LLM token 流、大文件、传感器数据）、无限序列
+- 选 **列表推导**：需要多次索引/长度/切片
+- 选 **itertools.chain / islice / takewhile**：组合多个数据源
+- 选 **async 生成器**：异步流式（如 `async for chunk in websocket`）
+- 不推荐 **手写迭代器类**：除非自定义状态复杂，否则用 `yield` 更短
