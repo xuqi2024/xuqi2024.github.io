@@ -37,7 +37,7 @@ ReAct 来自 2022 年斯坦福的论文 [《ReAct: Synergizing Reasoning and Act
 
 核心思想很简单：**大语言模型不应该只"想"（Reason），也不应该只"做"（Act），而应该交替进行。**
 
-```
+```yaml
 Reason: 思考当前状态，决定下一步行动
   ↓
 Act:   调用工具，获取结果
@@ -145,7 +145,7 @@ class Agent:
 
 LangChain 的 ReAct Agent 用了一个特定的 Prompt 模板，理解它才能调优 Agent：
 
-```
+```text
 你是一个 AI 助手。
 
 你有权访问以下工具：
@@ -431,7 +431,7 @@ print(result)
 
 ### 4.2 生产级 RAG 架构
 
-```
+```text
 文档 → 智能切分 → 向量化 → 存入向量库
                             ↓
 用户提问 → 生成查询向量 → 向量检索 → 混合搜索（向量+关键词）
@@ -577,7 +577,7 @@ retriever = ParentDocumentRetriever(
 
 **适用场景**：任务能明确分解，且各子任务相对独立。
 
-```
+```text
 用户 → Supervisor（分析任务）→ 分给 Worker A / Worker B / Worker C
                         ↓
               收集各 Worker 结果，整合回答
@@ -1170,3 +1170,47 @@ def cleanup_agent_memory(agent, keep_recent=5):
 - LangChain RAG 文档：https://python.langchain.com/docs/modules/data_connection/
 - AutoGen：https://microsoft.github.io/autogen/
 - CrewAI：https://github.com/joaomdmoura/crewAI
+
+---
+
+## 对比分析
+
+LangChain Agent 处于"通用 LLM 编排框架"的定位，与同类项目相比，其优势在于生态规模与组件丰富度，但学习曲线和抽象层数也被广泛吐槽。下面从三个维度展开对比。
+
+### 维度对比表
+
+| 维度 | LangChain Agent | LangGraph | CrewAI |
+|------|----------------|-----------|--------|
+| 抽象层级 | Chain + AgentExecutor（链式 + 自治 Agent） | 状态图（StateGraph），节点/边显式建模 | Role-based（角色驱动） |
+| 核心范式 | ReAct + Tool Calling，工具调用灵活 | 图遍历，支持循环、分支、人机协作 | 多角色任务委派，强调团队协作 |
+| 学习曲线 | 中等偏陡，概念多（Agent/Chain/Retriever/Memory…） | 较陡，需理解图论概念 | 平缓，Pythonic 上手最快 |
+| 适用场景 | 通用 LLM 应用、复杂工具链集成、RAG、Agent 实验 | 长流程、强状态、需要 checkpoint / human-in-loop | 角色化任务（研究+写作+审稿流水线） |
+| 生态/可扩展性 | 巨大（数百集成、LangSmith、LangServe） | 同 LangChain 生态，扩展一致 | 中等，专注多角色场景 |
+| 生产就绪度 | 中（抽象层深，调试需 LangSmith） | 较高（天然支持持久化、回溯） | 中（简单但缺少复杂状态机制） |
+
+### 优缺点
+
+**LangChain Agent**
+- 优点：生态最丰富，几乎所有 LLM / Vector DB / Loader 都有官方集成；ReAct + Tool Calling 模式上手快；社区资料和 Cookbook 极多。
+- 缺点：抽象层多（Chain / AgentExecutor / Tool / Retriever / Callback），新手容易迷失；版本迭代快，API 变动较多；深层调试需依赖 LangSmith。
+
+**LangGraph**
+- 优点：把 Agent 流程显式建模为图，天然支持循环、分支、持久化、checkpoint、human-in-the-loop；适合长流程和复杂状态。
+- 缺点：需要理解状态图概念，上手成本高于 Chain；生态相比 LangChain 主库略小。
+
+**CrewAI**
+- 优点：角色驱动模型直观，Pythonic API 简洁，研究+写作类流水线开箱即用；学习曲线最平缓。
+- 缺点：复杂状态控制和精细流程编排不如 LangGraph；生态规模小于 LangChain。
+
+### 何时选
+
+- **选 LangChain Agent**：你需要快速集成大量第三方组件（向量库、Loader、API），或在多种 LLM 间无缝切换，或团队已有 LangChain 积累。
+- **选 LangGraph**：你需要长流程、强状态、human-in-the-loop、可回溯执行的生产级 Agent，复杂业务编排是关键。
+- **选 CrewAI**：你想快速搭一个多角色协作流水线（研究员+写手+审核），原型优先、生产可用但不必极致精细。
+
+### 参考资料
+
+- LangChain Agents 文档：https://python.langchain.com/docs/modules/agents/
+- LangGraph 文档：https://langchain-ai.github.io/langgraph/
+- CrewAI 文档：https://docs.crewai.com/
+- ReAct 论文：https://arxiv.org/abs/2210.03629
