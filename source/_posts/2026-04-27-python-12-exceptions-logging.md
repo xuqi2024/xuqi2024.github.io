@@ -21,7 +21,7 @@ description: "本章讲解 Python 异常链机制、自定义异常层次设计�
 
 在 AI 应用中，错误往往不是孤立存在的。例如：
 
-```
+```text
 用户 prompt → LLM API 调用 → 网络错误 → 超时
 ```
 
@@ -135,7 +135,7 @@ def call_llm(prompt: str) -> str:
 
 ### 3.1 核心组件
 
-```
+```text
 Logger          ← 日志记录器（入口）
     ↓
 Handler         ← 处理器（输出目标）
@@ -356,6 +356,19 @@ finally:
 > 下节预告：【Python AI 教程】（十三）缓存艺术：lru_cache/ttl_cache/自定义 — 深入理解 Python 缓存机制，构建高效的 AI 响应缓存系统。
 ---
 
+```mermaid
+graph LR
+    A[try 块]:::input --> B{异常发生?}:::decision
+    B -->|否| C[正常继续]:::output
+    B -->|是| D[except 捕获]:::process
+    D --> E[logging.error]:::process
+    E --> F[raise from]:::process
+    F --> G[异常链保留]:::output
+    classDef input fill:#FFE5E5,stroke:#FF9AA2,color:#333
+    classDef decision fill:#FFF4E5,stroke:#FFD6A0,color:#333
+    classDef process fill:#E5F3FF,stroke:#A0C4FF,color:#333
+    classDef output fill:#E5FFE5,stroke:#B5EAD7,color:#333
+```
 ## 📚 Python AI教程 系列导航
 
 > 本文是《Python AI教程》系列第 **12/14** 篇。
@@ -384,3 +397,57 @@ finally:
 14. [（十四）组合模式实战](/2026/04/23/2026-04-27-python-14-composite-ai-agent/)
 
 </details>
+
+## 对比分析
+
+本章核心是 Python 的异常链（`raise ... from`）与 `logging` 模块。
+
+### 维度一：异常链 vs 旧写法
+
+| 方案 | 追溯原始异常 | 语法 | 推荐指数 |
+|------|--------------|------|----------|
+| **`raise NewError(...) from original`（PEP 3134）** | ✅ `__cause__` | 一行 | ⭐⭐⭐ 首选 |
+| **`raise NewError(...)`（不带 from）** | ✅ `__context__`（隐式） | 一行 | ⭐⭐ |
+| **`raise NewError(...) from None`** | ❌ 显式切断 | 一行 | 隐藏内部细节时用 |
+| **手动 `traceback.print_exc()`** | ✅ 需手写 | 多行 | ⭐ |
+| **`sys.exc_info()`** | ✅ 需手写 | 多行 | 库作者专用 |
+
+### 维度二：与其他语言的异常处理
+
+| 语言 | 异常机制 | 与 Python 对比 |
+|------|----------|----------------|
+| **Java** | checked exception + `try-catch-finally` + `addSuppressed` | checked 异常是 Java 特色；`addSuppressed` 类似 Python `__context__` |
+| **C++** | `throw` / `catch`（无 finally，用 RAII） | 无链式追溯（C++17 `nested_exception` 才支持） |
+| **Go** | `error` 值 + `panic/recover` + `errors.Wrap`（pkg/errors） | Go 1.13+ `fmt.Errorf("%w", err)` 提供链式；panic 类似未捕获异常 |
+| **Rust** | `Result<T, E>` + `?` 运算符 + `Error::source()` | 编译期强制处理；`?` 自动包装，最优雅 |
+| **JavaScript** | `Error.cause`（ES2022）+ `async` 错误链 | 后入场；`cause` 字段就是 Python `__cause__` |
+| **C#** | `try/catch/finally` + `InnerException` | 思路与 Python `__cause__` 几乎一样 |
+| **Ruby** | `rescue` + `cause` | 同 Python 哲学，但社区用法更松散 |
+
+### 维度三：Python `logging` vs 其他日志库
+
+| 方案 | 配置方式 | 结构化日志 | 异步 | 性能 |
+|------|----------|------------|------|------|
+| **标准库 `logging`** | `dictConfig` / `fileConfig` | 需 JSON Formatter | ❌ 需 `QueueHandler` | 中 |
+| **loguru** | 极简 API、零配置 | ✅（`serialize=True`） | ✅ 内置 | 中 |
+| **structlog** | 链式 API | ✅ 原生 | ✅ | 中 |
+| **Java Logback** | XML / Groovy | ✅ MDC | ✅ AsyncAppender | 高 |
+| **Go zap / zerolog** | 显式初始化 | ✅ 原生 | ✅ | 极高（零分配） |
+| **Rust tracing** | span + event | ✅ 原生 | ✅ | 高 |
+
+### 优缺点小结
+
+- **Python `raise ... from`**：语法最简洁、IDE 支持好；缺点是仅作用于 `__cause__`，跨框架追踪仍需日志关联 ID
+- **Java checked exception**：编译器强制处理；缺点是样板代码多
+- **Rust `Result` + `?`**：编译期保证错误传播；缺点是必须显式处理
+- **Go `fmt.Errorf("%w", err)`**：与 Python 思路最像；区别是 error 是值非异常
+- **Python `logging`**：标准库、生态最广；缺点是 dictConfig 略冗长
+
+### 何时选
+
+- 选 **`raise ... from e`**：在 except 块中重新抛新异常，永远应该加 `from`
+- 选 **`raise ... from None`**：明确不想让用户看到内部异常（如封装 SDK 隐藏实现细节）
+- 选 **`logging.dictConfig`**：需要统一管理多个 logger / handler
+- 选 **`loguru`**：快速开发、想少写配置
+- 选 **`structlog`**：需要结构化 JSON 日志（云原生、可观测性）
+- 不推荐 **`print` 调试**：无法分级、无时间戳、无目的地
