@@ -337,7 +337,11 @@ print(sse_stream[:500])
 
 1. **Pydantic 自动 camelCase**：`message_id` 序列化为 `messageId`，`thread_id` → `threadId`。这避免 Python 后端和 JS 前端的字段命名风格冲突。
 2. **`exclude_none=True`**：可空字段为 None 时不输出，减小 payload。
-3. **SSE 格式**：`data: ...\n\n` 是 Server-Sent Events 的标准格式，任何支持 EventSource 的浏览器/SDK 都能直接消费。
+3. **SSE 格式**：`data: ...
+
+
+
+` 是 Server-Sent Events 的标准格式，任何支持 EventSource 的浏览器/SDK 都能直接消费。
 
 ### 3.4 一个完整可运行的 FastAPI Server
 
@@ -491,7 +495,7 @@ class MultimodalInputCapabilities(ConfiguredBaseModel):
 
 AG-UI 把"事件编解码"和"事件路由"解耦得相当彻底。仓库的 `middlewares/` 目录提供了 6 类现成中间件：
 
-```
+```text
 middlewares/
 ├── a2a-middleware/             # AG-UI <-> A2A 桥接
 ├── a2ui-middleware/             # AG-UI <-> A2UI（生成式 UI 协议）
@@ -687,3 +691,58 @@ AG-UI 不是要"取代"MCP 或 A2A，而是补完了 Agent 协议栈的最后一
 > **参考实现**：[CopilotKit/CopilotKit](https://github.com/CopilotKit/CopilotKit)
 > **官方文档**：https://docs.ag-ui.com
 > **互动 Demo**：https://dojo.ag-ui.com
+
+## 对比分析
+
+AG-UI 的核心是"Agent ↔ 前端"的事件流协议。在"Agent 用户界面交互"这个细分赛道里，跟它最相关的项目是 OpenAI 的 Apps SDK、Vercel 的 AI SDK 3.x，以及 Anthropic 的 Tool Use 事件规范。下面对它们做一次横向对比。
+
+### 维度一：协议定位
+
+| 项目 | 协议层 | 传输 | 核心抽象 |
+|------|--------|------|----------|
+| **AG-UI** | Agent ↔ Frontend | SSE / WebSocket | 16+ 事件类型（Text/Message/ToolCall/State 等） |
+| **OpenAI Apps SDK** | App ↔ ChatGPT | Apps SDK over ChatGPT | Apps Manifest + Component Schema |
+| **Vercel AI SDK 3.x** | Client ↔ Server | useChat + streamText | UIMessage 流 + 工具调用 |
+| **Anthropic Tool Use** | Model ↔ Tool | Messages API | Input JSON Schema + Tool Result |
+
+### 维度二：事件模型
+
+- **AG-UI**：标准化事件（TEXT_MESSAGE_/TOOL_CALL_/STATE_/MESSAGES_SNAPSHOT 等），可被任意前端消费
+- **OpenAI Apps SDK**：把 App 当作 ChatGPT 内的"组件"，强调"组件即资产"
+- **Vercel AI SDK**：偏向 React/Vercel 生态，提供 `useChat`/UIMessage，对 LLM Provider 抽象统一
+- **Anthropic Tool Use**：以"工具调用"为核心，事件流不暴露给前端
+
+### 维度三：互操作与生态
+
+- AG-UI：协议中立，可与 LangGraph、Agno、AWS Strands、Mastra 等多家框架集成
+- OpenAI Apps SDK：紧绑 ChatGPT 生态，外部框架接入门槛高
+- Vercel AI SDK：紧绑 Vercel/Next.js 生态，但 Provider 抽象让多家模型可热插拔
+- Anthropic Tool Use：与 Claude 模型绑定，第三方前端需要走自己实现的事件层
+
+**优缺点小结**
+
+- **AG-UI**：协议中立 + 16+ 事件 + 状态快照，是"Agent UI 协议"的事实标准候选；缺点是生态尚处早期，前端 SDK 仍在补齐
+- **OpenAI Apps SDK**：ChatGPT 内的 App 体验最好；缺点是闭源、锁生态
+- **Vercel AI SDK**：React/Next.js 一等公民；缺点是协议范围较窄，主要面向 Web Chat 场景
+- **Anthropic Tool Use**：工具调用事实标准；缺点是不直接面向前端
+
+**何时选 AG-UI**
+
+- 你要做"Agent ↔ 自有前端"的结构化事件流
+- 你想"统一多家 Agent 框架的前端展示"（LangGraph + Agno + Mastra 等）
+- 你希望前端可以"打断 Agent / 同步共享状态"
+
+**何时不选 AG-UI**
+
+- 你只想做 ChatGPT 内的 App——OpenAI Apps SDK 是唯一选项
+- 你只想在 Next.js 里搭 Chat UI——Vercel AI SDK 最顺手
+- 你只做"单次工具调用"——Anthropic Tool Use 足矣
+
+**参考资料**
+
+- AG-UI GitHub：<https://github.com/ag-ui-protocol/ag-ui>
+- AG-UI 文档：<https://docs.ag-ui.com>
+- CopilotKit：<https://github.com/CopilotKit/CopilotKit>
+- OpenAI Apps SDK：<https://developers.openai.com/apps-sdk>
+- Vercel AI SDK：<https://ai-sdk.dev/>
+- Anthropic Tool Use：<https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview>
