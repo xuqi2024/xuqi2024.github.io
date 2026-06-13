@@ -76,7 +76,7 @@ int main() {
 ```
 
 **输出**：
-```
+```text
 value=1 count=2
 value=2 count=3
 value=3 count=1
@@ -146,7 +146,7 @@ int main() {
 ```
 
 **输出**：
-```
+```text
 0: hello
 1: world
 ```
@@ -353,3 +353,68 @@ int main() {
 4. [（四）Ranges 增强](/2026/04/23/2026-04-24-cpp23-ranges-enhancement/) **← 当前**
 
 </details>
+
+## 语法/控制流可视化
+
+下面是一张马卡龙色 Mermaid 图，帮你从图形角度把握本章涉及的语法与控制流。
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#FFE5EC', 'primaryTextColor': '#5D5D5D', 'primaryBorderColor': '#FFB3C6', 'lineColor': '#B5EAD7', 'secondaryColor': '#C7CEEA', 'tertiaryColor': '#FFDAC1'}}}%%
+flowchart LR
+    SRC["📊 源数据<br/>vector / range"] --> V1["views::chunk_by<br/>相邻同值分组"]
+    V1 --> V2["views::stride n<br/>等距采样"]
+    V2 --> V3["views::enumerate<br/>附加下标"]
+    V3 --> V4["views::zip<br/>多范围配对"]
+    V4 --> COL["🪣 views::collect<br/>物化结果"]
+    COL --> OUT["✅ 输出"]
+
+    SRC -. "惰性求值" .- V1
+    V1 -. "惰性" .- V2
+    V2 -. "惰性" .- V3
+    V3 -. "惰性" .- V4
+
+    style SRC fill:#FFE5EC,stroke:#FFB3C6,color:#5D5D5D
+    style V1 fill:#C7CEEA,stroke:#A8DADC,color:#5D5D5D
+    style V2 fill:#B5EAD7,stroke:#A8DADC,color:#5D5D5D
+    style V3 fill:#FFDAC1,stroke:#FFB3C6,color:#5D5D5D
+    style V4 fill:#C7CEEA,stroke:#A8DADC,color:#5D5D5D
+    style COL fill:#FFE5EC,stroke:#FFB3C6,color:#5D5D5D
+    style OUT fill:#B5EAD7,stroke:#A8DADC,color:#5D5D5D
+```
+
+本章讲 C++23 Ranges 增强（含 views::chunk_by、views::stride 等），对比维度：本特性 vs C++20 ranges 旧写法 vs 其他语言数据切分。
+
+## 对比分析
+
+### 一、本特性 vs 旧写法
+
+| 维度 | C++23 ranges 写法 | C++20 ranges 写法 | 旧手写循环 |
+|------|--------------------|-------------------|-----------|
+| 按相邻同值分组 | `v \| chunk_by(eq)` | 自己写组合 view | 双指针循环 |
+| 等距采样 | `v \| stride(n)` | 嵌套 filter / indices | 取模 |
+| 与 zip 组合 | `zip(v1, v2) \| chunk_by(...)` | 已有 zip | 嵌套迭代器 |
+
+### 二、对比其他语言
+
+| 语言 | 数据切分 / 分组 | 风格 |
+|------|-----------------|------|
+| C++23 | chunk_by / stride / zip | 惰性、view 组合 |
+| Python | itertools.groupby / more-itertools | 解释、惰性 |
+| Rust | `chunks` / `group_by`（slice / itertools） | 零开销 |
+| Java | Stream `Collectors.groupingBy` | 急切 |
+| Haskell | Data.List.group / groupBy | 类型化惰性 |
+
+### 三、优缺点
+
+优点：
+- 把常见的"分组 / 采样"标准化为 view
+- 与现有 ranges 风格一致，学习成本低
+
+缺点：
+- 部分 view 在不同编译器下性能差异较大
+- 命名约定仍在收敛
+
+### 四、何时选
+
+- 任何"数据切片 + 分组"流水线：先看 C++23 views
+- 性能敏感：benchmark 后再决定是否回到手写循环
