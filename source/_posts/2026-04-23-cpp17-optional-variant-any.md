@@ -330,3 +330,41 @@ g++ -std=c++17 -o demo demo.cpp && ./demo
 8. [（八）Attribute 新增](/2026/04/23/2026-04-24-cpp17-attributes/)
 
 </details>
+
+本章讲 C++17 的 std::optional / std::variant / std::any 三种类型，对比维度：本特性 vs 旧写法 vs 其他语言类似特性。
+
+## 对比分析
+
+### 一、本特性 vs 旧写法
+
+| 维度 | C++17 新类型 | C++11/14 替代方案 | 痛点 |
+|------|--------------|-------------------|------|
+| optional<T> | `std::optional<int> o = 42;` | 用特殊值（-1、nullptr）或 pair<bool, T> | 易忘检查标志位 |
+| variant<T1,T2,...> | `std::variant<int,std::string> v;` | 手写 union + tag | 类型不安全、不可扩展 |
+| any | `std::any a = 1;` | void* + 手动类型管理 | 完全无类型检查 |
+
+### 二、对比其他语言
+
+| 语言 | optional / nullable | 类型联合 | 任意类型 |
+|------|---------------------|-----------|----------|
+| C++17 | `std::optional<T>` | `std::variant<...>` | `std::any` |
+| Rust | `Option<T>` | `enum` 天然支持 | `Box<dyn Any>` |
+| Java | `Optional<T>`（自 Java 8） | 无原生，用 sealed class | `Object` |
+| Python | `Optional[T]`（注解） | `Union[T1,T2]` | `Any` |
+| TypeScript | `T \| undefined` | `T1 \| T2` | `any` |
+
+### 三、优缺点
+
+优点：
+- 让"可空 / 多类型 / 任意类型"在类型系统中显式化
+- 与 `std::visit` 配合可写出类型安全的访问代码
+
+缺点：
+- variant 配合自定义 visitor 的写法仍较繁琐
+- any 仍是类型擦除，使用要谨慎
+
+### 四、何时选
+
+- 函数可能"没结果"：optional
+- 多个固定类型之一：variant
+- 真要"任意类型"：any，但尽量配合 typeid 限定
