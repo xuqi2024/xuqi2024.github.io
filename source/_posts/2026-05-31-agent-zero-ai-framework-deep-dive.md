@@ -286,7 +286,7 @@ class Skill:
 ```
 
 Skills 搜索路径优先级：
-```
+```text
 usr/projects/*/.a0proj/agents/*/skills  # 项目内 Agent
 usr/projects/*/.a0proj/skills          # 项目内全局
 usr/agents/*/skills                     # 用户自定义 Agent
@@ -295,7 +295,7 @@ usr/plugins/*/skills                    # 用户插件
 ```
 
 一个 Skill 的典型结构：
-```
+```text
 my_skill/
 ├── skill.md       # 描述文件，包含触发词和工具列表
 └── (可选) tools/  # 该 Skill 专用的工具
@@ -314,7 +314,7 @@ class AgentConfig:
 
 向量检索使用 **FAISS + sentence-transformers**：
 
-```
+```text
 faiss-cpu==1.11.0
 sentence-transformers==3.0.1
 ```
@@ -488,3 +488,57 @@ Agent Zero 走出了一条**"让 AI 操作真实电脑"**的路线，与其他�
 ---
 
 *本文首发于 2026-05-31，基于 agent-zero v1.0 代码分析*
+
+## 对比分析
+
+Agent Zero 的核心差异点是"把整个 Linux 桌面塞进 Docker"。在"AI 操作真实 GUI/桌面软件"这个赛道上，开源社区里同样在做类似事情的还有 Open Interpreter 和 OpenDevin，下面对它们做一次横向对比。
+
+### 维度一：执行环境与隔离
+
+| 项目 | 执行环境 | 隔离方式 | 可操作对象 |
+|------|----------|----------|------------|
+| **Agent Zero** | 完整 Linux 桌面（XFCE）+ Docker | 容器级隔离 | 真实 GUI 软件、shell、浏览器 |
+| **Open Interpreter** | 宿主本地（无隔离） | ❌ 无沙箱 | 本地 shell、文件、Python REPL |
+| **OpenDevin (OpenHands)** | 远程沙箱（Docker/K8s） | 容器级隔离 | 浏览器、shell、编辑器、文件系统 |
+| **TenBox (跨平台 VMM)** | 完整 VM（macOS/Linux/Windows） | 硬件虚拟化 | 跨 OS 桌面、shell、远程桌面 |
+
+### 维度二：Agent 自主性
+
+- **Agent Zero**：高度自主的"general-purpose agentic framework"——动态生成子 Agent、有机协作（organic collaboration）、记忆系统持久化
+- **Open Interpreter**：早期是"Code Interpreter 复刻"模式（让 LLM 写 Python/Shell），后续也加入了 Computer-Use 能力，整体仍是"按指令执行"风格
+- **OpenDevin / OpenHands**：模仿 Devin 的"软件工程 Agent"形态，有专门的事件流、浏览器抽象、Plan-Act 循环
+- **TenBox**：本身不是 Agent，是给 Agent 用的"VM 沙箱 + 远程桌面 + LLM 代理"
+
+### 维度三：典型用户与场景
+
+- Agent Zero：通用桌面任务自动化、长期个人助手（家庭服务器 7×24）
+- Open Interpreter：开发者本地的"代码副驾"、写脚本、批处理
+- OpenDevin：SWE-Bench 类基准的研究型 Agent、自动化 PR
+- TenBox：需要"跨 OS / 高隔离"运行第三方 Agent 的安全敏感场景
+
+**优缺点小结**
+
+- **Agent Zero**：把"完整 Linux 桌面"和"AI Agent"做了一体化设计，开箱即用；缺点是资源占用偏重（整个 XFCE + Chrome）、不支持 macOS/Windows 宿主机操作
+- **Open Interpreter**：最轻量、上手最快；缺点是没有隔离，生产环境要自己套 Docker/firecracker
+- **OpenDevin**：工程化最深、benchmark 成绩好；缺点是部署较重、本地化体验不如 Agent Zero
+- **TenBox**：隔离强度最高、跨 OS；缺点是它本身不提供"Agent 脑"，需要搭配其它框架
+
+**何时选 Agent Zero**
+
+- 你想要"24/7 在自己机器上跑一个能操作真实软件的个人 AI 助手"
+- 你能接受 Docker 容器 + Linux 桌面带来的资源开销（建议 8GB+ 内存）
+- 你希望 Agent 之间能"有机协作"而不是写死编排
+
+**何时不选 Agent Zero**
+
+- 业务需要"严格 SWE-Bench 风格基准对标"——OpenDevin 更合适
+- 想要"轻量级代码副驾"——Open Interpreter 一行 `pip install` 即可
+- 业务对 OS 隔离强度有要求（金融/政企）——TenBox 这种 VMM 路线更安全
+
+**参考资料**
+
+- Agent Zero GitHub：<https://github.com/agent0ai/agent-zero>
+- Open Interpreter：<https://github.com/OpenInterpreter/open-interpreter>
+- OpenDevin / OpenHands：<https://github.com/All-Hands-AI/OpenHands>
+- TenBox：<https://github.com/78/tenbox>
+- DeepWiki Agent Zero：<https://deepwiki.com/agent0ai/agent-zero>
