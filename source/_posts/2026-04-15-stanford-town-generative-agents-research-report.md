@@ -607,3 +607,40 @@ roadmap
 ---
 
 *本文会持续更新，欢迎交流讨论*
+
+---
+
+## 对比分析
+
+斯坦福 Generative Agents 是"小镇模拟"多 Agent 范式的代表作。下面与两个同属"多智能体仿真 / 协作"赛道的真实开源项目对比：CrewAI（多角色协作）和 AutoGen（多 Agent 对话）。
+
+### 对比维度一：仿真 vs 协作
+| 维度 | Generative Agents | CrewAI | AutoGen |
+| --- | --- | --- | --- |
+| 主要场景 | 虚拟小镇仿真 | 任务流水线 | 对话协作 |
+| 角色数量 | 25 个 NPC | 任意 | 任意 |
+| 核心机制 | 记忆流 + 反思 + 规划 | 角色 + 任务 + 流程 | 对话式（user-proxy + assistant） |
+| 是否有"世界" | 有（小镇地图 + 时间） | 无 | 无 |
+
+### 对比维度二：记忆与社交
+| 维度 | Generative Agents | CrewAI | AutoGen |
+| --- | --- | --- | --- |
+| 长期记忆 | 显式 memory stream | 任务级 memory | 会话历史 |
+| 反思机制 | 周期性 reflection | 无 | 无 |
+| 角色关系 | 显式建模 | 通过 role + goal | 通过 system prompt |
+| 适合研究 | 极好 | 中 | 中 |
+
+### 优缺点
+- **Generative Agents**：用真实社交行为研究 Agent 行为最合适；不适合直接做生产任务。
+- **CrewAI**：角色化流水线最易理解，企业流程场景好上手；协作"深度"较浅。
+- **AutoGen**：对话驱动灵活，研究与原型首选；缺乏持久世界与反思机制。
+
+### 何时选哪个
+- 研究 LLM Agent 社交/行为 → 选 Generative Agents
+- 把业务流程拆成多角色 → 选 CrewAI
+- 让多个 Agent 对话式解决问题 → 选 AutoGen
+
+### 参考资料
+- Stanford Generative Agents 论文：https://arxiv.org/abs/2304.03442
+- CrewAI 仓库：https://github.com/crewAIInc/crewAI
+- AutoGen 仓库：https://github.com/microsoft/autogen
