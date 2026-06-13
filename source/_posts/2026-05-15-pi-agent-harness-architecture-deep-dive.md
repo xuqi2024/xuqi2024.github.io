@@ -342,7 +342,7 @@ return executeToolCallsParallel(currentContext, assistantMessage, toolCalls, con
 ## 示例
 ```
 some example code
-```
+```text
 ```
 
 ### Skill 加载与调用
