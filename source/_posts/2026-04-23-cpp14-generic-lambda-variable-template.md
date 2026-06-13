@@ -313,3 +313,41 @@ g++ -std=c++14 -o demo demo.cpp && ./demo
 2. [（二）Binary Literals 与 Deprecated](/2026/04/23/2026-04-23-cpp14-binary-literals-deprecated/)
 
 </details>
+
+本章讲解 C++14 的 Generic Lambda（auto 参数）和变量模板，对比维度：本特性 vs C++11 旧写法 vs 其他语言类似特性。
+
+## 对比分析
+
+### 一、本特性 vs C++11 旧写法
+
+| 维度 | C++14 本章写法 | C++11 写法 | 影响 |
+|------|----------------|-------------|------|
+| 泛型 lambda | `auto add = [](auto a, auto b){ return a+b; };` | 必须手写函数模板 `template<class A, class B> auto add(A a, B b){...}` | lambda 也能当模板用 |
+| 变量模板 | `template<class T> constexpr T pi = T(3.14159);` | 需要写一个 inline 函数返回常量 | 常量定义更直观 |
+| lambda 返回类型推导 | `auto f = [](int x){ return x*x; };` | 必须写尾置返回 `-> int` 或指定类型 | 写起来更短 |
+
+### 二、对比其他语言
+
+| 语言 | 泛型 lambda / 一等函数泛型 | 变量模板 / 常量模板 | 备注 |
+|------|------------------------------|--------------------|------|
+| C++14 | ✅ auto 参数 | ✅ | 模板仍是鸭子类型 |
+| Java | ❌ lambda 参数需具体类型 | ❌ | 没有变量模板概念 |
+| Python | ✅ lambda 内类型注解可省略 | ❌ | 无类型系统 |
+| Rust | ✅ 闭包 + 泛型 | ✅ `const N: usize = ...` | 编译期常量更彻底 |
+| Haskell | ✅ 完全多态 | ✅ | 类型推导更激进 |
+
+### 三、优缺点
+
+优点：
+- 让 lambda 真正成为"小型模板工具"
+- 变量模板让数值常量定义与类型解耦
+
+缺点：
+- 错误信息可读性仍然较差
+- 没有约束（Concepts 在 C++20 才补齐）
+
+### 四、何时选
+
+- 写小工具函数 / STL 风格助手：用 generic lambda
+- 定义数学常量 / 数值参数：用变量模板
+- 需要约束参数范围：升级到 C++20 Concepts
