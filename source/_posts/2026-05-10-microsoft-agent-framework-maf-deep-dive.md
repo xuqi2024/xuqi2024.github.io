@@ -485,3 +485,45 @@ Microsoft Agent Framework 是一个**设计精良的企业级 Agent 框架**，�
 **项目链接**：[microsoft/agent-framework](https://github.com/microsoft/agent-framework)
 
 **相关框架对比**：[LangGraph 状态图工作流深度解析](./2026-04-17-langgraph-stateful-workflow.md) | [AutoGen 多 Agent 对话框架](./2026-04-17-autogen-multi-agent-conversation.md)
+---
+
+## 对比分析
+
+Microsoft Agent Framework (MAF) 是微软推出的企业级 Agent 框架，与 LangGraph（状态图）和 Semantic Kernel（微软自家）相比，在生产特性与图式工作流上有差异化优势。
+
+### 维度对比表
+
+| 维度 | MAF | LangGraph | Semantic Kernel |
+|------|-----|-----------|-----------------|
+| 语言 | Python + .NET | Python + TS | Python + .NET + JS |
+| 编排模型 | 图式工作流（Pregel/MapReduce 思想） | 状态图 | 插件/函数链 + Planner |
+| 协议支持 | A2A + MCP | MCP（社区） | MCP（社区） |
+| 生产特性 | Checkpointing、Human-in-loop、时间回溯 | 持久化、checkpoint | 中等 |
+| 生态关系 | 微软新框架 | LangChain 子项目 | 微软经典框架 |
+| 适合场景 | 企业级复杂多 Agent、稳定性优先 | 长流程状态机 | .NET 生态企业集成 |
+
+### 优缺点
+
+MAF
+- 优点：图式工作流借鉴 Pregel/MapReduce 表达力强；Checkpointing、Human-in-loop、时间回溯等生产特性齐全；微软生态加持；Python + .NET 双栈。
+- 缺点：相对新，文档与社区仍在完善；学习曲线取决于图式思维。
+
+LangGraph
+- 优点：状态图成熟；持久化、checkpoint 完善；Python/TS 生态活跃。
+- 缺点：企业级 .NET 支持弱；图式表达力相对单一。
+
+Semantic Kernel
+- 优点：.NET 生态企业集成成熟；Planner + 插件模型稳定。
+- 缺点：多 Agent 编排能力弱于 MAF；现代 Agent 协议（A2A）支持滞后。
+
+### 何时选
+
+- 选 MAF：企业级复杂多 Agent、Python + .NET 团队、关注生产特性与协议标准化。
+- 选 LangGraph：Python/TS 团队、复杂状态图、长流程编排。
+- 选 Semantic Kernel：.NET 企业应用、传统 Planner + 插件模型。
+
+### 参考资料
+
+- MAF GitHub：https://github.com/microsoft/agent-framework
+- LangGraph 文档：https://langchain-ai.github.io/langgraph/
+- Semantic Kernel：https://github.com/microsoft/semantic-kernel
