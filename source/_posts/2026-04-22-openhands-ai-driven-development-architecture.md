@@ -35,16 +35,7 @@ description: "当 AI 能够自主阅读代码库、编写修复方案、执行�
 
 OpenHands 提供四种使用方式：
 
-```
-┌─────────────────────────────────────────────────────┐
-│                  OpenHands 生态                      │
-├─────────────────────────────────────────────────────┤
-│  SDK        │ Python 库，可嵌入任何应用                │
-│  CLI        │ 类比 Claude Code，终态终端交互            │
-│  Local GUI  │ 类比 Devin/Jules，本地 Web 界面         │
-│  Cloud      │ 托管服务，支持 Slack/Jira/Linear 集成    │
-└─────────────────────────────────────────────────────┘
-```
+
 
 ---
 
@@ -487,3 +478,47 @@ OpenHands 代表了 **AI 软件开发代理**的一种成熟架构范式：事�
 - 文档：[docs.openhands.dev](https://docs.openhands.dev)
 - SDK：[OpenHands/software-agent-sdk](https://github.com/OpenHands/software-agent-sdk)
 - 论文：[arxiv.org/abs/2511.03690](https://arxiv.org/abs/2511.03690)
+
+---
+
+## 对比分析
+
+OpenHands 是"AI 软件开发代理"赛道的代表性项目，其事件驱动 + 强执行环境的设计与 Claude Code、Devin 等同类项目有显著差异。
+
+### 维度对比表
+
+| 维度 | OpenHands | Claude Code | SWE-Agent |
+|------|-----------|-------------|-----------|
+| 执行环境 | Docker 沙箱 + 持久化文件 + Jupyter 内核 | 本地 CLI + 终端 + 编辑器 | Docker 容器 + bash/python 工具 |
+| 事件驱动 | 是（EventStream + Runtime） | 否（线性 CLI 调用） | 部分（基于观察-行动循环） |
+| 记忆/上下文 | 可压缩记忆 + 工作区状态 | 会话级上下文 + 文件历史 | 观察历史 + 重试上下文 |
+| SWE-Bench 表现 | 出色（论文报道） | 强（Anthropic 内部评测） | 较早的 SWE-Agent 也达到 SOTA |
+| 开源程度 | 完全开源（GitHub 6 万+ stars） | 闭源 CLI | 完全开源（学术项目） |
+| 主要定位 | 通用 AI 软件开发代理，可自托管 | 开发者辅助 CLI，强调本地工作流 | 学术研究导向的 SWE-Bench 基准 |
+
+### 优缺点
+
+**OpenHands**
+- 优点：完整的事件驱动架构、强执行环境（Docker + Jupyter）、可压缩记忆、独立 Runtime、SDK 化设计；完全开源，自托管友好。
+- 缺点：部署复杂度较高（需要 Docker + LLM 代理栈）；延迟较大（每步需要环境往返）；不适合实时低延迟场景。
+
+**Claude Code**
+- 优点：本地工作流集成深（编辑器、终端、Git），Anthropic 模型加持，UX 流畅。
+- 缺点：闭源，无法自托管深度定制；依赖 Claude API；不擅长长时多步骤任务。
+
+**SWE-Agent**
+- 优点：学术上奠定了 Agent + 容器执行环境的范式，简单直接；完全开源。
+- 缺点：偏向研究而非生产，错误恢复、可观测性较弱；生态相对小。
+
+### 何时选
+
+- **选 OpenHands**：你需要完全开源、可自托管的 AI 软件开发代理，希望跑 SWE-Bench 类任务或长时编码任务。
+- **选 Claude Code**：你已经在用 Anthropic 生态，希望 IDE/CLI 一体化、低延迟。
+- **选 SWE-Agent**：你是研究者或想基于学术基线做实验。
+
+### 参考资料
+
+- OpenHands GitHub：https://github.com/OpenHands/OpenHands
+- Claude Code 文档：https://docs.claude.com/en/docs/claude-code
+- SWE-Agent 论文：https://arxiv.org/abs/2405.15793
+- SWE-Bench：https://www.swebench.com/
