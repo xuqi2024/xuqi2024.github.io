@@ -675,7 +675,7 @@ Unity 2022版本的URP项目导出微信小游戏时，可能会遇到Shader兼�
 ### 第二步：下载微信转换工具
 
 Unity微信转换工具（WXT）的下载地址：
-```
+```text
 https://game.weixin.qq.com/cgi-bin/gamewxagwasmsplitwap/getunityplugininfo?download=1
 ```
 
