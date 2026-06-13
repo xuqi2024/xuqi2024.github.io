@@ -781,3 +781,57 @@ browser-use 之所以在 18 个月内冲到 97k stars，本质上是**把 Web Ag
 **项目链接**：https://github.com/browser-use/browser-use
 **官方网站**：https://browser-use.com
 **官方文档**：https://docs.browser-use.com
+
+## 对比分析
+
+browser-use 的核心定位是"用自然语言驱动浏览器"。在"Web Agent / 浏览器自动化"赛道里，跟它最相关的项目是 Skyvern、Stagehand（Browserbase），以及 OpenAI Operator。下面对它们做一次横向对比。
+
+### 维度一：抽象层级
+
+| 项目 | 抽象模型 | 底层驱动 | LLM 决策点 |
+|------|----------|----------|------------|
+| **browser-use** | Action + DOM 序列化 + Service.py | Playwright | 每步由 LLM 决定 |
+| **Skyvern** | Step + Goal | 自研（基于 Playwright） | 每步 LLM + 计算机视觉 |
+| **Stagehand (Browserbase)** | act/extract/observe 三类原子 API | Playwright | 开发者可混合 |
+| **Playwright 直接驱动** | Selector 脚本 | Playwright | ❌ 无 LLM |
+
+### 维度二：DOM 序列化策略
+
+- **browser-use**：自定义 DOM 序列化（高 token 效率）+ 视觉模型可选
+- **Skyvern**：屏幕截图 + CV 主导，对无障碍较差的网站更鲁棒
+- **Stagehand**：基于 accessibility tree + 元素 ID，对 a11y 友好的网站更顺
+- **Playwright**：selector + xpath，零 LLM 决策
+
+### 维度三：商业 vs 开源
+
+- **browser-use**：Apache-2.0 协议，社区 97k+ stars，商用友好
+- **Skyvern**：AGPL-3.0 协议，Skyvern Cloud 商业版
+- **Stagehand**：Apache-2.0，由 Browserbase 商业化
+- **OpenAI Operator**：闭源、仅 ChatGPT Pro 用户
+
+**优缺点小结**
+
+- **browser-use**：DOM 序列化最精细 + 97k+ stars + 跨 LLM Provider；缺点是"无视觉版本"在某些复杂网站需要自配视觉模型
+- **Skyvern**：视觉 + LLM 混合，工业 RPA 场景最稳；缺点是 AGPL 协议商用需谨慎
+- **Stagehand**：act/extract/observe 三类 API 抽象最清晰；缺点是默认走 Browserbase 云，私有化部署要额外集成
+- **OpenAI Operator**：体验最好、零部署；缺点是闭源 + 锁 ChatGPT 生态
+
+**何时选 browser-use**
+
+- 你做"开源 / 可自托管"的 Web Agent
+- 你能接受"DOM 序列化为主、按需开启视觉"的策略
+- 你想要"跨 LLM Provider"的灵活性（OpenAI / Anthropic / Google / DeepSeek / Ollama 等）
+
+**何时不选 browser-use**
+
+- 业务全是 a11y 较差的网站——Skyvern 视觉路线更鲁棒
+- 你想用更结构化的 act/extract/observe API——Stagehand 更对路
+- 你只要"开箱即用、不想部署"——OpenAI Operator 最省心
+
+**参考资料**
+
+- browser-use GitHub：<https://github.com/browser-use/browser-use>
+- Skyvern：<https://github.com/Skyvern-AI/skyvern>
+- Stagehand：<https://github.com/browserbase/stagehand>
+- OpenAI Operator：<https://openai.com/index/operator/>
+- Playwright：<https://playwright.dev/python/>
