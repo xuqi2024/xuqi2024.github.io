@@ -332,3 +332,70 @@ int main() {
 8. [（八）Attribute 新增](/2026/04/23/2026-04-24-cpp17-attributes/) **← 当前**
 
 </details>
+
+## 语法/控制流可视化
+
+下面是一张马卡龙色 Mermaid 图，帮你从图形角度把握本章涉及的语法与控制流。
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#FFE5EC', 'primaryTextColor': '#5D5D5D', 'primaryBorderColor': '#FFB3C6', 'lineColor': '#B5EAD7', 'secondaryColor': '#C7CEEA', 'tertiaryColor': '#FFDAC1'}}}%%
+flowchart TD
+    SRC["📄 源码<br/>含 [[nodiscard]] 等标注"] --> LEX["🔍 词法/语法解析"]
+    LEX --> SEM{"🏷️ 语义分析<br/>识别属性"}
+    SEM -- "[[nodiscard]]" --> A1["⚠️ 标记返回值<br/>调用方未使用 → 警告"]
+    SEM -- "[[maybe_unused]]" --> A2["🤫 抑制<br/>未使用变量警告"]
+    SEM -- "[[fallthrough]]" --> A3["🎯 允许 switch<br/>case 穿透"]
+    SEM -- "[[deprecated]]" --> A4["🚫 调用旧接口<br/>→ 警告/错误"]
+
+    A1 --> OUT["✅ 编译继续<br/>生成目标文件"]
+    A2 --> OUT
+    A3 --> OUT
+    A4 --> OUT
+
+    style SRC fill:#FFE5EC,stroke:#FFB3C6,color:#5D5D5D
+    style LEX fill:#C7CEEA,stroke:#A8DADC,color:#5D5D5D
+    style SEM fill:#FFDAC1,stroke:#FFB3C6,color:#5D5D5D
+    style A1 fill:#B5EAD7,stroke:#A8DADC,color:#5D5D5D
+    style A2 fill:#B5EAD7,stroke:#A8DADC,color:#5D5D5D
+    style A3 fill:#B5EAD7,stroke:#A8DADC,color:#5D5D5D
+    style A4 fill:#FFE5EC,stroke:#FFB3C6,color:#5D5D5D
+    style OUT fill:#C7CEEA,stroke:#A8DADC,color:#5D5D5D
+```
+
+本章讲 C++17 的新增 Attributes（[[nodiscard]] / [[maybe_unused]] / [[fallthrough]] 等），对比维度：本特性 vs 旧写法 vs 其他语言注解 / 装饰器。
+
+## 对比分析
+
+### 一、本特性 vs 旧写法
+
+| 维度 | C++17 写法 | 旧写法 | 影响 |
+|------|------------|--------|------|
+| 标记返回值不可丢 | `[[nodiscard]] int f();` | 注释 / 团队约定 | 编译器强制 |
+| 标记有意未使用变量 | `[[maybe_unused]] int x;` | `(void)x;` / 注释 | 消除警告 |
+| switch 穿透 | `[[fallthrough]];` | 注释 `// fall through` | 消除警告、显式意图 |
+| unused 参数 | `[[maybe_unused]]` | 注释 / `(void)p;` | 同上 |
+
+### 二、对比其他语言
+
+| 语言 | 注解 / 装饰器 | 强制能力 | 备注 |
+|------|---------------|----------|------|
+| C++17 | ✅ `[[xxx]]` | 编译器警告 / 行为 | 静态 |
+| Java | ✅ `@Annotation` | 反射 + 处理器 | 运行时 |
+| Python | ✅ `@decorator` | 完全运行时 | 可改函数行为 |
+| Rust | ✅ `#[attribute]` | 编译期 lint | 静态 |
+| C# | ✅ `[Attribute]` | 运行时 | 反射可用 |
+
+### 三、优缺点
+
+优点：
+- 把"隐式意图"变成"显式标注"
+- 不影响 ABI，可渐进引入
+
+缺点：
+- 仍不能完全替代团队规范
+- 第三方工具链识别不一致
+
+### 四、何时选
+
+- 任何会被忽略的返回值：加 `[[nodiscard]]`
+- 临时禁用代码：加 `[[maybe_unused]]`
