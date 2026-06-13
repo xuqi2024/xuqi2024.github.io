@@ -784,7 +784,7 @@ system_prompt: |
 ```
 
 **多轮对话提示词优化**：
-```
+```text
 保持对话上下文连贯性。
 当用户追问时，优先使用之前对话中的信息。
 如果当前问题涉及新主题，明确区分"关于新问题"和"继续之前话题"。
@@ -1288,3 +1288,40 @@ flowchart LR
 ---
 
 *RAGFlow是目前最值得关注的开源RAG项目之一，推荐在生产环境中尝试！*
+
+---
+
+## 对比分析
+
+RAGFlow 主打"深度文档理解"的 RAG 引擎。下面与同样面向企业知识库的另外两个真实开源 RAG 项目对比：Dify（应用编排 + RAG）和 Haystack（深度学习 RAG 框架）。
+
+### 对比维度一：核心能力
+| 维度 | RAGFlow | Dify | Haystack |
+| --- | --- | --- | --- |
+| 文档解析 | 深度 OCR + 表格/图像 | 基础解析 | 组件化解析 |
+| 检索方式 | 多路召回 + 重排 | 向量 + 关键词 | 可插拔 pipeline |
+| 是否带 LLM 编排 | 自带 Agent/工作流 | 一等公民 | 偏检索组件 |
+| 是否带 UI | 是 | 是 | 否（需自建） |
+
+### 对比维度二：定位与生态
+| 维度 | RAGFlow | Dify | Haystack |
+| --- | --- | --- | --- |
+| 主语言 | Go/Python | Python | Python |
+| 部署复杂度 | 中（依赖多） | 中 | 低 |
+| 上手时间 | 中 | 中 | 中偏高 |
+| 适合场景 | 复杂 PDF/合同问答 | 多场景 LLM 应用 | 自建检索 pipeline |
+
+### 优缺点
+- **RAGFlow**：深度文档解析能力最强；部署依赖较多，对运维有要求。
+- **Dify**：应用编排 + LLM 全栈最完整；RAG 深度不如 RAGFlow。
+- **Haystack**：灵活可编程的检索管线；不带 UI，需要工程团队。
+
+### 何时选哪个
+- PDF/合同/扫描件问答 → 选 RAGFlow
+- 多种 LLM 应用一站式搭建 → 选 Dify
+- 想完全自控检索 Pipeline → 选 Haystack
+
+### 参考资料
+- RAGFlow 仓库：https://github.com/infiniflow/ragflow
+- Dify 仓库：https://github.com/langgenius/dify
+- Haystack 仓库：https://github.com/deepset-ai/haystack
