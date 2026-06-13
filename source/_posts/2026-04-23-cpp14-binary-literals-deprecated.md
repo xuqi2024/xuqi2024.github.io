@@ -92,7 +92,7 @@ int main() {
 
 编译器输出：
 
-```
+```text
 warning: 'void OldFunc()' is deprecated: Use NewFunc instead [-Wdeprecated-declarations]
 warning: 'class OldClass' is deprecated [-Wdeprecated-declarations]
 ```
@@ -157,7 +157,7 @@ g++ -std=c++14 -o demo demo.cpp 2>&1 | head -20
 
 ### 5.1 API 演进
 
-```
+```text
 旧API (标记为 deprecated)
     ↓
 编译器警告 → 开发者看到 → 迁移到新API
@@ -200,3 +200,67 @@ g++ -std=c++14 -o demo demo.cpp 2>&1 | head -20
 2. [（二）Binary Literals 与 Deprecated](/2026/04/23/2026-04-23-cpp14-binary-literals-deprecated/) **← 当前**
 
 </details>
+
+## 语法/控制流可视化
+
+下面是一张马卡龙色 Mermaid 图，帮你从图形角度把握本章涉及的语法与控制流。
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#FFE5EC', 'primaryTextColor': '#5D5D5D', 'primaryBorderColor': '#FFB3C6', 'lineColor': '#B5EAD7', 'secondaryColor': '#C7CEEA', 'tertiaryColor': '#FFDAC1'}}}%%
+flowchart TD
+    A["📝 字面量源文本<br/>0b1010'1010"] --> B{"✅ 语法合法?"}
+    B -- 否 --> X["❌ 编译错误<br/>'invalid literal suffix'"]
+    B -- 是 --> C["🔢 Tokenizer 解析<br/>拆分为 token"]
+    C --> D["🏷️ 类型推导<br/>int / unsigned / long"]
+    D --> E["📦 编译期常量<br/>存放在 .rodata"]
+    X --> F["🛠️ 修复建议<br/>补全 0b 前缀或 ' 分隔符"]
+    E --> G["✅ 运行时使用<br/>位运算 / 协议解析"]
+    F --> G
+
+    style A fill:#FFE5EC,stroke:#FFB3C6,color:#5D5D5D
+    style B fill:#FFDAC1,stroke:#FFB3C6,color:#5D5D5D
+    style C fill:#C7CEEA,stroke:#A8DADC,color:#5D5D5D
+    style D fill:#B5EAD7,stroke:#A8DADC,color:#5D5D5D
+    style E fill:#FFE5EC,stroke:#FFB3C6,color:#5D5D5D
+    style X fill:#FFDAC1,stroke:#FF9AA2,color:#5D5D5D
+    style F fill:#C7CEEA,stroke:#A8DADC,color:#5D5D5D
+    style G fill:#B5EAD7,stroke:#A8DADC,color:#5D5D5D
+```
+
+本章介绍 C++14 的 Binary Literals、Digit Separators、Deprecated 属性，对比维度：本特性 vs C++11 旧写法 vs 其他语言类似写法。
+
+## 对比分析
+
+### 一、本特性 vs C++11 旧写法
+
+| 维度 | C++14 本章写法 | C++11 写法 | C++17/20 写法 |
+|------|----------------|-------------|----------------|
+| 二进制字面量 | `0b1010'1010` | 不支持，只能用十六进制 `0xAA` 或八进制 `012` | 同 C++14 |
+| 数字分隔符 | `1'000'000`、二进制中可加分隔 | 不支持，必须 `1000000` 或宏拼接 | 同 C++14 |
+| 标记弃用 | `[[deprecated]] func()` | 需厂商扩展（如 `__declspec(deprecated)`） | C++14 起标准化 |
+
+### 二、对比其他语言
+
+| 语言 | 二进制字面量 | 数字分隔符 | 弃用标记 |
+|------|---------------|-----------|----------|
+| C++14 | ✅ `0b` | ✅ `'` | ✅ `[[deprecated]]` |
+| Java | ✅ `0b`（自 Java 7） | ✅ `_`（Java 7 起 `_` 在 JDK 8 也逐步放宽） | ✅ `@Deprecated` |
+| Python | ✅ `0b` | ✅ `_`（Python 3.6+） | ✅ `DeprecationWarning` / `warnings.warn` |
+| Rust | ✅ `0b` | ✅ `_` | ✅ `#[deprecated]` |
+| C# | ✅ `0b` | ✅ `_` | ✅ `[Obsolete]` |
+
+### 三、优缺点
+
+优点：
+- 二进制字面量让位运算 / 协议解析可读性大幅提升
+- 数字分隔符减少手写出错
+- `[[deprecated]]` 把"警告"标准化，工具链识别一致
+
+缺点：
+- `0b` 前缀只支持无符号，遇到有符号位运算仍需注意
+- 弃用标记不会自动迁移调用方，仍需人工 follow-up
+
+### 四、何时选
+
+- 涉及位掩码 / 协议字节：立即使用二进制字面量 + 分隔符
+- 重构旧库：给旧 API 加 `[[deprecated("use X instead")]]`
