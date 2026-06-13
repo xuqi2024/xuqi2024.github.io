@@ -195,7 +195,7 @@ XiaoZhi 的状态机围绕**语音对话流程**设计，状态清晰：Idle →
 
 ESP-Claw 没有显式的状态机概念，而是采用**事件驱动模型**：
 
-```
+```text
 事件输入 → Router 规则匹配 → [Lua 脚本] / [LLM 推理] → 动作执行
 ```
 
@@ -393,3 +393,46 @@ graph TB
 - XiaoZhi GitHub：https://github.com/78/xiaozhi-esp32
 - ESP-Claw GitHub：https://github.com/espressif/esp-claw
 - ESP-Claw 官网：https://esp-claw.com/
+---
+
+## 对比分析
+
+XiaoZhi 与 ESP-Claw 都是基于 ESP32 的本地 AI 语音助手框架，二者定位有重叠但生态策略显著不同。
+
+### 维度对比表
+
+| 维度 | XiaoZhi (78/xiaozhi-esp32) | ESP-Claw (espressif/esp-claw) | OpenAI Realtime + ESP32 |
+|------|---------------------------|------------------------------|--------------------------|
+| 维护方 | 社区（78） | 乐鑫官方 | OpenAI |
+| 硬件支持 | 99+ 第三方开发板 | 乐鑫官方开发板为主 | 通用（依赖网络） |
+| 协议/接口 | MCP、WebSocket、离线唤醒 | edge_agent、ESP 工具链 | Realtime API |
+| 离线能力 | 较强（关键词唤醒 + 离线命令） | 较强（设计目标） | 弱（依赖云） |
+| 框架深度 | 应用层完整、UI/语音管线成熟 | 框架级，提供 Agent SDK | 纯 API 调用 |
+| 适合场景 | 快速原型、第三方硬件、生态丰富 | 乐鑫客户商业化、深度定制 | 云端优先、对延迟不敏感 |
+
+### 优缺点
+
+XiaoZhi
+- 优点：社区活跃、第三方硬件支持广；MCP/语音管线成熟；适合个人/创客。
+- 缺点：维护依赖个人/小团队，长期商业化支持有限；v1/v2 分区表不兼容。
+
+ESP-Claw
+- 优点：乐鑫官方维护、与 ESP-IDF 工具链深度集成；商业项目可靠性强。
+- 缺点：相对早期、文档仍在完善；第三方开发板覆盖弱于 XiaoZhi。
+
+OpenAI Realtime
+- 优点：模型能力最强；接入最简单。
+- 缺点：强依赖网络与云服务；隐私/延迟不适合本地场景。
+
+### 何时选
+
+- 选 XiaoZhi：你用第三方开发板、看重生态丰富度与快速原型。
+- 选 ESP-Claw：你是乐鑫客户、做商业化产品、需要官方长期支持。
+- 选 OpenAI Realtime：网络条件好、对模型能力要求高、不在意数据出云。
+
+### 参考资料
+
+- XiaoZhi GitHub：https://github.com/78/xiaozhi-esp32
+- ESP-Claw GitHub：https://github.com/espressif/esp-claw
+- ESP-Claw 官网：https://esp-claw.com/
+- ESP-IDF：https://docs.espressif.com/projects/esp-idf/
