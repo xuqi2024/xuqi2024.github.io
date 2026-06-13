@@ -645,3 +645,47 @@ Mastra 不是又一个 LangChain 的"TypeScript 替代品"，而是一个**从 T
 - 语言：TypeScript
 - 许可证：Apache 2.0（核心）+ Enterprise License（企业功能）
 - 文档：https://mastra.ai/docs
+
+---
+
+## 对比分析
+
+Mastra 是 TypeScript 生态中较新的生产级 Agent 框架，与 Vercel AI SDK、LangChain.js 在定位与抽象上有明显差异。
+
+### 维度对比表
+
+| 维度 | Mastra | Vercel AI SDK | LangChain.js |
+|------|--------|---------------|--------------|
+| 语言生态 | TypeScript 原生，Node + 浏览器 | TypeScript 原生，Next.js 友好 | TypeScript（Python 移植） |
+| 核心抽象 | Agent + Processor + Workflow | generateText / streamText | Chain / AgentExecutor |
+| 工具调用 | 内置 tool() helper，统一接口 | 内置 tool() helper | 通过 Tool 抽象 |
+| 多 Agent 协作 | Workflow + Agent.step 可组合 | 主要单 Agent，可手写协作 | LangGraph 支持图编排 |
+| 长期记忆 | 三层 Memory（MessageHistory + SemanticRecall + ObservationalMemory） | 需自接 Vercel KV / 外部 DB | LangChain Memory 模块 |
+| RAG | 内置 RAG 工具 | 通过工具/外部库 | 内置 Retriever/VectorStore |
+| 生产特性 | Mastra Cloud、可观测、processor 可插拔 | 流式渲染 + Edge 优化 | LangSmith 调试 + LangServe |
+
+### 优缺点
+
+**Mastra**
+- 优点：TypeScript 原生设计，类型安全；Processor 架构可插拔、输入输出对称；三层 Memory 创新（Observational Memory）；Mastra Cloud 一站式托管。
+- 缺点：相对年轻，生态与社区小于 LangChain；部分企业能力需要 Enterprise License；学习曲线中等。
+
+**Vercel AI SDK**
+- 优点：与 Next.js / Edge Runtime 深度集成；流式输出体验优秀；轻量、API 简洁。
+- 缺点：长期记忆与复杂 Agent 编排需要外部实现；多 Agent 协作需手写。
+
+**LangChain.js**
+- 优点：生态成熟、组件丰富；LangGraph 支持复杂状态编排；社区资料多。
+- 缺点：从 Python 移植而来，部分 API 略显冗长；TypeScript 类型体验不如原生方案。
+
+### 何时选
+
+- **选 Mastra**：你是 TypeScript 团队，构建生产级 Agent，需要可插拔 Processor + 长期记忆 + 可观测性。
+- **选 Vercel AI SDK**：你做 Next.js 应用，需要流式 AI 交互、轻量集成。
+- **选 LangChain.js**：你需要复杂状态图编排、跨 Python/TS 团队、生态最大。
+
+### 参考资料
+
+- Mastra 文档：https://mastra.ai/docs
+- Vercel AI SDK：https://sdk.vercel.ai/docs
+- LangChain.js：https://js.langchain.com/
