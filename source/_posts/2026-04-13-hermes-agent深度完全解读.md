@@ -165,21 +165,21 @@ flowchart TD
 #### 倒排索引（Inverted Index）
 
 **假设有3条文档：**
-```
+```text
 文档1: "今天天气很好，适合出门"
 文档2: "今天下雨，不出门"
 文档3: "天气不错，心情好"
 ```
 
 **传统正排索引（doc → terms）：**
-```
+```text
 文档1 → ["今天", "天气", "很好", "适合", "出门"]
 文档2 → ["今天", "下雨", "不出门"]
 文档3 → ["天气", "不错", "心情", "好"]
 ```
 
 **FTS5 倒排索引（term → docs）：**
-```
+```text
 "今天"   → [文档1, 文档2]
 "天气"   → [文档1, 文档2, 文档3]
 "很好"   → [文档1]
@@ -372,7 +372,7 @@ flowchart LR
 
 #### Token 批处理
 
-```
+```text
 触发条件：约 1000 tokens 的消息队列
 
 用户: "yes" (3 tokens) → 等待
@@ -682,7 +682,7 @@ flowchart TD
 
 ### 7.2 使用示例
 
-```
+```text
 用户: "帮我分析这个项目的代码质量和安全性"
 
 Hermes 执行:
@@ -798,3 +798,40 @@ sudo systemctl start hermes
 **本文作者：** xuqi2024
 **编写日期：** 2026年4月13日
 **许可协议：** CC BY-SA 4.0
+
+---
+
+## 对比分析
+
+Hermes Agent 定位为带持久记忆和自我进化能力的智能体，下面把它和同类型的两个开源记忆型 Agent 项目做对比：OpenHands（前 OpenDevin）和 Letta（前 MemGPT）。
+
+### 对比维度一：记忆与学习机制
+| 维度 | Hermes Agent | OpenHands | Letta |
+| --- | --- | --- | --- |
+| 记忆介质 | SQLite + FTS5 全文索引 | 文件 + 工作区快照 | 自建上下文数据库 |
+| 长期画像 | Honcho 用户画像 | 无显式画像层 | 核心记忆 / 回忆 / 归档三层 |
+| 自我进化 | 任务后自动创建可复用技能 | 基于事件的工作流迭代 | 靠 prompt 工具调用写入记忆 |
+| 检索方式 | FTS5 + LLM 摘要二阶段 | 关键词 + 嵌入混合 | 上下文窗口外的 LLM 召回 |
+
+### 对比维度二：定位与使用场景
+| 维度 | Hermes Agent | OpenHands | Letta |
+| --- | --- | --- | --- |
+| 主要形态 | CLI / TUI Agent | 软件工程 Agent（操控代码仓库） | Agent 服务化框架 + 前端 |
+| 适合谁 | 个人/小团队的私人助手 | 想自动化改 Bug、写 PR 的工程师 | 想做 SaaS 化产品的开发者 |
+| 学习成本 | 中，需要理解 Honcho | 中，事件流模型 | 高，记忆层级抽象复杂 |
+| 部署形态 | 单机 CLI | Docker / 云端 Runtime | Python SDK + 数据库 |
+
+### 优缺点
+- **Hermes Agent**：把"自我进化"做成产品核心，CLI 体验最贴近本地日常使用；但生态较小，Honcho 协议绑定较深。
+- **OpenHands**：软件工程场景最成熟，事件溯源模型清晰；面向"任务执行"而非"长期陪伴"。
+- **Letta**：记忆模型学术化、可扩展性高；上手门槛最高，需要熟悉核心/回忆/归档三层语义。
+
+### 何时选哪个
+- 想做"越用越懂你"的个人助手 → 选 Hermes Agent
+- 想自动化处理 GitHub Issue、写代码、跑测试 → 选 OpenHands
+- 想把 Agent 做成带记忆的 SaaS 产品 → 选 Letta
+
+### 参考资料
+- Hermes Agent 仓库：https://github.com/NousResearch/Hermes-Agent
+- OpenHands 仓库：https://github.com/All-Hands-AI/OpenHands
+- Letta 仓库：https://github.com/letta-ai/letta
