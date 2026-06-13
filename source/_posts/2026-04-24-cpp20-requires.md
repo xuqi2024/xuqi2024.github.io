@@ -421,7 +421,7 @@ int main() {
 ```
 
 **运行结果**：
-```
+```text
 integral: 42
 floating: 3.14
 ```
@@ -461,3 +461,40 @@ floating: 3.14
 7. [（七）Ranges 库](/2026/04/23/2026-04-24-cpp20-ranges/)
 
 </details>
+
+本章讲 C++20 的 requires 表达式与约束子句，对比维度：本特性 vs C++17 SFINAE / C++20 concepts 旧写法 vs 其他语言约束。
+
+## 对比分析
+
+### 一、本特性 vs 旧写法
+
+| 维度 | C++20 requires | C++17 SFINAE | C++20 Concepts |
+|------|-----------------|--------------|----------------|
+| 表达式形式 | `requires (T x) { x.foo(); }` | `void_t` 探测 | 命名约束 concept |
+| 子句形式 | `template<class T> requires std::integral<T> void f(T)` | enable_if | `template<std::integral T>` |
+| 可读性 | 接近自然语言 | 较差 | 最佳 |
+| 错误信息 | 明确指出哪个表达式不满足 | 一长串 | 概念名 + 表达式 |
+
+### 二、对比其他语言
+
+| 语言 | 约束 / 接口 | 备注 |
+|------|-------------|------|
+| C++20 | requires / concept | 编译期 |
+| Rust | trait bound | `T: Trait` |
+| Haskell | class constraint | 最强 |
+| Java | bounded generics | `<T extends X & Y>` |
+| TypeScript | generic constraint | `extends` |
+
+### 三、优缺点
+
+优点：
+- 比 SFINAE 直观很多
+- 与 concept 协同设计
+
+缺点：
+- 单独使用时不一定要比 concept 更简洁
+
+### 四、何时选
+
+- 局部约束 / 内联表达：requires
+- 复用约束 / 公共 API：concept
