@@ -344,3 +344,46 @@ FunASR 代表了端到端语音识别的最新进展。相比传统 GMM-HMM 和�
 - ModelScope: [Fun-ASR-Nano-2512](https://modelscope.cn/models/FunAudioLLM/Fun-ASR-Nano-2512)
 - HuggingFace: [Fun-ASR-Nano-2512](https://huggingface.co/FunAudioLLM/Fun-ASR-Nano-2512)
 - 官方文档: [FunASR Runtime 部署指南](https://github.com/modelscope/FunASR/tree/main/runtime)
+---
+
+## 对比分析
+
+FunASR 是阿里达摩院开源的工业级 ASR 工具包，与 Whisper（OpenAI）、Paraformer（同源）、WeNet 在部署难度、性能上各有侧重。
+
+### 维度对比表
+
+| 维度 | FunASR | OpenAI Whisper | WeNet |
+|------|--------|----------------|-------|
+| 模型体系 | Paraformer + SAN-M + 多种 | Encoder-Decoder Transformer | U2 / RNN-T |
+| 中文识别 | 强（工业场景 SOTA） | 中（多语种通用） | 强 |
+| 多语种 | 中（中文/英文/日文等） | 强（99 种语言） | 中 |
+| 实时流式 | 支持（80ms 延迟级） | 不原生支持（依赖 VAD 切片） | 支持（U2 流式） |
+| 部署形式 | Python + ONNX + Runtime + Docker | Python + C++ whisper.cpp | C++ + Python |
+| 适合场景 | 工业级中文识别、客服、会议 | 多语种离线转写 | 流式、嵌入式、学术研究 |
+
+### 优缺点
+
+FunASR
+- 优点：工业级中文识别表现强；多模型可选（Paraformer 流式、SAN-M 离线）；Runtime SDK 完善；本地部署友好。
+- 缺点：多语种覆盖弱于 Whisper；模型选择多需熟悉场景；与社区国际主流工具生态略独立。
+
+Whisper
+- 优点：多语种覆盖广；社区与衍生生态（whisper.cpp、faster-whisper）强大；零样本识别。
+- 缺点：原始版本非流式；中文表现需较大模型；延迟较高。
+
+WeNet
+- 优点：端到端 U2 流式；学术与工业兼顾；纯 C++ 运行时便于嵌入式。
+- 缺点：中文工业场景 API 完善度不如 FunASR；模型库规模较小。
+
+### 何时选
+
+- 选 FunASR：工业级中文 ASR、需要流式 + 离线多模型、本地私有部署。
+- 选 Whisper：多语种转写、离线批处理、不在意延迟。
+- 选 WeNet：嵌入式/端侧流式识别、研究项目。
+
+### 参考资料
+
+- FunASR GitHub：https://github.com/FunAudioLLM/Fun-ASR
+- Whisper GitHub：https://github.com/openai/whisper
+- WeNet GitHub：https://github.com/wenet-e2e/wenet
+- Paraformer 论文：https://arxiv.org/abs/2206.08317
