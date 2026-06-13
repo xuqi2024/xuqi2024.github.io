@@ -108,7 +108,7 @@ flowchart TB
 
 Silero-VAD 以 **32ms**（512 samples）为单位处理音频块，输出概率值 `prob ∈ [0,1]`：
 
-```
+```text
 prob >= 0.5 持续积累 →  进入 SPEAKING 状态
 prob < 0.5 持续 300ms → 退出 SPEAKING，触发语音片段处理
 ```
@@ -154,7 +154,7 @@ merged = merged / ||merged||  # L2 归一化回单位球面
 
 ### 5. 端到端时序
 
-```
+```text
 t=0ms      麦克风采集 PCM 16kHz
 t=0~300ms  VAD 检测语音起止
 t=300ms    并行触发 ASR + 声纹
@@ -192,7 +192,7 @@ t=~2300ms  TTS 生成 WAV，分发给浏览器 + ESP32
 
 项目文档中已规划了清晰的 v1→v2→v3→v4 路径：
 
-```
+```text
 v1.0          v2.0              v3.0              v4.0
   │             │                │                 │
   ▼             ▼                ▼                 ▼
