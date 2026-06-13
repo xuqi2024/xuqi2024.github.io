@@ -251,20 +251,7 @@ Pydantic AI 同时支持 **MCP（Model Context Protocol）** 和 **A2A（Agent-t
 
 ## 八、优缺点总结
 
-```
-┌─────────────────┬──────────────────────────────┬──────────────────────────────┐
-│                 │  架构简洁性 / 扩展性 / 易用性  │       性能 / 复杂度 / 维护性     │
-├─────────────────┼──────────────────────────────┼──────────────────────────────┤
-│ ✅ 优势         │ • 类型系统完整，全程 IDE 支持    │ • Graph 架构状态清晰好维护       │
-│                 │ • Pydantic 校验内置 Agent 循环  │ • Provider 抽象简洁，不堆 if/else │
-│                 │ • 装饰器注册工具，API 极简       │ • OTel 原生，可观测性好         │
-│                 │ • Capabilities 组合模式灵活     │                               │
-├─────────────────┼──────────────────────────────┼──────────────────────────────┤
-│ ⚠️ 注意事项      │ • 相对较新 (2024.6)，生态在成长 │ • 异步为主，同步封装是语法糖      │
-│                 │ • Graph 调试需要熟悉状态机概念   │ • 高度依赖 Pydantic 版本兼容     │
-│                 │ • 复杂多 Agent 场景建议用 LangGraph│                             │
-└─────────────────┴──────────────────────────────┴──────────────────────────────┘
-```
+
 
 ---
 
@@ -359,3 +346,46 @@ Pydantic AI 的设计哲学代表着 AI Agent 框架的一种重要方向：**�
 
 **项目链接**: https://github.com/pydantic/pydantic-ai
 **官方文档**: https://ai.pydantic.dev/
+---
+
+## 对比分析
+
+Pydantic AI 是"Type Engineering"路线的代表，与 LangChain、Pydantic 自身的演进方向相比，在类型安全与可靠执行上有差异化优势。
+
+### 维度对比表
+
+| 维度 | Pydantic AI | LangChain | Instructor |
+|------|-------------|-----------|------------|
+| 核心理念 | 类型驱动的 Agent（Type Engineering） | 链式 + Agent + 工具的通用编排 | 用 Pydantic 强制 LLM 输出结构化 |
+| 类型安全 | 一等公民（依赖类型 + result_type + 验证器） | 中（需自行处理输出） | 强（专注输出校验） |
+| 协议支持 | MCP + A2A 双协议 | MCP 支持、A2A 通过社区 | 主要专注输出，不直接做协议 |
+| Durable Execution | 支持（Temporal / DBOS 集成） | 通过 LangGraph 提供 | 不涉及 |
+| 工具调用 | 内置 tool() 与 type hints | Tool 抽象 + Toolkits | 通过函数描述 |
+| 适合场景 | 生产级 Agent、需要可靠 IO、研究型应用 | 通用 LLM 应用、复杂工具链 | 仅需结构化 LLM 输出的轻量场景 |
+
+### 优缺点
+
+Pydantic AI
+- 优点：类型安全领先；MCP + A2A 双协议；Durable Execution；Eval 原生集成；FastAPI 式开发体验。
+- 缺点：相对年轻，生态小于 LangChain；部分企业级特性需要自行补齐；学习成本取决于 Pydantic 经验。
+
+LangChain
+- 优点：生态最大、组件最多、社区成熟；LangGraph 弥补了流程编排。
+- 缺点：抽象层深、版本迭代快、类型体验弱于 Pydantic AI。
+
+Instructor
+- 优点：专注做"结构化 LLM 输出"，简单直接；与 Pydantic 天然契合。
+- 缺点：不解决 Agent 编排、工具调用、记忆等完整 Agent 问题。
+
+### 何时选
+
+- 选 Pydantic AI：你在意 LLM 输入输出的可靠性，需要 A2A/MCP、Durable Execution、生产级 Eval。
+- 选 LangChain：你要最快搭一个 LLM 应用，依赖丰富生态。
+- 选 Instructor：你只需要"把 LLM 输出变成 Pydantic 对象"，不需要完整 Agent 编排。
+
+### 参考资料
+
+- Pydantic AI 文档：https://ai.pydantic.dev/
+- LangChain 文档：https://python.langchain.com/
+- Instructor GitHub：https://github.com/jxnl/instructor
+- Durable Execution (Temporal)：https://temporal.io/
