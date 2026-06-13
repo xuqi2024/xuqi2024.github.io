@@ -87,7 +87,7 @@ graph TB
 
 elizaOS 的代码组织在 `packages/` 目录下，主要包含三大核心包：
 
-```
+```text
 packages/
 ├── core/          # @elizaos/core — 核心运行时、类型定义、Agent Loop
 ├── agent/         # @elizaos/agent — AgentRuntime + 插件加载器 + API
@@ -330,7 +330,7 @@ export interface Plugin {
 
 ### 插件生命周期
 
-```
+```text
 插件加载流程：
 1. 解析插件声明 → 验证 Plugin 接口完整性
 2. 加载插件依赖 → 解析 npm 包依赖
@@ -644,3 +644,57 @@ elizaOS 是一个设计精良、功能全面的开源 AI Agent 框架。它的�
 ---
 
 *本文基于 elizaOS v0.x 源码分析，版本号获取自 GitHub 最新 commit。*
+
+## 对比分析
+
+elizaOS 的独特之处是"操作系统 + 多渠道 + 插件市场"三件套齐全。在 Agent 框架生态里，定位最接近、且社区讨论最多的三个项目分别是 LangChain、AutoGen 和 CrewAI。下面从架构、Agent 协作、生态三个维度展开。
+
+### 维度一：架构抽象
+
+| 项目 | 核心抽象 | 多 Agent 协作 | 多渠道连接器 | 运行时类型 |
+|------|----------|----------------|----------------|------------|
+| **elizaOS** | Runtime + Character + Provider + Action | ✅（room/world） | ✅（Discord/Telegram/Farcaster/X） | Node + 浏览器双构建 |
+| **LangChain / LangGraph** | Chain / Tool / AgentExecutor | ✅（LangGraph 显式图） | ⚠️ 主要靠社区集成 | Python 为主 + TS SDK |
+| **AutoGen (Microsoft)** | ConversableAgent + GroupChat | ✅（GroupChat / Swarm） | ❌ 需自行封装 | Python |
+| **CrewAI** | Agent + Crew + Task | ✅（角色化） | ❌ 需自行封装 | Python |
+
+### 维度二：Agent 编排模型
+
+- elizaOS：基于"角色（Character）+ 行为（Action）+ 上下文（Provider）"的声明式组合，运行时支持多 Agent 共享 room/world
+- LangGraph：显式有向图，节点是函数/Agent，边是事件条件；最适合"工作流即代码"的可视化与回放
+- AutoGen：把多 Agent 当成"一组可对话的人"，GroupChat 模式天然适合辩论/审稿类场景
+- CrewAI：把 Agent 抽象成"有角色、有目标、有工具"的"船员"，适合"业务流程"快速编排
+
+### 维度三：生态与语言
+
+- elizaOS：TypeScript 为主，天然适配前端/Web 团队；插件市场 + CLI 一键启动
+- LangChain/LangGraph：Python + JS 双 SDK，集成最广（向量库、模型、工具 1000+）
+- AutoGen：研究/学术风格重，Python 一家独大
+- CrewAI：Python 生态，定位偏"低代码 + 业务流"
+
+**优缺点小结**
+
+- **elizaOS**：开箱即用 + 多渠道 + 浏览器双构建是它的杀手锏；缺点是文档偏简、版本演进快、生态还在快速变化
+- **LangChain/LangGraph**：工具/集成最全，工业级落地首选；缺点是 API 抽象层多，版本升级偶有 breaking change
+- **AutoGen**：多 Agent 学术研究标杆；缺点是工程化体验一般，文档对新人门槛偏高
+- **CrewAI**：低代码体验好；缺点是灵活度有限，复杂业务逻辑需要绕路
+
+**何时选 elizaOS**
+
+- 团队以 TypeScript / Node.js 为主，需要"在 Discord / Telegram / Web 上快速上线 AI Bot"
+- 希望 Agent 既能跑在 Node 服务器，也能跑在浏览器（WebGPU 推理）
+- 看中"插件市场 + 角色卡"这种 Web3 社区熟悉的开发范式
+
+**何时不选 elizaOS**
+
+- 业务核心是"严格 RAG 工作流"——LangChain/LangGraph 集成更深
+- 业务核心是"多 Agent 学术协作"——AutoGen 更系统
+- 业务核心是"角色化快速试错"——CrewAI 上手更快
+
+**参考资料**
+
+- elizaOS GitHub：<https://github.com/elizaOS/eliza>
+- LangGraph：<https://langchain-ai.github.io/langgraph/>
+- AutoGen：<https://github.com/microsoft/autogen>
+- CrewAI：<https://github.com/crewAIInc/crewAI>
+- "Comparing Agent Frameworks"（LangChain Blog）：<https://blog.langchain.com/comparing-agent-frameworks/>
