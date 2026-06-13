@@ -20,18 +20,7 @@ description: "本章综合运用本系列所有知识：Dataclass + Protocol + �
 
 ### 1.1 为什么需要模块化 Agent？
 
-```
-传统方式：                    模块化方式：
-┌─────────────────┐           ┌─────────┐ ┌─────────┐ ┌─────────┐
-│   单一巨大的    │           │  Tool   │ │  LLM    │ │ Memory  │
-│   Agent 类     │           │  管理   │ │  抽象   │ │  抽象   │
-│                 │           └────┬────┘ └────┬────┘ └────┬────┘
-│ - 难以测试      │                └─────────┬─────────┘
-│ - 难以扩展      │                      ┌────▼────┐
-│ - 难以复用      │                      │  Agent  │
-└─────────────────┘                      │  核心   │
-                                          └─────────┘
-```
+
 
 ### 1.2 核心设计原则
 
@@ -397,7 +386,7 @@ print(a.chat("What is 2+2?"))
 
 ### 7.2 运行流程
 
-```
+```text
 用户输入: "What is 2+2?"
     ↓
 Agent.chat() 被调用
@@ -503,6 +492,21 @@ Agent.chat = logging_middleware(Agent.chat)
 这些知识不仅适用于 AI 开发，更是现代 Python 工程化的必备技能。
 ---
 
+```mermaid
+graph LR
+    A[用户输入]:::input --> B[Agent Router]:::process
+    B --> C[Memory Agent]:::agent
+    B --> D[Tool Agent]:::agent
+    B --> E[Reasoning Agent]:::agent
+    C --> F[结果聚合]:::output
+    D --> F
+    E --> F
+    F --> G[最终响应]:::output
+    classDef input fill:#FFE5E5,stroke:#FF9AA2,color:#333
+    classDef process fill:#E5F3FF,stroke:#A0C4FF,color:#333
+    classDef agent fill:#FFF4E5,stroke:#FFD6A0,color:#333
+    classDef output fill:#E5FFE5,stroke:#B5EAD7,color:#333
+```
 ## 📚 Python AI教程 系列导航
 
 > 本文是《Python AI教程》系列第 **14/14** 篇。
@@ -530,3 +534,60 @@ Agent.chat = logging_middleware(Agent.chat)
 14. [（十四）组合模式实战](/2026/04/23/2026-04-27-python-14-composite-ai-agent/) **← 当前**
 
 </details>
+
+## 对比分析
+
+本章核心是 Python 组合模式（Composite Pattern）构建模块化 AI Agent。
+
+### 维度一：组合模式 vs 其他"组装 Agent"范式
+
+| 范式 | 抽象单位 | 灵活性 | 复杂度 | 典型代表 |
+|------|----------|--------|--------|----------|
+| **组合模式（Composite）** | Component 接口 + Leaf/Composite | 中 | 中 | 本章风格 |
+| **责任链（Chain of Responsibility）** | Handler 链 | 中 | 中 | LangChain LCEL、`|` 管道 |
+| **策略模式（Strategy）** | 多个可替换算法 | 中 | 低 | 不同 Prompt 模板切换 |
+| **装饰器模式（Decorator）** | 包装增强 | 高 | 中 | 重试 / 日志 / 缓存包装 |
+| **Pipeline（数据流）** | 数据沿管道流动 | 中 | 中 | LangChain Chain、Haystack |
+| **图（Graph）** | 节点 + 边 | 高 | 高 | LangGraph、LlamaIndex Workflow |
+| **多 Agent 协作** | 多个独立 Agent 通信 | 极高 | 极高 | AutoGen、CrewAI、MetaGPT |
+
+### 维度二：与其他 Agent 框架的对比
+
+| 框架 | 核心抽象 | 组合方式 | 状态管理 | 适合 |
+|------|----------|----------|----------|------|
+| **本章（手写 Protocol + 组合）** | `Tool` Protocol | 显式 `Composite` 类 | 调用方维护 | 教学 / 轻量项目 |
+| **LangChain** | `Runnable` / `Chain` | LCEL 管道 `prompt \| model \| parser` | 内置 Memory | 通用 LLM 应用 |
+| **LangGraph** | `StateGraph` + 节点 | 有向图 + 条件边 | 显式 State schema | 复杂多步 / 循环 / 人机协作 |
+| **LlamaIndex** | `QueryEngine` / `AgentRunner` | 数据索引 + Agent | 上下文自动管理 | RAG 为主 |
+| **Haystack** | `Pipeline` + 组件 | 显式 `add_node` / `connect` | 显式 state | 生产级 RAG / 搜索 |
+| **AutoGen** | 多 Agent + GroupChat | 消息传递 | 对话历史 | 多角色协作 |
+| **CrewAI** | Crew + Agent + Task | 角色分工 + 流程 | 任务上下文 | 模拟团队 |
+| **Pydantic AI** | `Agent` + 工具 | 强类型 + 依赖注入 | 类型化 deps | 类型安全项目 |
+| **Semantic Kernel** | `Kernel` + Plugin | 函数组合 | 内置 Memory | .NET 生态 / 企业 |
+
+### 维度三：组合模式 vs 继承
+
+| 维度 | 组合（has-a） | 继承（is-a） |
+|------|----------------|--------------|
+| 耦合度 | 弱（运行时换组件） | 强（编译期绑定） |
+| 灵活性 | 高 | 低 |
+| 多态 | 通过 Protocol/接口 | 通过父类引用 |
+| 适用 | 跨类型组合、运行时切换 | 严格的"分类"关系 |
+| AI 框架选择 | LangChain、Pydantic AI、Haystack | 极少（多数用组合） |
+
+### 优缺点小结
+
+- **本章组合模式（手写）**：透明、易理解、零依赖；缺点是缺监控、缺可视化、缺持久化
+- **LangChain LCEL**：生态最全、流式友好；缺点是抽象层多、性能有 overhead
+- **LangGraph**：支持循环 / 条件 / 人机协作；缺点是学习曲线陡
+- **AutoGen / CrewAI**：多 Agent 协作强大；缺点是 token 消耗大、难调试
+- **Pydantic AI**：类型安全、依赖注入；缺点是生态较新
+
+### 何时选
+
+- 选 **本章组合模式**：教学、自定义小项目、要 100% 控制流程
+- 选 **LangChain LCEL**：标准 LLM 应用（Prompt + Model + Parser 链式）
+- 选 **LangGraph**：需要循环 / 条件分支 / 人在回路
+- 选 **Pydantic AI**：项目重度使用 Pydantic、要类型安全
+- 选 **AutoGen / CrewAI**：需要"多角色"模拟团队
+- 不推荐 **从零手写大 Agent**：用成熟框架，避免重复造轮子
