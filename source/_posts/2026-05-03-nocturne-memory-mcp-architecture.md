@@ -481,3 +481,45 @@ Nocturne Memory 背后的哲学思考值得重视：
 ---
 
 *本文基于 2026年5月3日的源码分析，如有疏漏欢迎指正。*
+---
+
+## 对比分析
+
+Nocturne Memory 走"AI 主权记忆（第一人称叙事）"路线，与同样基于 MCP 的记忆项目（如 MemPalace、mem0 MCP）在记忆主权与设计上形成对比。
+
+### 维度对比表
+
+| 维度 | Nocturne Memory | MemPalace | mem0 (MCP 集成) |
+|------|------------------|-----------|------------------|
+| 记忆主权 | 第一人称、AI 自写 | 系统代管、用户可见 | 系统代管、可插拔 LLM 提取 |
+| 协议 | MCP Server | MCP Server（29 个工具） | 提供 MCP 集成 |
+| 数据形态 | 自然语言叙事条目 | 精确库 + 索引库 + 上下文库 | 三层（情景/语义/程序性） |
+| 部署 | 本地/小服务 | 完全本地 | 云/OSS 双轨 |
+| 适合场景 | 人格化 AI 陪伴、研究"认知所有权" | 高保真检索、隐私敏感 | 通用 Agent 长期记忆 |
+
+### 优缺点
+
+Nocturne Memory
+- 优点：哲学与设计独特，强调记忆主权；MCP 原生；适合人格化/陪伴场景研究。
+- 缺点：相对小众；检索效率与工程化程度不及成熟项目；不擅长企业级高并发。
+
+MemPalace
+- 优点：本地、高保真、工具丰富；benchmark 可复现。
+- 缺点：依赖 Chroma 单后端；社区规模小。
+
+mem0
+- 优点：生态最大、云/OSS 双模式；通用 Agent 记忆基础设施。
+- 缺点：第一人称叙事能力弱；本地化需自配。
+
+### 何时选
+
+- 选 Nocturne Memory：构建人格化 AI、关注"认知所有权"与第一人称记忆的研究/产品。
+- 选 MemPalace：高保真本地检索、隐私敏感。
+- 选 mem0：通用、活跃、大规模部署的 Agent 记忆。
+
+### 参考资料
+
+- Nocturne Memory GitHub：https://github.com/Dataojitori/nocturne_memory
+- MemPalace GitHub：https://github.com/MemPalace/mempalace
+- mem0 GitHub：https://github.com/mem0ai/mem0
+- MCP 官方：https://modelcontextprotocol.io/
