@@ -93,7 +93,7 @@ flowchart TB
 
 CLI-Anything的核心不是"生成CLI工具"，而是**定义了软件与Agent之间的新协议**：
 
-```
+```text
 传统协议（软件 → 人类）：
 软件 → 图形界面 → 鼠标键盘 → 人类理解
 
@@ -475,3 +475,40 @@ CLI-Anything是第一个系统性地解决这个问题的开源项目。它的�
 ---
 
 *本文为技术洞察，如有疑问或想法，欢迎交流。*
+
+---
+
+## 对比分析
+
+CLI-Anything 提出把任意软件"CLI 化"以便 Agent 调用。下面选取两个也围绕"软件可由 Agent 操作"的项目做对比：Anthropic 的 Computer Use 与 OpenHands，并加上 pi-mono 做轻量对照。
+
+### 对比维度一：与软件交互的接口
+| 维度 | CLI-Anything | Anthropic Computer Use | OpenHands |
+| --- | --- | --- | --- |
+| 接入方式 | 生成 CLI 子命令 | 截屏 + 鼠标键盘 | 浏览器/Shell 自动化 |
+| 适配目标 | 任何有 CLI 潜力的软件 | 任意带 GUI 的桌面应用 | 任意 Web/桌面 |
+| 确定性 | 高，纯命令行 | 低，依赖视觉识别 | 中 |
+| 可调试性 | 直接看终端 | 需要回放截图 | 工作区快照 |
+
+### 对比维度二：Agent 友好度
+| 维度 | CLI-Anything | Computer Use | OpenHands |
+| --- | --- | --- | --- |
+| LLM 工具调用友好 | 极好 | 一般 | 好 |
+| 权限边界 | 文件级 + 命令级 | 屏幕级 | 沙箱级 |
+| 学习成本 | 中，需要适配每个软件 | 低（直接给目标） | 中 |
+| 适合生产 | 是 | PoC | 是 |
+
+### 优缺点
+- **CLI-Anything**：把"软件交互"压到最确定的形式，工具调用最稳；但需要为每个软件写适配。
+- **Computer Use**：通用性最强，能跑任何 GUI；视觉链路不可控、耗 token。
+- **OpenHands**：在仓库/浏览器场景最成熟；CLI 化软件的支持不是它的主战场。
+
+### 何时选哪个
+- 想让 Agent 操作企业内软件、可接受适配成本 → 选 CLI-Anything
+- 想零改造操作任意 GUI 软件 → 选 Computer Use
+- 想自动化 Web/仓库任务 → 选 OpenHands
+
+### 参考资料
+- Anthropic Computer Use 文档：https://docs.anthropic.com/en/docs/agents-and-tools/computer-use
+- OpenHands 仓库：https://github.com/All-Hands-AI/OpenHands
+- pi-mono 仓库：https://github.com/malcolmyu/pi-mono（作为轻量对照）
