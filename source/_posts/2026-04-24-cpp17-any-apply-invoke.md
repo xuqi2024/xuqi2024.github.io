@@ -287,3 +287,73 @@ int main() {
 8. [（八）Attribute 新增](/2026/04/23/2026-04-24-cpp17-attributes/)
 
 </details>
+
+## 语法/控制流可视化
+
+下面是一张马卡龙色 Mermaid 图，帮你从图形角度把握本章涉及的语法与控制流。
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#FFE5EC', 'primaryTextColor': '#5D5D5D', 'primaryBorderColor': '#FFB3C6', 'lineColor': '#B5EAD7', 'secondaryColor': '#C7CEEA', 'tertiaryColor': '#FFDAC1'}}}%%
+flowchart LR
+    subgraph INVOKE["std::invoke 调用分派"]
+        direction TB
+        A["可调用对象"] --> B{"对象类型?"}
+        B -- "成员指针" --> C["🔧 调用对象成员<br/>obj.*fn(args)"]
+        B -- "函数指针" --> D["📞 直接调用<br/>fn(args)"]
+        B -- "函数对象" --> E["🎯 operator()<br/>f(args)"]
+    end
+
+    subgraph APPLY["std::apply 元组展开"]
+        direction TB
+        T["📦 std::tuple&lt;Args...&gt;"] --> F["🪄 编译期展开"]
+        F --> G["🎁 逐元素传参"]
+        G --> H["✅ f args0,args1,..."]
+    end
+
+    style A fill:#FFE5EC,stroke:#FFB3C6,color:#5D5D5D
+    style B fill:#FFDAC1,stroke:#FFB3C6,color:#5D5D5D
+    style C fill:#C7CEEA,stroke:#A8DADC,color:#5D5D5D
+    style D fill:#B5EAD7,stroke:#A8DADC,color:#5D5D5D
+    style E fill:#FFE5EC,stroke:#FFB3C6,color:#5D5D5D
+    style T fill:#C7CEEA,stroke:#A8DADC,color:#5D5D5D
+    style F fill:#FFDAC1,stroke:#FFB3C6,color:#5D5D5D
+    style G fill:#B5EAD7,stroke:#A8DADC,color:#5D5D5D
+    style H fill:#FFE5EC,stroke:#FFB3C6,color:#5D5D5D
+```
+
+本章讲 C++17 的 std::apply 与 std::invoke（也涉及 std::any），对比维度：本特性 vs 旧写法 vs 其他语言一等函数调用机制。
+
+## 对比分析
+
+### 一、本特性 vs 旧写法
+
+| 维度 | C++17 写法 | 旧写法 | 影响 |
+|------|------------|--------|------|
+| 用 tuple 调函数 | `std::apply(f, std::tuple{1, "x"})` | 手写 `unpack` helper / index_sequence 展开 | 一行替代 30+ 行 |
+| 调用成员函数指针 | `std::invoke(&Foo::bar, foo, 1, 2)` | `std::bind` / `std::mem_fn` | 简洁、统一 |
+| any 容器 | `std::any a = 1;` | `void*` + 手动管理 | 类型安全略好 |
+
+### 二、对比其他语言
+
+| 语言 | 一等函数调用 | 元组调用 | 备注 |
+|------|--------------|----------|------|
+| C++17 | `std::invoke` | `std::apply` | 标准化 |
+| Python | 直接调用 + `*args` 解包 | `f(*t)` | 语言原生 |
+| Rust | trait `Fn` | `f.call(args)` | 类型系统严格 |
+| Java | Method Reference | ❌ | 仅限单参数 |
+| JavaScript | 直接调用 | `f(...args)` | 动态类型 |
+
+### 三、优缺点
+
+优点：
+- 把"调用任意可调用对象"这件事标准化
+- apply 让"tuple 当参数列表"可一行完成
+
+缺点：
+- invoke 的 SFINAE 友好性需要适应
+- any 仍是类型擦除
+
+### 四、何时选
+
+- 实现通用回调 / 任务队列：用 invoke + function
+- 处理 tuple / pair 当参数：用 apply
