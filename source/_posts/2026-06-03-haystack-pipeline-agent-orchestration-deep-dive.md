@@ -189,7 +189,7 @@ class State:
         "type": SomeType,
         "handler": Optional[Callable[[Any, Any], Any]]
       }
-    ```
+    ```text
     Handlers control how values are merged when using the `set()` method:
     - For list types: defaults to `merge_lists` (concatenates lists)
     - For other types: defaults to `replace_values` (overwrites existing value)
@@ -629,3 +629,58 @@ Haystack 不是"新框架"，它是 deepset 团队把 **"工业级"软件工程�
 ---
 
 > 本文所有代码示例均参考 Haystack 2.x 官方 examples（Apache-2.0 License），并经过简化整理。完整示例请访问 [haystack/examples](https://github.com/deepset-ai/haystack/tree/main/test)。
+
+## 对比分析
+
+Haystack 的核心定位是"组件即积木 + 工业级 RAG + 简单 Agent"。在"LLM 应用编排框架"赛道里，跟它定位最像、且真正在生产里被对比过的项目是 LangChain/LangGraph、LlamaIndex 和 DSPy。下面对它们做一次横向对比。
+
+### 维度一：抽象模型
+
+| 项目 | 核心抽象 | 编排方式 | 状态管理 |
+|------|----------|----------|----------|
+| **Haystack** | Component / Pipeline / SuperComponent | 显式 Pipeline（add + connect） | ComponentState + 自带 AgentState |
+| **LangChain / LangGraph** | Chain / Runnable / Graph | LangChain 链式；LangGraph 显式图 | Memory + Checkpoint |
+| **LlamaIndex** | QueryEngine / Workflow | Workflow（事件驱动） | Context + Memory Block |
+| **DSPy** | Module / Signature | 程序化组合 | 训练时自动优化 |
+
+### 维度二：RAG 与 Agent
+
+- **Haystack**：RAG 一等公民，自带 Document/Retriever/Ranker/Reader 全套；AgentState 提供分支、循环、Human-in-the-loop
+- **LangChain / LangGraph**：工具/RAG 集成最广；LangGraph 适合"图编排自由"，但学习曲线较陡
+- **LlamaIndex**：RAG 出身（与 LangChain 并称"应用层双雄"），Workflow 引擎偏事件驱动
+- **DSPy**：不直接做 RAG，更像"提示工程编译器"，适合优化 prompt/chain 权重
+
+### 维度三：生产稳定性
+
+- Haystack：deepset 团队 5+ 年持续迭代，2.x 重写后类型与异步统一，商业版（Enterprise）提供监控/审计
+- LangChain：迭代最快，breaking change 也最多，LangSmith 是事实上的 trace 工具
+- LlamaIndex：版本号频繁跳，事件驱动 Workflow 较新，长期稳定性待观察
+- DSPy：偏研究，模型调用较轻，生产链路需要自建
+
+**优缺点小结**
+
+- **Haystack**：组件化 + 类型安全 + 异步统一 + Agent 状态机；缺点是"组件+连接"的写法对新人有学习成本
+- **LangChain / LangGraph**：工具/RAG 集成最广；缺点是抽象层多，版本升级偶有 breaking change
+- **LlamaIndex**：RAG 出生 + Workflow 引擎新；缺点是版本号变化快、长期稳定性观察中
+- **DSPy**：提示优化可解释；缺点是不直接做"业务级 RAG"
+
+**何时选 Haystack**
+
+- 你要做"能在生产环境跑 1–2 年"的企业级 RAG
+- 你想要"组件 + Pipeline"这种"积木式"心智模型
+- 你能接受 Python 类型注解和异步作为默认风格
+
+**何时不选 Haystack**
+
+- 你想要"图编排最大自由度"——LangGraph 更适合
+- 你想要"事件驱动 Workflow"——LlamaIndex 风格更对味
+- 你想"自动优化 prompt"——DSPy 才是研究主流
+
+**参考资料**
+
+- Haystack GitHub：<https://github.com/deepset-ai/haystack>
+- Haystack 文档：<https://docs.haystack.deepset.ai/>
+- LangChain / LangGraph：<https://langchain-ai.github.io/langgraph/>
+- LlamaIndex：<https://www.llamaindex.ai/>
+- DSPy：<https://dspy.ai/>
+- "Haystack vs LangChain vs LlamaIndex" 社区对比：<https://www.deepset.ai/blog>
