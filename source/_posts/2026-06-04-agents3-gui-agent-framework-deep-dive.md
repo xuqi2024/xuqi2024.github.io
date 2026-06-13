@@ -598,3 +598,58 @@ Agent S3 给 GUI Agent 领域带来的核心启示：
 - 📊 OSWorld 基准：<https://os-world.github.io>
 - 🤖 UI-TARS 模型：<https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B>
 - 📰 Simular 团队博客：<https://www.simular.ai/articles/agent-s3>
+
+## 对比分析
+
+Agent S3 的核心特征是"Worker + Reflection 双 Agent + Behavior Best-of-N"——以 OSWorld 72.6% 首次超越人类基线。在"Computer-Use Agent"赛道里，跟它最常被对比的项目是 OpenAI Operator、Anthropic Computer Use，以及 UI-TARS。下面对它们做一次横向对比。
+
+### 维度一：执行范式
+
+| 项目 | 决策循环 | 评测基准 | 关键创新 |
+|------|----------|----------|----------|
+| **Agent S3 (Simular)** | Worker + Reflection + bBoN | OSWorld 72.6% | Behavior Best-of-N 提升单次成功率 |
+| **OpenAI Operator / CUA** | 单一 CUA 模型端到端 | OSWorld 38.1%（CUA 早期） | 端到端 VLM + 浏览器 + 工具 |
+| **Anthropic Computer Use** | Claude 直接看截图 + 工具 | OSWorld ~28-44% | 多模态原生 + Bash/Editor/浏览器 |
+| **UI-TARS (ByteDance)** | 端到端 VLM | OSWorld 46.6%（UI-TARS-1.5） | 大规模 GUI 轨迹训练 + 推理时 CoT |
+
+### 维度二：开源 vs 闭源
+
+- **Agent S3**：开源 + 学术 paper + 评测脚本完整
+- **OpenAI Operator / CUA**：闭源服务，Operator 走浏览器侧，OpenAI CUA SDK 已开放（受限）
+- **Anthropic Computer Use**：闭源模型 + Claude API 暴露
+- **UI-TARS**：模型权重开源（Apache 2.0），但框架集成仍以 SDK 为主
+
+### 维度三：基准成绩与场景
+
+- Agent S3：OSWorld 72.6% 首次超过人类基线 ~72%
+- UI-TARS-1.5：OSWorld 46.6%、AndroidWorld 46.6%、ScreenSpot Pro 60+
+- OpenAI CUA：OSWorld 38.1%（早期），Operator 闭源、效果强但难复现
+- Claude Computer Use：OSWorld 28-44%（不同版本），稳定性高、生态最广
+
+**优缺点小结**
+
+- **Agent S3**：开源 + bBoN + Reflection 让单次成功率显著提升；缺点是依赖外接 VLM 推理，部署成本高
+- **OpenAI Operator / CUA**：商业产品体验最好；缺点是闭源、难定制
+- **Anthropic Computer Use**：API 体验最稳、生态最广；缺点是闭源、价格贵
+- **UI-TARS**：模型权重开源 + 跨平台；缺点是框架集成与 bBoN 类增强少
+
+**何时选 Agent S3**
+
+- 你需要"开源 + 可复现 + 可定制"的 GUI Agent 方案
+- 你能接受"Worker + Reflection"双 Agent 的推理成本
+- 你正在做 OSWorld / OSWorld-X 类基准的研究与对比
+
+**何时不选 Agent S3**
+
+- 你要"开箱即用、零部署"的商业体验——OpenAI Operator / Claude Computer Use 更省心
+- 你只关心"模型本身"——UI-TARS 权重可直接微调
+- 你的目标是"低资源、低延迟"——双 Agent + bBoN 较重
+
+**参考资料**
+
+- Agent S3 论文：<https://arxiv.org/abs/2510.02250>
+- Agent S GitHub：<https://github.com/simular-ai/Agent-S>
+- OpenAI CUA：<https://openai.com/index/operator-and-cua/>
+- Anthropic Computer Use：<https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/computer-use-tool>
+- UI-TARS：<https://github.com/bytedance/UI-TARS>
+- OSWorld 基准：<https://os-world.github.io>
