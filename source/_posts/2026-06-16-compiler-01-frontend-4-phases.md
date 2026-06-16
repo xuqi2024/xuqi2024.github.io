@@ -224,29 +224,29 @@ stateDiagram-v2
     [*] --> Start
     Start --> Ident: 字母/下划线
     Start --> Number: 数字
-    Start --> String: "
-    Start --> Op: + - * / < > = ! & |
-    Start --> Punct: ( ) { } , ;
-    Start --> Skip: 空白/换行
-    Start --> Comment: //
+    Start --> String: 引号
+    Start --> Op: 运算符
+    Start --> Punct: 分隔符
+    Start --> Skip: 空白
+    Start --> Comment: 注释
     Start --> [*]: EOF
 
-    Ident --> Ident: 字母/数字/下划线
-    Ident --> [*]: 其他字符（回退1）
+    Ident --> Ident: 字母数字下划线
+    Ident --> [*]: 其他字符回退1
 
     Number --> Number: 数字
-    Number --> [*]: 其他字符（回退1）
+    Number --> [*]: 其他字符回退1
 
-    String --> String: 非"字符
-    String --> [*]: "（接受）
+    String --> String: 引号内字符
+    String --> [*]: 引号结束
 
-    Op --> Eq: =
-    Op --> [*]: 其他字符（接受）
+    Op --> Eq: 等号
+    Op --> [*]: 其他字符接受
 
-    Comment --> Comment: 非\n
-    Comment --> [*]: \n
+    Comment --> Comment: 行内字符
+    Comment --> [*]: 换行
 
-    Skip --> [*]: 跳过当前字符
+    Skip --> [*]: 跳过字符
     Skip --> Start: 继续
 ```
 
@@ -1233,8 +1233,8 @@ graph LR
     T1["t1 = b * c"]:::tac
     T2["t2 = a + t1"]:::tac
 
-    EXPR ==>|gen(t1)| T1
-    T1 ==>|gen(t2)| T2
+    EXPR ==>|gen t1| T1
+    T1 ==>|gen t2| T2
 
     classDef ast fill:#FFDAB9,stroke:#FFAB76,color:#333
     classDef tac fill:#B5EAD7,stroke:#80CBC4,color:#333
