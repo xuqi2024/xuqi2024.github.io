@@ -209,7 +209,40 @@ def _hash_namespace_components(*parts: str) -> str:
 
 输出恒为 43 个字符（base64url SHA-256 截断）。这样无论 workspace/peer 名字多长，命名空间都落在 Turbopuffer 的 128 字符限制内。这种"先定长度上限再哈希"的设计，在云原生数据库里很常见——Cloudflare Worker 的 Durable Object namespace 也是类似套路。
 
-### 3.3 数据流：从消息到结论
+### 3.3 Peer 视角的关系建模
+
+```mermaid
+graph TB
+    subgraph Alice_POV["🔵 Alice 的视角"]
+        A_self["👤 Alice self<br/>observer=alice, observed=alice"]
+        A_about_bob["👁️ Alice 看 Bob<br/>observer=alice, observed=bob"]
+    end
+
+    subgraph Bob_POV["🟣 Bob (Agent) 的视角"]
+        B_about_alice["👁️ Bob 看 Alice<br/>observer=bob, observed=alice"]
+        B_self["🤖 Bob self<br/>observer=bob, observed=bob"]
+    end
+
+    Session["💬 共享 Session<br/>(同一段对话)"]
+
+    Session --> A_self
+    Session --> A_about_bob
+    Session --> B_about_alice
+    Session --> B_self
+
+    A_self -.独立演化.-> A_about_bob
+    B_about_alice -.独立演化.-> B_self
+
+    style Alice_POV fill:#C7CEEA,stroke:#9FA8DA,color:#333
+    style Bob_POV fill:#E8D5F5,stroke:#CE93D8,color:#333
+    style A_self fill:#FFDAB9,stroke:#FFAB76,color:#333
+    style A_about_bob fill:#FFDAB9,stroke:#FFAB76,color:#333
+    style B_about_alice fill:#B5EAD7,stroke:#80CBC4,color:#333
+    style B_self fill:#B5EAD7,stroke:#80CBC4,color:#333
+    style Session fill:#FFF9C4,stroke:#F9A825,color:#333
+```
+
+### 3.4 数据流：从消息到结论
 
 ```mermaid
 flowchart LR
@@ -290,7 +323,57 @@ class BaseSpecialist(ABC):
 
 `src/dreamer/trees/` 目录实现了一组树结构用来高效估算惊奇度——`rptree.py`（随机投影树）、`covertree.py`（覆盖树）、`lsh.py`（局部敏感哈希）。这些不是数据库索引，而是**在向量空间中找"密度低的点"**——也就是"远离已有观察簇的新观察"，它们往往是值得深挖的。
 
-### 4.4 Dreamer 调度的去重
+### 4.4 Dreamer 的自演化闭环
+
+```mermaid
+graph TB
+    subgraph Input["📥 输入层"]
+        OBS["📚 已有观察<br/>(Deriver 写入)"]
+        SESSION["💬 新消息流"]
+    end
+
+    subgraph Surprisal["🟡 惊奇度筛选"]
+        S1["📊 计算几何惊奇度<br/>(RP-Tree / Cover-Tree / LSH)"]
+        HINTS["🎯 高分观察<br/>作为 hint 喂给 specialist"]
+    end
+
+    subgraph Specialists["🟣 Specialist Agents"]
+        DED["🔍 Deduction Specialist<br/>(演绎：显式→隐式)"]
+        IND["🔮 Induction Specialist<br/>(归纳：模式→新结论)"]
+    end
+
+    subgraph Output["🟢 输出层"]
+        NEW_OBS["✨ 新观察<br/>(deductive / inductive)"]
+        CARD["🪪 Peer Card 更新<br/>(durable identity)"]
+    end
+
+    OBS --> S1 --> HINTS
+    SESSION --> DED
+    HINTS --> DED
+    HINTS --> IND
+    SESSION --> IND
+
+    DED -->|"可删除重复项"| NEW_OBS
+    IND -->|"只新增"| NEW_OBS
+    DED --> CARD
+
+    NEW_OBS -.反馈回.-> OBS
+
+    style Input fill:#C7CEEA,stroke:#9FA8DA,color:#333
+    style Surprisal fill:#FFF9C4,stroke:#F9A825,color:#333
+    style Specialists fill:#E8D5F5,stroke:#CE93D8,color:#333
+    style Output fill:#B5EAD7,stroke:#80CBC4,color:#333
+    style OBS fill:#FFDAB9,stroke:#FFAB76,color:#333
+    style SESSION fill:#FFDAB9,stroke:#FFAB76,color:#333
+    style S1 fill:#FFF9C4,stroke:#F9A825,color:#333
+    style HINTS fill:#FFF9C4,stroke:#F9A825,color:#333
+    style DED fill:#E8D5F5,stroke:#CE93D8,color:#333
+    style IND fill:#E8D5F5,stroke:#CE93D8,color:#333
+    style NEW_OBS fill:#B5EAD7,stroke:#80CBC4,color:#333
+    style CARD fill:#B5EAD7,stroke:#80CBC4,color:#333
+```
+
+### 4.5 Dreamer 调度的去重
 
 `src/dreamer/dream_scheduler.py` 用 `src/reconciler/scheduler.py` 里的任务调度机制保证**同一时刻只有一个 Dream 在跑**——通过 SQL `QueueItem` 表 + work_unit_key 实现分布式锁。这比 Redis 锁更轻量，适合已经在用 Postgres 的部署。
 
