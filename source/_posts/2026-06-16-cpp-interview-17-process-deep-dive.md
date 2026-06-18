@@ -13,6 +13,7 @@ tags:
 - 守护进程
 - 死锁
 - IPC
+series: cpp-interview
 ---
 
 > **进程是操作系统最古老、最核心的抽象**。从 1970 年 UNIX 引入 `fork` 系统调用开始，进程模型统治了服务器编程 50+ 年。本文是「C++ 面试题集锦」第 17 篇：在第 13 篇「进程/线程/IO」19 道题的基础上，**把"进程"部分单独拎出来深挖**，补全 6 道 fork/execve 题、3 道死锁题、1 道 IPC 综合题、2 道守护进程题、1 道孤儿/僵尸题、1 道进程 vs 作业题，再加 10 个延伸专题（task_struct、COW、vfork、execve 7 步、exit/_exit/return、进程组会话、double-fork、CFS、rlimit、/proc）和 2 个完整实战项目。

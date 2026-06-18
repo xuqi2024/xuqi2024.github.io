@@ -12,6 +12,7 @@ tags:
 - Timestamp
 - DateTime
 - 嵌入式
+series: poco-craton
 ---
 
 > **一句话核心结论**：POCO 的时间体系**不是 std::chrono 的简单包装**——它把"墙上时钟"（Timestamp/DateTime）、"单调时钟"（Stopwatch）、"时间间隔"（Timespan）三套语义彻底分开，再加上 Linux `timerfd`、QNX `timer_create`、Windows `CreateWaitableTimer` 三大平台后端的统一抽象。这一篇把所有坑（精度、回拨、时区、嵌套定时器）一次性讲透。

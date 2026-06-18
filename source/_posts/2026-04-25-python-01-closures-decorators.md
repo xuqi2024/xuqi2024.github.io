@@ -6,6 +6,7 @@ categories:
 tags:
 - Python
 description: "装饰器是 Python 最强大的语法糖之一，也是 AI 工程化离不开的利器。从 @retry 重试机制到 @timer 性能监控，从 Agent 链路追踪到 LLM…"
+series: python-ai
 ---
 
 > 装饰器是 Python 最强大的语法糖之一，也是 AI 工程化离不开的利器。从 `@retry` 重试机制到 `@timer` 性能监控，从 Agent 链路追踪到 LLM 调用缓存——装饰器让这些横切关注点（Cross-Cutting Concerns）的实现变得优雅而简洁。

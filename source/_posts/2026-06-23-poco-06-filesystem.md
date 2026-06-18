@@ -12,6 +12,7 @@ tags:
 - File
 - MemoryMappedFile
 - 嵌入式
+series: poco-craton
 ---
 
 > **一句话核心结论**：POCO 的 `Foundation::Filesystem` 不是简单包装 POSIX——它把**句柄 RAII、跨平台路径、零拷贝 mmap、临时文件 RAII、Glob 模式匹配**这 5 件事做成了**工业级嵌入式可用**的统一 API。在 C++17 之前的 10 年里，**车机、路由器、工业 PLC、医疗设备**几乎只能选它——即使在 C++20 的今天，**嵌入式只读 FS 与遗留 POSIX 兼容场景**，POCO 仍然是更稳的工程选择。

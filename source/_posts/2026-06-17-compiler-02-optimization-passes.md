@@ -14,6 +14,7 @@ tags:
 - CSE
 - LICM
 - C++17
+series: compiler
 ---
 
 > 为什么 `-O0` 编译的代码比 `-O3` 慢 10 倍？答案藏在 **8 大优化 Pass** 里。#1 我们把 `printf("Hello")` 编译到了 IR，#2 我们要把这段 IR 压榨到极致。

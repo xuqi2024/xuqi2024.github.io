@@ -2,3 +2,223 @@
 .links-of-author a::before {
   background: #178566 !important;
 }
+
+// ============= Series Pages (2026-06-18 patch) =============
+
+// 总览页
+.series-intro {
+  font-size: 1.05rem;
+  color: #555;
+  margin: 0 0 2rem 0;
+  padding: 1rem 1.25rem;
+  background: #f8f9fa;
+  border-left: 4px solid #C7CEEA;
+  border-radius: 4px;
+}
+
+.series-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin: 2rem 0;
+}
+
+.series-card {
+  display: flex;
+  gap: 0.875rem;
+  padding: 1.125rem 1.25rem;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  text-decoration: none !important;
+  color: #333 !important;
+  transition: all 0.25s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.series-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  border-color: #C7CEEA;
+}
+
+.series-card-icon {
+  font-size: 2.4rem;
+  line-height: 1;
+  flex-shrink: 0;
+  width: 50px;
+  text-align: center;
+}
+
+.series-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.series-card-title {
+  font-size: 1.05rem !important;
+  font-weight: 600 !important;
+  margin: 0 0 0.4rem 0 !important;
+  color: #2c3e50 !important;
+}
+
+.series-card-desc {
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.5;
+  margin: 0 0 0.6rem 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.series-card-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: #888;
+  padding-top: 0.4rem;
+  border-top: 1px dashed #eee;
+}
+
+.series-card-count {
+  color: #FF6B6B;
+  font-weight: 600;
+}
+
+.series-card-cat {
+  background: #FFF9C4;
+  color: #8B6914;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 0.72rem;
+}
+
+// 详情页
+.series-icon-large {
+  font-size: 1.4em;
+  margin-right: 0.3em;
+}
+
+.series-description {
+  font-size: 1rem;
+  color: #555;
+  border-left: 4px solid #FFDAB9;
+  background: #fffaf3;
+  margin: 1rem 0 2rem 0;
+  padding: 0.8rem 1.2rem;
+  border-radius: 4px;
+}
+
+.series-post-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+  counter-reset: series-counter;
+}
+
+.series-post-list li {
+  counter-increment: series-counter;
+  margin: 0 0 0.75rem 0;
+  padding: 0.75rem 1rem;
+  background: #f8f9fa;
+  border-left: 3px solid #B5EAD7;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.series-post-list li:hover {
+  background: #eaf7f0;
+  border-left-color: #FF9AA2;
+  transform: translateX(3px);
+}
+
+.series-post-list li::before {
+  content: counter(series-counter);
+  display: inline-block;
+  width: 1.6em;
+  height: 1.6em;
+  margin-right: 0.6em;
+  background: #B5EAD7;
+  color: #2c5e4d;
+  border-radius: 50%;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.85em;
+  line-height: 1.6em;
+}
+
+.series-post-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  text-decoration: none !important;
+  color: #2c3e50 !important;
+  width: calc(100% - 2.5em);
+}
+
+.series-post-date {
+  font-size: 0.78rem;
+  color: #999;
+  flex-shrink: 0;
+  font-family: 'SF Mono', Consolas, monospace;
+}
+
+.series-post-title {
+  font-size: 0.95rem;
+  color: #2c3e50;
+}
+
+.series-post-link:hover .series-post-title {
+  color: #FF6B6B !important;
+}
+
+.series-back-link {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px dashed #ddd;
+  text-align: center;
+}
+
+.series-back-link a {
+  color: #888;
+  text-decoration: none !important;
+  font-size: 0.9rem;
+}
+
+.series-back-link a:hover {
+  color: #FF6B6B !important;
+}
+
+// post-meta 区显示的 series 项
+.post-meta-series a {
+  color: #FF6B6B !important;
+  font-weight: 500;
+  text-decoration: none !important;
+  margin-left: 4px;
+}
+
+.post-meta-series a:hover {
+  color: #C7CEEA !important;
+  text-decoration: underline !important;
+}
+
+// 暗黑模式适配
+if hexo-config('darkmode') {
+  html.darkmode {
+    .series-intro { background: #2a2a2a; color: #ccc; }
+    .series-card { background: #2a2a2a; border-color: #444; color: #ccc !important; }
+    .series-card-title { color: #fff !important; }
+    .series-card-desc { color: #aaa; }
+    .series-card:hover { border-color: #C7CEEA; }
+    .series-description { background: #2a2a2a; color: #ccc; }
+    .series-post-list li { background: #2a2a2a; }
+    .series-post-list li:hover { background: #333; }
+    .series-post-list li::before { background: #5a9b87; color: #fff; }
+    .series-post-link { color: #fff !important; }
+    .series-post-title { color: #fff; }
+    .series-post-link:hover .series-post-title { color: #FF9AA2 !important; }
+    .series-card-cat { background: #5a4a1a; color: #FFDAB9; }
+  }
+}

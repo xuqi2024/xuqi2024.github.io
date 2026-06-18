@@ -14,6 +14,7 @@ tags:
 - IO 多路复用
 - epoll
 - 零拷贝
+series: cpp-interview
 ---
 
 > **一句话结论**：进程是资源分配的最小单位，线程是 CPU 调度的最小单位，协程是用户态调度的最小单位。理解 fork/exec、IPC、死锁四条件、用户态/内核态切换、五种 IO 模型、epoll LT/ET，是 C++ 后端面试的"硬通货"。

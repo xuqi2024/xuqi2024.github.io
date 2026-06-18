@@ -12,6 +12,7 @@ tags:
 - extern
 - volatile
 - 关键字
+series: cpp-interview
 ---
 
 > 一句话核心结论：**const 保护数据，static 控制生命周期与作用域，extern 解决跨文件符号，volatile 解决内存可见性**——这 4 个关键字是 C++ 面试中出现频率最高、坑也最多的一组基本功。

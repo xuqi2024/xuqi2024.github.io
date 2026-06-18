@@ -12,6 +12,7 @@ tags:
 - 嵌入式
 - Android
 - QNX
+series: poco-craton
 ---
 
 > **一句话核心结论**：嵌入式场景下，**std::filesystem 太重（编译体积+50KB）、POCO File 太杂（依赖 Net 库）、SQLite 又过重（VFS+B-tree 一套）**。本文给出 Craton 的「**三方均分**」方案——Path/File 走 POSIX 直调（编译后只增加 ~12KB）、KV 走自研 hash bucket + COW（10K 条记录只占 64KB）、INI 走纯 std::map 手写解析（无任何三方依赖），并在 Android 与 QNX 上做了平台适配，让同一份代码同时跑在车机、Android 车机和 QNX 仪表盘上。

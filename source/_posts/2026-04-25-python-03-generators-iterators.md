@@ -6,6 +6,7 @@ categories:
 tags:
 - Python
 description: "当你调用 ChatGPT 或 Claude 时，为什么回复是逐字出现而不是一次性返回？这背后正是流式处理（Streaming） 在发挥作用。而在 Python 中，生成器和迭代器是实现这一能力的基石。"
+series: python-ai
 ---
 
 > 当你调用 ChatGPT 或 Claude 时，为什么回复是**逐字出现**而不是一次性返回？这背后正是**流式处理（Streaming）** 在发挥作用。而在 Python 中，生成器和迭代器是实现这一能力的基石。

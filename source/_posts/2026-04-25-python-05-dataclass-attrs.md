@@ -5,6 +5,7 @@ categories: [Python AI教程]
 tags:
 - Python
 description: "写了几百行 __init__、__repr__、__eq__，只为定义一个「数据容器」？Dataclass 让 Python 程序员从重复劳动中解放出来，专注于业务逻辑本身。"
+series: python-ai
 ---
 
 > 写了几百行 `__init__`、`__repr__`、`__eq__`，只为定义一个「数据容器」？Dataclass 让 Python 程序员从重复劳动中解放出来，专注于业务逻辑本身。

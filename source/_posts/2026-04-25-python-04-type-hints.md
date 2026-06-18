@@ -6,7 +6,7 @@ categories:
 description: Python 类型提示从入门到精通：typing.Optional/Union/Literal/Callable/TypeVar/Generic/Protocol，让 AI 代码像强类型语言一样安全。
 tags:
 - Python
-
+series: python-ai
 ---
 
 # 【Python AI教程】（四）类型提示：让AI代码更安全

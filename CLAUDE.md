@@ -189,16 +189,19 @@ title: [文章标题，中文，不超过25字]
 date: [YYYY-MM-DD HH:MM:SS]
 categories:
 - [一级分类]  # 技术分析 / 技术报告 / 技术科普 / 行业观察
+  # 注：必须与 series.yml 中该系列的 category 字段保持一致
 tags:
 - [标签1]
 - [标签2]
 - [标签3，不超过5个]
+series: [系列id]   # 必填（在 source/_data/series.yml 中定义）
+description: [≤100字摘要，无双引号]
 ---
 ```
 
 ---
 
-## 五、质量检查清单
+## 六、质量检查清单
 
 在提交文章前，验证以下每项：
 
@@ -214,7 +217,7 @@ tags:
 
 ---
 
-## 六、常用 Mermaid 模板片段
+## 七、常用 Mermaid 模板片段
 
 ### 架构图（系统分层）
 ```mermaid
@@ -274,4 +277,59 @@ sequenceDiagram
 
 ---
 
-*最后更新：2026-04-15 | 维护者：Xu Qi*
+---
+
+## 五、Series 规范（2026-06-18 新增）
+
+### 5.1 系列 vs 分类
+
+- **`series` 字段**：语义上的"系列文章组"，对应一个主题/一本书/一个长线学习路径
+- **`categories` 字段**：hexo 原生支持的分类，用于生成 `/categories/` 列表
+- **两者必须保持一致**：文章被分到一个 series 时，frontmatter 里的 categories 必须和 series.yml 中该系列的 `category` 字段一致
+
+### 5.2 series.yml 维护
+
+`source/_data/series.yml` 是系列的**唯一权威定义**，所有文章 frontmatter 的 `series:` 字段值必须在此文件中存在。
+
+新增系列时同步更新 series.yml：
+```yaml
+- id: my-new-series
+  name: 我的新系列
+  description: 一句话描述
+  icon: 📚
+  category: 技术分析
+  order: 99
+```
+
+### 5.3 写作流程硬性要求
+
+1. **写文章前**：先看 `source/_data/series.yml` 确认文章归属
+   - 文章属于现有系列 → frontmatter 填 `series: <id>`
+   - 文章是新主题/新项目/新书 → **先在 series.yml 中加新系列定义**，再写文章
+2. **写文章时**：frontmatter **必须包含** `series` 字段（除非是单篇杂谈且明确不属于任何系列）
+3. **frontmatter 模板**：
+   ```yaml
+   ---
+   title: 文章标题
+   date: YYYY-MM-DD HH:MM:SS
+   categories:
+   - [一级分类]   # 必须与 series.yml 中对应系列的 category 一致
+   tags:
+   - 标签1
+   - 标签2
+   series: <series-id>   # 必须在 series.yml 中已定义
+   description: [≤100字，无双引号]
+   ---
+   ```
+
+### 5.4 系列页面的工作机制
+
+- `/series/` 总览页：由 `scripts/series-generator.js` + `themes/next/layout/series-index.njk` 生成
+- `/series/<id>/` 详情页：同上
+- 文章页底部"系列"链接：由 `scripts/series-inject.js` 注入 `series_name/series_icon/series_url` 变量，`themes/next/layout/_partials/post/post-meta.njk` 渲染
+
+**修改这三个文件时请同时检查 scripts/series-*.js 和 themes/next/layout/ 下的模板是否需要同步。**
+
+---
+
+*最后更新：2026-06-18 | 维护者：Xu Qi*

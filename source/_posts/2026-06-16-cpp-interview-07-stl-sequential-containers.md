@@ -13,6 +13,7 @@ tags:
 - deque
 - 迭代器失效
 - 扩容
+series: cpp-interview
 ---
 
 > **核心结论**：STL 顺序容器中，**vector 扩容倍数的本质是空间换时间的权衡**——GCC 选 2 倍追求常数摊还复杂度，VS 选 1.5 倍追求更好的缓存局部性，Facebook folly 选 1.5 倍 + 紧凑布局回收碎片。**迭代器失效的根源在于容器内部内存模型**：连续内存（vector/deque）失效剧烈，节点内存（list/map）几乎不失效。

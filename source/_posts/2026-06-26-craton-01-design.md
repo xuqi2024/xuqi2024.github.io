@@ -12,6 +12,7 @@ tags:
 - 嵌入式
 - QNX
 - Android
+series: poco-craton
 ---
 
 > **一句话核心结论**：Craton 不是 POCO 的替代品——它是 **"用 22 年 POCO 实战经验蒸馏出来的下一代嵌入式 C++ 基础库"**：体积比 POCO 小 60%、编译时间从 12 分钟压到 90 秒、原生支持 QNX 8 与 Android NDK r26、API 全部走 `inline namespace v1` 严格 ABI 锁版。命名取自地质学术语「克拉通」——地球上最古老、最稳定、跨越亿年的大陆块根基。

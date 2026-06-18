@@ -11,6 +11,7 @@ tags:
 - 嵌入式
 - Foundation
 - 开源库
+series: poco-craton
 ---
 
 > **一句话核心结论**：**POCO 是嵌入式 C++ 工程的"标准库补丁"**——它用 18 个 Foundation 子模块 + Net/Util/XML/JSON/Crypto 完整生态，补齐了 C++ 标准库在「跨平台、IO、网络、并发」上的所有短板，且 **编译产物仅 ~3 MB**，比 Boost 整整小一个数量级。本文用 30+ 段可运行代码、8 张对比表、7 张架构图，帮你建立 POCO 的完整心智模型。

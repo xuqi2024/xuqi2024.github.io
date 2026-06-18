@@ -6,6 +6,7 @@ tags:
 - Python
 - AI Agent
 description: "本章综合运用本系列所有知识：Dataclass + Protocol + 装饰器 + 上下文管理器 + 泛型，构建一个可扩展的模块化 AI Agent 框架。"
+series: python-ai
 ---
 
 # 【Python AI教程】（十四）组合模式实战：构建模块化AI Agent

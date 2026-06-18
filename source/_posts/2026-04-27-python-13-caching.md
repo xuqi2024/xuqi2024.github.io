@@ -5,6 +5,7 @@ categories: [Python AI教程]
 tags:
 - Python
 description: "本章讲解 Python 内置缓存机制、自定义 TTL 缓存实现，以及在 AI 应用中的 LLM 响应缓存策略。"
+series: python-ai
 ---
 
 # 【Python AI教程】（十三）缓存艺术：lru_cache/ttl_cache/自定义

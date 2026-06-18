@@ -14,6 +14,7 @@ tags:
 - KMP
 - 背包
 - LCS
+series: cpp-interview
 ---
 
 > **为什么 KMP 能在 O(n+m) 完成字符串匹配？为什么 next 数组叫"前缀函数"？**

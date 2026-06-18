@@ -11,6 +11,7 @@ tags:
 - Logger
 - Channel
 - 异步日志
+series: poco-craton
 ---
 
 > **一句话核心结论**：POCO 的日志系统不是"一个 Logger + 一个文件流"，而是 **Logger + Channel + Formatter 三层解耦的工业级体系**——它用 8 个 LogLevel、树状命名空间、6 种 Channel 内置实现，让一份代码既能跑 Linux 服务器、又能跑 QNX 嵌入式、还能跑 Windows 服务。**和 spdlog 比，POCO 更适合异构嵌入式；和 glog 比，POCO 更容易扩展 Channel。**

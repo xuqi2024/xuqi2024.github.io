@@ -14,6 +14,7 @@ tags:
 - 观察者
 - SOLID
 - UML
+series: cpp-interview
 ---
 
 > **为什么单例模式这么简单，面试还能问 30 分钟？**

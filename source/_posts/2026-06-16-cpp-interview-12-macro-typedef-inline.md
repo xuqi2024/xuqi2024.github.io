@@ -13,6 +13,7 @@ tags:
 - 浮点数
 - volatile
 - 空类大小
+series: cpp-interview
 ---
 
 > 一行 `#define SQUARE(x) x*x` 在看似无害的外表下，藏着多少 bug？`inline` 真的比宏"高级"吗？空类为什么不是 0 字节？这一篇，我们把 C/C++ 里**最容易被忽略的预处理与类型细节**一次性讲透。

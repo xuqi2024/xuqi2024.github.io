@@ -12,6 +12,7 @@ tags:
 - Socket
 - IPC
 - 嵌入式
+series: poco-craton
 ---
 
 > **一句话核心结论**：嵌入式 IPC 的 3 大难题——**父子进程协作、跨进程数据零拷贝、跨主机网络通信**——POCO 用 3 大模块（Process / Foundation / Net）给了**同一套 C++ API 跨 Linux / QNX / Windows / VxWorks** 的统一答案。**一套代码，6 大平台**——这是 POCO 在车规、机器人、工控领域能成为事实标准的最重要原因。

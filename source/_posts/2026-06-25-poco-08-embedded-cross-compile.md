@@ -12,6 +12,7 @@ tags:
 - QNX
 - Android NDK
 - ARM
+series: poco-craton
 ---
 
 > **一句话核心结论**：把 POCO 1.15+ 装上 QNX Neutrino 8.0 / Android NDK r26 / 嵌入式 ARM Linux，**是一道「环境 + toolchain + 模块裁剪」的三元一次方程**——任何一个变量算错，链接阶段就会给你一个长达 200 行的 undefined reference。本文给出三套**可直接复用的 CMake toolchain 文件**，并把 IVI（In-Vehicle Infotainment，车载信息娱乐系统）和工业 IoT 网关两个真实工程的代码、性能、包大小摊在台面上。

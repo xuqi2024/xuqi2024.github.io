@@ -13,6 +13,7 @@ tags:
 - 类型转换
 - static_cast
 - dynamic_cast
+series: cpp-interview
 ---
 
 > 一句话核心结论：**strcpy 是不安全的，strncpy 也不完全安全，std::string + std::string_view 才是 C++ 的正解；4 种 C++ 类型转换各有分工，static_cast 不是 C 风格转换的"替代品"，而是更精准的工具。**

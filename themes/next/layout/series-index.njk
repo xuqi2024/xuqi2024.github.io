@@ -1,0 +1,46 @@
+{% extends '_layout.njk' %}
+{% import '_macro/sidebar.njk' as sidebar_template with context %}
+
+{% block title %}系列总览 | {{ title }}{% endblock %}
+{% block class %}series-index-page{% endblock %}
+
+{% block content %}
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">
+      <i class="fa fa-list"></i> 系列总览
+    </h1>
+    <div class="post-meta">
+      <span class="post-meta-item-text">共 <strong>{{ page.total_series }}</strong> 个系列，<strong>{{ page.total_posts }}</strong> 篇文章</span>
+    </div>
+  </header>
+
+  <div class="post-content">
+
+    <p class="series-intro">
+      这里汇总了博客中所有按系列组织的文章。每个系列围绕一个主题或一本书展开，建议按系列顺序阅读。
+    </p>
+
+    <div class="series-grid">
+      {%- for s in page.series_list %}
+      <a href="{{ url_for(s.id + '/') }}" class="series-card">
+        <div class="series-card-icon">{{ s.meta.icon }}</div>
+        <div class="series-card-body">
+          <h3 class="series-card-title">{{ s.meta.name }}</h3>
+          <p class="series-card-desc">{{ s.meta.description }}</p>
+          <div class="series-card-footer">
+            <span class="series-card-count">{{ s.count }} 篇</span>
+            <span class="series-card-cat">{{ s.meta.category }}</span>
+          </div>
+        </div>
+      </a>
+      {%- endfor %}
+    </div>
+
+  </div>
+
+{% endblock %}
+
+{% block sidebar %}
+  {{ sidebar_template.render(false) }}
+{% endblock %}

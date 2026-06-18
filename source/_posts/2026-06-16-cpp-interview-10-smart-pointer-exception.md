@@ -13,6 +13,7 @@ tags:
 - 异常
 - noexcept
 - RAII
+series: cpp-interview
 ---
 
 > 为什么 `shared_ptr` 比 `unique_ptr` 慢？为什么循环引用要用 `weak_ptr`？`noexcept` 到底优化了什么？这篇文章一次性讲透 C++ 资源管理的"四大金刚"。

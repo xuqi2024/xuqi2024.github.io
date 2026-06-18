@@ -12,6 +12,7 @@ tags:
 - 互斥锁
 - 同步原语
 - 嵌入式
+series: poco-craton
 ---
 
 > **一句话核心结论**：POCO 的并发原语不是「`std::thread` 的二次封装」——它在底层直接调用 `pthread_mutex` / `sem_t` / `pthread_cond`，并向上暴露**跨平台一致 API**、**带超时的等待**、**优先级调度**三件套，正好补齐了嵌入式 QNX/Android 实时场景里 `std::` 系列最缺的能力。

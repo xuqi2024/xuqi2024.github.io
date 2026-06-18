@@ -12,6 +12,7 @@ tags:
 - IAT
 - 导入表
 - 导出表
+series: programmer-self-cultivation
 ---
 
 > **核心结论**：PE（Portable Executable）是 Windows 的可执行文件格式，COFF（Common Object File Format）是它的对象文件祖先。PE 在 COFF 的基础上扩展出了 16 个 DataDirectory、IAT（导入地址表）、Base Relocation 等机制。理解 PE，是理解 Windows 加载器、链接器、PE 工具链（dumpbin、PEview、pefile）的基础，也是后续「Windows 动态链接」章节的必读前置。

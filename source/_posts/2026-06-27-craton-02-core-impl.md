@@ -15,6 +15,7 @@ tags:
 - 跨平台
 - QNX
 - Android
+series: poco-craton
 ---
 
 > **一句话核心结论**：Craton 核心 4 件套（types/log/os/time）**用 2200 行 C++17 代码，覆盖了 POCO Foundation 的 60% 常用 API**——并且零依赖、单头文件、Linux/QNX/Android 三平台编译通过。**真正的难点不是写代码，而是在 3 个平台、4 套 ABI、5 种 C++ 运行时之间找平衡**。本文配套代码在 `/tmp/craton`，可一键 `cmake -B build && cmake --build build`。

@@ -12,6 +12,7 @@ tags:
 - Concepts
 - 元编程
 - 完美转发
+series: cpp-interview
 ---
 
 > 一句话核心结论：**C++ 模板（Template）是编译期的"代码生成器"——它让一份源码在不同的类型上展开成多份真正可执行的代码；而 SFINAE、Concepts、变长模板（Variadic Template）、完美转发（Perfect Forwarding）等现代特性，本质上都是在解决"如何让编译器更聪明地挑选、约束、传递参数"这一核心问题。**
