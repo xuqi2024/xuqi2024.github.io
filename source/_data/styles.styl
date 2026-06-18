@@ -204,21 +204,19 @@
   text-decoration: underline !important;
 }
 
-// 暗黑模式适配
-if hexo-config('darkmode') {
-  html.darkmode {
-    .series-intro { background: #2a2a2a; color: #ccc; }
-    .series-card { background: #2a2a2a; border-color: #444; color: #ccc !important; }
-    .series-card-title { color: #fff !important; }
-    .series-card-desc { color: #aaa; }
-    .series-card:hover { border-color: #C7CEEA; }
-    .series-description { background: #2a2a2a; color: #ccc; }
-    .series-post-list li { background: #2a2a2a; }
-    .series-post-list li:hover { background: #333; }
-    .series-post-list li::before { background: #5a9b87; color: #fff; }
-    .series-post-link { color: #fff !important; }
-    .series-post-title { color: #fff; }
-    .series-post-link:hover .series-post-title { color: #FF9AA2 !important; }
-    .series-card-cat { background: #5a4a1a; color: #FFDAB9; }
-  }
+// 暗黑模式适配 (next 主题在 html.darkmode 时加这个 class)
+html.darkmode {
+  .series-intro { background: #2a2a2a; color: #ccc; }
+  .series-card { background: #2a2a2a; border-color: #444; color: #ccc !important; }
+  .series-card-title { color: #fff !important; }
+  .series-card-desc { color: #aaa; }
+  .series-card:hover { border-color: #C7CEEA; }
+  .series-description { background: #2a2a2a; color: #ccc; }
+  .series-post-list li { background: #2a2a2a; }
+  .series-post-list li:hover { background: #333; }
+  .series-post-list li::before { background: #5a9b87; color: #fff; }
+  .series-post-link { color: #fff !important; }
+  .series-post-title { color: #fff; }
+  .series-post-link:hover .series-post-title { color: #FF9AA2 !important; }
+  .series-card-cat { background: #5a4a1a; color: #FFDAB9; }
 }
