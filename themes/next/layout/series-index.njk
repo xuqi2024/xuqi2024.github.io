@@ -1,46 +1,67 @@
-{% extends '_layout.njk' %}
-{% import '_macro/sidebar.njk' as sidebar_template with context %}
+<html lang="{{ page.lang }}">
+<head>
+  {{ partial('_partials/head/head.njk', {}, {cache: theme.cache.enable}) }}
+  <title>系列总览 | {{ title }}</title>
+  {{ partial('_third-party/analytics/index.njk', {}, {cache: theme.cache.enable}) }}
+  {{ partial('_scripts/index.njk', {}, {cache: theme.cache.enable}) }}
+  {{ partial('_third-party/index.njk', {}, {cache: theme.cache.enable}) }}
+  {{- next_inject('head') }}
+  <noscript>
+    <link rel="stylesheet" href="{{ url_for(theme.css) }}/noscript.css">
+  </noscript>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage"{% if theme.motion.enable %} class="use-motion"{% endif %}>
+  <div class="headband"></div>
 
-{% block title %}系列总览 | {{ title }}{% endblock %}
-{% block class %}series-index-page{% endblock %}
-
-{% block content %}
-
-  <header class="post-header">
-    <h1 class="post-title" itemprop="name headline">
-      <i class="fa fa-list"></i> 系列总览
-    </h1>
-    <div class="post-meta">
-      <span class="post-meta-item-text">共 <strong>{{ page.total_series }}</strong> 个系列，<strong>{{ page.total_posts }}</strong> 篇文章</span>
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+        {{ partial('_partials/header/index.njk', {}, {cache: theme.cache.enable}) }}
+      </header>
     </div>
-  </header>
 
-  <div class="post-content">
+    <div class="main-inner series-index-page">
+      <article class="post">
+        <header class="post-header">
+          <h1 class="post-title" itemprop="name headline">
+            <i class="fa fa-list"></i> 系列总览
+          </h1>
+          <div class="post-meta">
+            <span class="post-meta-item-text">共 <strong>{{ page.total_series }}</strong> 个系列，<strong>{{ page.total_posts }}</strong> 篇文章</span>
+          </div>
+        </header>
 
-    <p class="series-intro">
-      这里汇总了博客中所有按系列组织的文章。每个系列围绕一个主题或一本书展开，建议按系列顺序阅读。
-    </p>
+        <div class="post-content">
+          <p class="series-intro">
+            这里汇总了博客中所有按系列组织的文章。每个系列围绕一个主题或一本书展开，建议按系列顺序阅读。
+          </p>
 
-    <div class="series-grid">
-      {%- for s in page.series_list %}
-      <a href="{{ url_for(s.id + '/') }}" class="series-card">
-        <div class="series-card-icon">{{ s.meta.icon }}</div>
-        <div class="series-card-body">
-          <h3 class="series-card-title">{{ s.meta.name }}</h3>
-          <p class="series-card-desc">{{ s.meta.description }}</p>
-          <div class="series-card-footer">
-            <span class="series-card-count">{{ s.count }} 篇</span>
-            <span class="series-card-cat">{{ s.meta.category }}</span>
+          <div class="series-grid">
+            {%- for s in page.series_list %}
+            <a href="{{ url_for('/series/' + s.id + '/') }}" class="series-card">
+              <div class="series-card-icon">{{ s.meta.icon }}</div>
+              <div class="series-card-body">
+                <h3 class="series-card-title">{{ s.meta.name }}</h3>
+                <p class="series-card-desc">{{ s.meta.description }}</p>
+                <div class="series-card-footer">
+                  <span class="series-card-count">{{ s.count }} 篇</span>
+                  <span class="series-card-cat">{{ s.meta.category }}</span>
+                </div>
+              </div>
+            </a>
+            {%- endfor %}
           </div>
         </div>
-      </a>
-      {%- endfor %}
+      </article>
     </div>
+  </main>
 
-  </div>
+  <footer class="footer">
+    <div class="footer-inner">
+      {{ partial('_partials/footer.njk', {}, {cache: theme.cache.enable}) }}
+    </div>
+  </footer>
 
-{% endblock %}
-
-{% block sidebar %}
-  {{ sidebar_template.render(false) }}
-{% endblock %}
+  {{ partial('_partials/widgets.njk', {}, {cache: theme.cache.enable}) }}
+</body>
+</html>
