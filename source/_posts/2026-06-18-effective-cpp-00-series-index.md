@@ -2,7 +2,7 @@
 title: 【Effective C++ 第三版】系列总览：55 个条款 × 11 篇文章，Scott Meyers 经典精读
 date: 2026-06-18 09:00:00
 categories:
-- Effective C++ 深度解读
+- C++新特性
 description: Effective C++ 中文版第三版系列总览：覆盖 55 个条款、9 大主题、11 篇文章，附学习路径、必读建议、源码实验
 tags:
 - C++
@@ -11,6 +11,8 @@ tags:
 - 编程规范
 - 必读书单
 - 总览
+series: effective-cpp
+
 ---
 
 > **一句话核心结论**：《Effective C++》第三版是 C++ 程序员书架上的"圣经级"读物——它用 55 个条款，把"什么样的 C++ 代码才算专业"这件事讲透了。读完之后，你看 `const`、`virtual`、`operator=`、`template` 这些基础语法的眼神，都会变。

@@ -2,7 +2,7 @@
 title: "从 0 到 30 分钟：跟着 TenBox 原理手搓一个迷你 VMM"
 date: 2026-06-15 08:00:00
 categories:
-- 技术分析
+- AI技术
 tags:
 - TenBox
 - VMM
@@ -11,6 +11,8 @@ tags:
 - KVM
 - 动手实验
 description: "用 30 分钟、500 行 Python，从 0 写一个能跑 Linux 的迷你 VMM。跟着 TenBox 源码的抽象分层，把 KVM/IO 环/VirtIO/内核加载一次走通。"
+series: ai-agent-frameworks
+
 ---
 
 > 一句话核心结论：**虚拟化不是一个神秘的黑魔法，而是一组分工明确的 ioctl + 内存映射 + 中断回调。** TenBox 的源码把这件事分成了 `core/`（跨平台 VMM 引擎）、`platform/`（KVM/WHVP/HVF 适配）、`daemon/`（Linux 守护进程）、`ipc/`（manager↔runtime 协议）四层。本文不走源码分析路线，而是**参照它的抽象分层**，用 Python + Linux KVM API，从 0 写一个 500 行的迷你 VMM。30 分钟后，你不仅能跑起一个最小 Linux guest，还会彻底理解 TenBox 的源码到底在做什么。

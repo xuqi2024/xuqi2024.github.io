@@ -2,7 +2,7 @@
 title: 【Effective C++ 第三版】第 7 篇：模板与泛型 —— 编译期多态的 8 大工程设计（条款 41-48）
 date: 2026-06-18 20:00:00
 categories:
-- Effective C++ 深度解读
+- C++新特性
 description: Effective C++ 第 7 章深度解读：条款 41-48 — 隐式接口与编译期多态、typename 的双重含义、模板参数推导、显式指定参数、智能指针 helper 函数、模板元编程、SFINAE、traits classes
 tags:
 - C++
@@ -15,6 +15,8 @@ tags:
 - 隐式接口
 - typename
 - 模板元编程
+series: effective-cpp
+
 ---
 
 > **一句话核心结论**：C++ 模板是**编译期多态**的载体——所有"参数类型"和"行为"都在编译期决定。掌握**隐式接口、typename、参数推导、traits、SFINAE、模板元编程**这 8 大工程设计，你就能写出**STL 风格**的通用代码，比 Java 泛型更强大。

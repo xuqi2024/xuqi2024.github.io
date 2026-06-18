@@ -2,13 +2,15 @@
 title: 【DeerFlow】Agent + Memory 架构深度解析：DeerFlow、mem0与Dify技术对比
 date: 2026-04-16 08:28:00
 categories:
-- 技术深度
+- AI技术
 tags:
 - AI Agent
 - RAG
 - 记忆系统
 - Agent框架
 description: "大模型本身没有记忆——每次对话都是从零开始。真正让 Agent「变聪明」的，是它背后那套 Memory 系统的设计方式。今天我们深入拆解三个 2025~2026…"
+series: ai-agent-memory
+
 ---
 
 > 大模型本身没有记忆——每次对话都是从零开始。真正让 Agent「变聪明」的，是它背后那套 Memory 系统的设计方式。今天我们深入拆解三个 2025~2026 年最活跃的开源项目，从架构设计到实现原理，一探究竟。

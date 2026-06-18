@@ -2,7 +2,7 @@
 title: 【OpenClaw】完全入门指南：一文读懂节点、会话、心跳与配置项
 date: 2026-04-15 22:56:00
 categories:
-- 技术科普
+- AI技术
 tags:
 - AI Agent
 - 开源项目

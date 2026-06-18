@@ -9,6 +9,8 @@ tags:
 - 工具调用
 - hello-agents
 description: "通信协议是 AI Agent 能力的天花板——没有标准化的协议，再强的模型也只是孤岛上的天才。"
+series: hello-agents
+
 ---
 
 > **通信协议是 AI Agent 能力的天花板**——没有标准化的协议，再强的模型也只是孤岛上的天才。

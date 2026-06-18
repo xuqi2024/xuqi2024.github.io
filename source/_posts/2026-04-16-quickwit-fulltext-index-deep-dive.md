@@ -2,10 +2,11 @@
 title: 【Quickwit】全文索引加速原理：为什么它比ES快10倍
 date: 2026-04-16 20:00:00
 categories:
-- 技术分析
+- AI技术
 description: Quickwit是用Rust编写的云原生搜索引擎，通过列存储、分片并行和ZSTD压缩等机制实现亚秒级全文检索。本文深入剖析其索引加速原理并给出完整上手教程。
 tags:
 - 开源项目
+series: ai-agent-memory
 
 ---
 

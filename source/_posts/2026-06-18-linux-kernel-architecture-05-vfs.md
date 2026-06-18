@@ -14,6 +14,7 @@ tags:
 - dentry
 - ext4
 - 文件系统
+series: linux-kernel-architecture
 
 ---
 

@@ -3,11 +3,12 @@ title: 「Hello Agents 第11章」用强化学习"驯服"AI Agent：GRPO与Agent
 date: 2026-04-16 11:00:00
 categories:
 - 技术科普
-- hello-agents
 tags:
 - AI Agent
 - hello-agents
 description: "核心结论：监督微调（SFT）教模型模仿人类答案，强化学习（RL）教模型在真实反馈中超越训练数据——这正是把普通 LLM 变成真正智能 Agent 的关键跨越。"
+series: hello-agents
+
 ---
 
 > **核心结论**：监督微调（SFT）教模型"模仿"人类答案，强化学习（RL）教模型在真实反馈中"超越"训练数据——这正是把普通 LLM 变成真正智能 Agent 的关键跨越。

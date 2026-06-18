@@ -4,6 +4,8 @@ date: 2026-06-15 09:30:00
 tags: [Agent, Memori, 记忆系统, RAG, 向量检索, 架构分析, 项目评测, LLM基础设施]
 categories: [AI, 项目评测]
 description: 深度剖析 MemoriLabs/Memori 的核心架构：一个把 Agent 的对话和执行痕迹自动转化为结构化记忆（语义三元组 + 事实 + 关系）的 LLM 无关、数据存储无关、框架无关的开源记忆基础设施。在 LoCoMo 长对话记忆基准上以 81.95% 准确率超越 Zep、LangMem、Mem0，prompt 体积仅占完整上下文的 4.97%。
+series: ai-agent-memory
+
 ---
 
 ## 引子：当 Agent「金鱼脑」成为生产瓶颈

@@ -15,6 +15,7 @@ tags:
 - task_struct
 - fork
 - exec
+series: linux-kernel-architecture
 
 ---
 

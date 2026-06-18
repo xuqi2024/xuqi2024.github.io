@@ -2,7 +2,7 @@
 title: "tenboxd 深度解析：TenBox 的 Headless 控制面"
 date: 2026-06-11 14:00:00
 categories:
-- 技术分析
+- AI技术
 tags:
 - TenBox
 - VMM
@@ -11,6 +11,8 @@ tags:
 - WebRTC
 - 架构分析
 description: "tenboxd 是 TenBox 在 Linux 的 headless 守护进程。深度拆解其进程模型、RPC、配对状态机、WebRTC 远程桌面、内嵌 LLM Proxy。"
+series: ai-agent-frameworks
+
 ---
 
 > 一句话核心结论：tenboxd 不是 QEMU 套了个 systemd wrapper，而是一个**把"VM 生命周期 + 远程控制 + LLM 网关 + 自更新 + 配对鉴权"五件事**用 2000+ 行 C++ 串成一条链的**头less（headless）控制器**。它的真正亮点不是某个模块多炫酷，而是"**不做什么**"——不实现 NAT 穿透、不引入数据库、不搞分布式锁。

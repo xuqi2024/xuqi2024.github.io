@@ -13,6 +13,8 @@ tags:
 - unordered_map
 - 哈希
 - LRU
+series: automotive-ai
+
 ---
 
 > 一句话结论：**`std::map`/`std::set` 底层是红黑树（Red-Black Tree），`std::unordered_map`/`std::unordered_set` 底层是哈希表（Hash Table）**。前者有序、O(log n) 操作；后者无序、均摊 O(1) 操作，但哈希冲突会让"最坏情况"退化到 O(n)。面试时如果能讲清楚 **为什么 STL 选红黑树不选 AVL**、**负载因子（load factor）0.75 的来历**、**map[] 与 find 的本质区别**，基本就稳了。

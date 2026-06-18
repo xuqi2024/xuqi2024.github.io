@@ -14,6 +14,7 @@ tags:
 - swap
 - slab
 - kmem_cache
+series: linux-kernel-architecture
 
 ---
 

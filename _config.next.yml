@@ -21,6 +21,7 @@ menu:
   home: / || fa fa-home
   archives: /archives/ || fa fa-archive
   categories: /categories/ || fa fa-folder-open
+  series: /series/ || fa fa-list
   tags: /tags/ || fa fa-tags
   about: /about/ || fa fa-user
 

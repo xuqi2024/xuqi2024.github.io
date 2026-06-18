@@ -2,7 +2,7 @@
 title: 【CowAgent】开源超级 AI Agent：三层记忆架构与 Deep Dream 蒸馏设计深度解析
 date: 2026-06-02 08:00:00
 categories:
-- 技术分析
+- AI技术
 tags:
 - AI Agent
 - Memory
@@ -11,6 +11,8 @@ tags:
 - 记忆系统
 - 深度解析
 description: "一个能 24/7 运行、记住你的一切、持续学习进化的 AI 助手——不是科幻，是 CowAgent 已经在做的事。"
+series: ai-agent-frameworks
+
 ---
 
 > 一个能 24/7 运行、记住你的一切、持续学习进化的 AI 助手——不是科幻，是 CowAgent 已经在做的事。

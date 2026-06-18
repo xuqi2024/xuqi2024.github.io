@@ -2,8 +2,7 @@
 title: 【Nocturne Memory】基于MCP协议的长期记忆架构深度解析
 date: 2026-05-03 08:00:00
 categories:
-- AI
-- 项目评测
+- AI技术
 tags:
 - Agent
 - Memory

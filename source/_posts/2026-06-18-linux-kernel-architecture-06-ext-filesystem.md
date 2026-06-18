@@ -15,6 +15,7 @@ tags:
 - 日志
 - 磁盘布局
 - 块组
+series: linux-kernel-architecture
 
 ---
 

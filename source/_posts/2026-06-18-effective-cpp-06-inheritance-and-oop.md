@@ -2,7 +2,7 @@
 title: 【Effective C++ 第三版】第 6 篇：继承与 OOP —— is-a、has-a、is-implemented-in-terms-of 的三角哲学（条款 32-40）
 date: 2026-06-18 18:00:00
 categories:
-- Effective C++ 深度解读
+- C++新特性
 description: Effective C++ 第 6 章深度解读：条款 32-40 — public 继承的 is-a 语义、复合 vs private 继承 vs 实现继承、避免遮蔽继承而来的名字、模板方法模式、private 继承的语义、多重继承的虚继承、继承与 OOP 设计
 tags:
 - C++
@@ -16,6 +16,8 @@ tags:
 - 多重继承
 - 模板方法模式
 - NVI
+series: effective-cpp
+
 ---
 
 > **一句话核心结论**：C++ 继承有三种关系——**is-a（public 继承）、has-a / is-implemented-in-terms-of（复合）、is-implemented-in-terms-of（private 继承）**。本章 9 个条款讲透：什么时候用 public 继承、什么时候复合更好、private 继承的边界、虚函数的 7 个工程点、模板方法模式、多重继承的虚继承、避免遮蔽名字、virtual 函数替代方案。

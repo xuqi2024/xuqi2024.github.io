@@ -9,6 +9,8 @@ tags:
 - Agent框架
 - hello-agents
 description: "当你用LangGraph写了第三个Agent之后，你会开始思考：这些框架到底帮我做了什么？自己造一个轮子，是搞懂框架本质最快的方式——没有之一。"
+series: hello-agents
+
 ---
 
 > 当你用LangGraph写了第三个Agent之后，你会开始思考：这些框架到底帮我做了什么？自己造一个轮子，是搞懂框架本质最快的方式——没有之一。

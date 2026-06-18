@@ -2,7 +2,7 @@
 title: 【More Effective C++ 中文版】第 7 篇：技术 —— 7 大 C++ 高级工程模式（条款 25-31）
 date: 2026-06-19 21:00:00
 categories:
-- More Effective C++ 深度解读
+- C++新特性
 description: More Effective C++ 第 7 章深度解读：条款 25-31 — 虚拟构造（virtual constructor）、对象计数与限制、heap 限制、智能指针的"前世今生"、引用计数、proxy class、双重分派（visitor 模式）
 tags:
 - C++
@@ -16,6 +16,8 @@ tags:
 - visitor
 - auto_ptr
 - shared_ptr
+series: more-effective-cpp
+
 ---
 
 > **一句话核心结论**：C++ 高级技术的"7 大工程模式"——**虚拟构造**（virtual constructor 模式）、**对象计数与限制**（printer / pool 模式）、**heap 限制**（new 探测 / 析构限制）、**智能指针**（`auto_ptr` 的前世今生 + 现代 `unique_ptr`）、**引用计数**（`shared_ptr` 的简化版本）、**proxy class**（区分 `[]` 的左值/右值）、**双重分派**（visitor 模式）。

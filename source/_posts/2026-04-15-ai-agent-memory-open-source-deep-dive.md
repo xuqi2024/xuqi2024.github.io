@@ -11,6 +11,8 @@ tags:
 - 记忆系统
 - 多智能体
 description: 深入对比分析四个主流开源 AI Agent + Memory 项目的核心架构、决策机制、记忆存储方案，以及它们在设计思路上的本质差异。
+series: ai-agent
+
 ---
 
 # AI Agent 与 Memory 系统架构深度解析

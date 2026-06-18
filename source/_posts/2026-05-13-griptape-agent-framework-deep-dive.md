@@ -11,6 +11,8 @@ tags:
   - 架构分析
   - Python
 description: "在 AI Agent 框架百花齐放的今天，LangChain、AutoGen、CrewAI 等框架各有特色，但往往在生产级复杂度和易用性之间难以平衡。今天要介绍的…"
+series: ai-agent-frameworks
+
 ---
 
 # 【Griptape】模块化 AI Agent 框架架构与设计原理深度解析

@@ -15,6 +15,7 @@ tags:
 - slab
 - NUMA
 - 内存节点
+series: linux-kernel-architecture
 
 ---
 

@@ -2,7 +2,7 @@
 title: 【Effective C++ 第三版】第 1 篇：让自己习惯 C++ —— 视 C++ 为语言联邦、const 与初始化
 date: 2026-06-18 09:30:00
 categories:
-- Effective C++ 深度解读
+- C++新特性
 description: Effective C++ 第一章深度解读：条款 1-4 —— C++ 是 4 个子语言组成的联邦；尽量用 const/enum/inline 替换 #define；尽可能使用 const；确定对象使用前已先被初始化
 tags:
 - C++
@@ -12,6 +12,8 @@ tags:
 - 宏
 - 内联
 - 编译期
+series: effective-cpp
+
 ---
 
 > **一句话核心结论**：C++ 不是"一个语言"，而是 **C、Object-Oriented C++、Template C++、STL** 四个子语言组成的联邦。写好 C++ 的第一步，是先认清"我现在在哪个子语言里"，然后用那个子语言的规则写代码——`const` 是给编译器的契约，初始化是给运行时的人身保险。

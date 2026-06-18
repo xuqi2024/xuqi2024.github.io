@@ -2,7 +2,7 @@
 title: 【Effective C++ 第三版】第 4 篇：设计与声明 —— 好的接口像一盏灯，让对的用法亮起来（条款 18-25）
 date: 2026-06-18 14:00:00
 categories:
-- Effective C++ 深度解读
+- C++新特性
 description: Effective C++ 第 4 章深度解读：条款 18-25 — 类的设计与声明哲学：让接口易用且不易被误用、设计 class 像设计 type、pass-by-value vs pass-by-const-ref、成员函数 vs 非成员函数、类型转换函数、相等 vs 父子、namespace 与 using、模板 vs 继承
 tags:
 - C++
@@ -15,6 +15,8 @@ tags:
 - 命名空间
 - 模板
 - 友元
+series: effective-cpp
+
 ---
 
 > **一句话核心结论**：好的 C++ 接口设计有一条核心原则——**让对的用法亮起来，让错的用法编译失败**。本章 8 个条款教你掌握：类的本质（class = type）、参数传递的最优姿势（pass-by-const-ref）、成员函数 vs 非成员函数的取舍、类型转换的克制、namespace 与友元的边界、模板 vs 继承的工程选择。

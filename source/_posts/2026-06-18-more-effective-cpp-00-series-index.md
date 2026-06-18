@@ -2,7 +2,7 @@
 title: 【More Effective C++ 中文版】系列总览：35 个改善编程与设计的有效方法 × 8 篇文章
 date: 2026-06-18 23:50:00
 categories:
-- More Effective C++ 深度解读
+- C++新特性
 description: More Effective C++ 中文版系列总览：覆盖 35 个条款、6 大主题、8 篇文章，附学习路径、必读建议、源码实验
 tags:
 - C++
@@ -15,6 +15,8 @@ tags:
 - 效率
 - 操作符
 - 技术
+series: more-effective-cpp
+
 ---
 
 > **一句话核心结论**：《More Effective C++》是《Effective C++》的"进阶版"——它深入 35 个具体的 C++ 编程问题，从"指针语义"到"异常安全"，从"效率优化"到"高级技术"。如果说《Effective C++》教你怎么"写对"，《More Effective C++》教你怎么"写好"。

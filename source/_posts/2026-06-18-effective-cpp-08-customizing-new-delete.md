@@ -2,7 +2,7 @@
 title: 【Effective C++ 第三版】第 8 篇：定制 new / delete —— 内存管理的 4 大工程化（条款 49-52）
 date: 2026-06-18 22:00:00
 categories:
-- Effective C++ 深度解读
+- C++新特性
 description: Effective C++ 第 8 章深度解读：条款 49-52 — new-handler 机制、自定义 operator new 的 4 个理由、内存池、placement new 的应用、new/delete 的可继承性
 tags:
 - C++
@@ -15,6 +15,8 @@ tags:
 - new_handler
 - 内存池
 - placement new
+series: effective-cpp
+
 ---
 
 > **一句话核心结论**：C++ 让你**完全控制内存管理**——通过重载 `operator new` / `operator delete`，可以构建内存池、debug 内存、统计分配。C++11 的 `std::allocator` + 智能指针让 99% 的场景不需要定制，本章 4 个条款帮你**理解原理 + 知道何时该用**。

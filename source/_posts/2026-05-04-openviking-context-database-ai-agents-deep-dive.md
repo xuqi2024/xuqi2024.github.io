@@ -2,7 +2,7 @@
 title: OpenViking：AI Agent 的上下文数据库，让 Agent 像管理文件一样管理记忆
 date: 2026-05-04 08:00:00
 categories:
-- 技术分析
+- AI技术
 tags:
 - AI Agent
 - OpenViking
@@ -10,6 +10,8 @@ tags:
 - 架构分析
 - 记忆系统
 description: "一个反常识的事实：大多数 AI Agent 的记忆其实是碎片化的 —— 记忆存在代码里、资源在向量数据库里、工具散落各处。这就是为什么用 Agent…"
+series: ai-agent-memory
+
 ---
 
 > **一个反常识的事实**：大多数 AI Agent 的"记忆"其实是碎片化的 —— 记忆存在代码里、资源在向量数据库里、工具散落各处。这就是为什么用 Agent 做事时，它经常"失忆"或者找不到上下文。OpenViking 做了件事：把 AI Agent 的所有上下文（记忆、资源、技能）统一成虚拟文件系统，用 `viking://` 协议访问，像管理本地文件一样管理 Agent 的大脑。

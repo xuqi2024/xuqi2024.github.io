@@ -8,6 +8,8 @@ tags:
 - RAG
 - hello-agents
 description: "核心结论：深度研究（Deep Research）Agent的本质不是更聪明的搜索，而是会规划任务的研究员——它先想清楚要查什么，再系统地查，最后把碎片整合成结论。"
+series: hello-agents
+
 ---
 
 > **核心结论**：深度研究（Deep Research）Agent的本质不是"更聪明的搜索"，而是"会规划任务的研究员"——它先想清楚要查什么，再系统地查，最后把碎片整合成结论。

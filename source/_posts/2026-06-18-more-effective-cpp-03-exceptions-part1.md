@@ -2,7 +2,7 @@
 title: 【More Effective C++ 中文版】第 3 篇：异常（上）—— 异常安全的 3 大保证 + RAII 哲学（条款 9-12）
 date: 2026-06-19 13:00:00
 categories:
-- More Effective C++ 深度解读
+- C++新特性
 description: More Effective C++ 第 3 章（上）深度解读：条款 9-12 — 利用 destructor 避免泄漏（RAII 核心）、constructor 内阻止资源泄漏、禁止 exception 流出 destructor、抛 exception 与传参的 3 大差异
 tags:
 - C++
@@ -15,6 +15,8 @@ tags:
 - 异常传播
 - throw
 - try/catch
+series: more-effective-cpp
+
 ---
 
 > **一句话核心结论**：C++ 异常安全的**4 大支柱**：**destructor 释放资源**（RAII）、**constructor 内阻止泄漏**（try/catch）、**禁止异常流出 destructor**（`noexcept`）、**理解抛异常 vs 传参的差异**（拷贝次数 1/2/3）。这 4 个条款是 C++ 程序员写"安全代码"的底线。

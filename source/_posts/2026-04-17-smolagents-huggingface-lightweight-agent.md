@@ -2,12 +2,14 @@
 title: 【AI Agent】（五）HuggingFace小而美：Smolagents 轻量Agent框架入门
 date: 2026-04-17 14:00:00
 categories:
-- 技术科普
+- AI技术
 tags:
 - AI Agent
 - Agent框架
 - Python
 description: "📚 AI Agent 开源框架实战系列（6/6） | ⬅️ 上一篇：Agno：极简主义的 AI Agent 框架 | 🔗 配套代码仓库"
+series: ai-agent
+
 ---
 
 > 📚 **AI Agent 开源框架实战系列**（6/6） | ⬅️ 上一篇：[Agno：极简主义的 AI Agent 框架](/2026/04/17/agno-minimalist-agent-framework/) | 🔗 [配套代码仓库](https://github.com/xuqi2024/ai-agent-tutorials)

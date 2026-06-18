@@ -2,7 +2,7 @@
 title: 【More Effective C++ 中文版】第 6 篇：效率（下）—— 重载、op=、库选择、虚函数的"真实成本"（条款 21-24）
 date: 2026-06-19 19:00:00
 categories:
-- More Effective C++ 深度解读
+- C++新特性
 description: More Effective C++ 第 6 章（下）深度解读：条款 21-24 — 利用重载避免隐式转换（const char* 重载避免 string 隐式）、op= 优于 op（少一次拷贝）、了解其他库的成本（不同库性能差异巨大）、虚函数 / 多重继承 / RTTI 的真实成本
 tags:
 - C++
@@ -16,6 +16,8 @@ tags:
 - 虚函数成本
 - 多重继承
 - RTTI
+series: more-effective-cpp
+
 ---
 
 > **一句话核心结论**：C++ 效率优化的"下半部分"——**重载避免隐式转换**、**op= 优于 op**（少一次拷贝）、**不同库的性能差异巨大**、**虚函数 + 多重继承 + RTTI 的"真实成本"**（vptr + 间接寻址 + 阻止 EBO）。这 4 个条款是性能调优的"最后一块拼图"。

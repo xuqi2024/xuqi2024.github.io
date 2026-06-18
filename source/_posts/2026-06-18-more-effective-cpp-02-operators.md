@@ -2,7 +2,7 @@
 title: 【More Effective C++ 中文版】第 2 篇：操作符 —— 4 个"深水区"陷阱（条款 5-8）
 date: 2026-06-19 11:00:00
 categories:
-- More Effective C++ 深度解读
+- C++新特性
 description: More Effective C++ 第 2 章深度解读：条款 5-8 — 用户定义转换的"静默"陷阱、increment/decrement 的前置 vs 后置语义、绝不要重载 && || , 操作符、new/delete 的 3 个意义区分
 tags:
 - C++
@@ -15,6 +15,8 @@ tags:
 - new
 - delete
 - placement new
+series: more-effective-cpp
+
 ---
 
 > **一句话核心结论**：C++ 操作符重载的"深水区"——**用户定义转换会"静默"发生**、**前置 vs 后置的语义差异**、**`&&` `||` `,` 绝不要重载**、**`new` `delete` 的 3 个意义**。这 4 个条款决定了你写的"重载"是"地道"还是"踩坑"。

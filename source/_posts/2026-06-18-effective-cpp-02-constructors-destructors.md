@@ -2,7 +2,7 @@
 title: 【Effective C++ 第三版】第 2 篇：构造/析构/赋值 —— 对象生命周期的 5 把钥匙（条款 5-12）
 date: 2026-06-18 10:00:00
 categories:
-- Effective C++ 深度解读
+- C++新特性
 description: Effective C++ 第 2 章深度解读：条款 5-12 — 编译器默默生成的 4 个函数、=delete 拒绝拷贝、多态基类必须 virtual 析构、析构函数不抛异常、构造/析构中不要调虚函数、operator= 返回 *this、自我赋值的 copy-and-swap、复制时勿忘每一成分
 tags:
 - C++
@@ -14,6 +14,8 @@ tags:
 - Rule of Three
 - 虚析构
 - copy-and-swap
+series: effective-cpp
+
 ---
 
 > **一句话核心结论**：C++ 编译器会**默默为你**生成默认构造、拷贝构造、拷贝赋值、析构 4 个函数——但**默默生成 ≠ 默默正确**。本章 8 个条款教你怎么把"对象生命周期"这 5 把钥匙握在自己手里：`virtual` 析构、`= delete`、构造析构中勿调虚函数、`operator=` 的 copy-and-swap 范式、Rule of Three 的完整实现。

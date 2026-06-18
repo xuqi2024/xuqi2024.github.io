@@ -14,6 +14,8 @@ tags:
   - LLM
   - mem0
 description: "从架构设计、核心机制、检索原理三个层面，深度解析GitHub 53K stars的Universal Memory…"
+series: ai-agent-memory
+
 ---
 
 # mem0——为AI Agent打造的Universal Memory Layer深度解读

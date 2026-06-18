@@ -2,7 +2,7 @@
 title: 【pi-mono】4个工具搞定所有编程任务：极简主义哲学深度解析
 date: 2026-04-15 23:00:00
 categories:
-- 技术分析
+- AI技术
 tags:
 - AI Agent
 - LLM

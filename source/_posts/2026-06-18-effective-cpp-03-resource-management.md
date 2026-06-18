@@ -2,7 +2,7 @@
 title: 【Effective C++ 第三版】第 3 篇：资源管理 —— RAII 是 C++ 的灵魂（条款 13-17）
 date: 2026-06-18 12:00:00
 categories:
-- Effective C++ 深度解读
+- C++新特性
 description: Effective C++ 第 3 章深度解读：条款 13-17 — RAII 范式、auto_ptr 的陨落、unique_ptr 的独占所有权、shared_ptr 的引用计数、weak_ptr 打破循环引用、自定义 deleter、智能指针在容器和 pimpl 中的正确用法、new/delete 的对称性
 tags:
 - C++
@@ -15,6 +15,8 @@ tags:
 - 资源管理
 - 异常安全
 - pimpl
+series: effective-cpp
+
 ---
 
 > **一句话核心结论**：C++ 资源管理的核心是 **RAII（Resource Acquisition Is Initialization）**——把资源的获取放在构造函数、释放放在析构函数，让对象的生命周期替你"自动管理"资源。`unique_ptr`（独占）+ `shared_ptr`（共享）+ `weak_ptr`（观察）三件套，覆盖 99% 的场景，**直接淘汰 `auto_ptr` 和裸 `new`/`delete`**。

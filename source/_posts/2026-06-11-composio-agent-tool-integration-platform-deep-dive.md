@@ -4,6 +4,8 @@ date: 2026-06-11 09:00:00
 tags: [Agent, Composio, 工具集成, MCP, 架构分析, 项目评测]
 categories: [AI, 项目评测]
 description: 深度剖析 ComposioHQ/composio (⭐28.7k) 的核心架构：Provider 抽象、Tool Router 会话、Modifier 钩子链，以及它如何成为 AI Agent 工具集成的「事实标准中台」
+series: ai-agent-frameworks
+
 ---
 
 ## 引子：当 Agent 拥有了"手和脚"

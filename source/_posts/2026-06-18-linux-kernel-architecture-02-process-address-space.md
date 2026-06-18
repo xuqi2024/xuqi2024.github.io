@@ -15,6 +15,7 @@ tags:
 - 写时复制
 - ELF
 - VMA
+series: linux-kernel-architecture
 
 ---
 

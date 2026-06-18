@@ -2,7 +2,7 @@
 title: 【A2A Protocol】AI Agent 互联互通协议深度解析：架构、设计与 MCP 的分工
 date: 2026-05-01 08:00:00
 categories:
-- 技术分析
+- AI技术
 tags:
 - A2A
 - Agent

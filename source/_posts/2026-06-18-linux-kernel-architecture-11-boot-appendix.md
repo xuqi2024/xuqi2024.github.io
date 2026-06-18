@@ -16,6 +16,7 @@ tags:
 - init
 - 汇编
 - 调试
+series: linux-kernel-architecture
 
 ---
 

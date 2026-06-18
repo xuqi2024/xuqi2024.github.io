@@ -1,9 +1,12 @@
 ---
+categories:
+- AI技术
 title: 【elizaOS】开源 AI Agent 框架核心架构与设计原理深度解析
 date: 2026-05-30 10:00:00
-categories: AI
 tags: [Agent, elizaOS, 架构分析, 开源框架, 多Agent]
 description: "在 AI Agent 生态蓬勃发展的 2026 年，各种 Agent 框架如雨后春笋般涌现。从 LangChain、AutoGen 到…"
+series: ai-agent-frameworks
+
 ---
 
 # 【elizaOS】开源 AI Agent 框架核心架构与设计原理深度解析

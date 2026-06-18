@@ -2,7 +2,7 @@
 title: 【Generative Agents】斯坦福小镇开源项目深度调研报告
 date: 2026-04-15 18:25:00
 categories:
-- 技术报告
+- AI技术
 description: "2023年斯坦福小镇论文震撼学术界：25个AI智能体在虚拟小镇自主生活、社交、甚至组织情人节派对。深度解析Generative Agents的实现原理与技术架构。"
 tags:
 - AI Agent

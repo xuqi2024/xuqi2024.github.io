@@ -11,6 +11,8 @@ tags:
 - ldconfig
 - LD_LIBRARY_PATH
 - glibc
+series: programmer-self-cultivation
+
 ---
 
 # 第八章：Linux 共享库的组织

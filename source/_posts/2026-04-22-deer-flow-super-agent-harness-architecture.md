@@ -10,6 +10,8 @@ tags:
 - 多智能体
 - Agent框架
 description: "大多数 Agent 框架给开发者一副牌，但牌桌要自己搭。DeerFlow 2.0 说：不，你需要一个全包拎包入住的 Agent 工作台。"
+series: ai-agent-memory
+
 ---
 
 > 大多数 Agent 框架给开发者一副牌，但牌桌要自己搭。DeerFlow 2.0 说：不，你需要一个"全包拎包入住"的 Agent 工作台。

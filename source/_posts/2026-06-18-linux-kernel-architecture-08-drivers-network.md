@@ -15,6 +15,7 @@ tags:
 - kobject
 - sysfs
 - tty
+series: linux-kernel-architecture
 
 ---
 

@@ -2,13 +2,15 @@
 title: 【AI Agent】（六）mem0三层记忆：重塑长期记忆系统
 date: 2026-04-16 23:30:00
 categories:
-- 技术分析
+- AI技术
 tags:
 - AI Agent
 - 记忆系统
 - RAG
 - 开源项目
 description: "核心结论： RAG 解决的是查资料问题，而 mem0 解决的是记人心问题——用单次 LLM 调用 + 三信号混合检索，把 AI Agent 的记忆准确率在 LoCoMo 基准上从 71.4 提升到…"
+series: ai-agent
+
 ---
 
 > **核心结论：** RAG 解决的是"查资料"问题，而 mem0 解决的是"记人心"问题——用单次 LLM 调用 + 三信号混合检索，把 AI Agent 的记忆准确率在 LoCoMo 基准上从 71.4 提升到 **91.6**，延迟控制在 1 秒以内。

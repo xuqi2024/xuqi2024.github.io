@@ -2,7 +2,7 @@
 title: "TenBox 核心架构深度解析：给 AI Agent 一台安全虚拟机"
 date: 2026-06-11 10:00:00
 categories:
-- 技术分析
+- AI技术
 tags:
 - VMM
 - 虚拟化
@@ -10,6 +10,8 @@ tags:
 - OpenClaw
 - 架构分析
 description: "面向 OpenClaw/QwenPaw/Hermes Agent 的跨平台 VMM：跨平台 hypervisor 抽象、双架构中断、内嵌 OpenAI 兼容 LLM Proxy、浏览器远程桌面。"
+series: ai-agent-frameworks
+
 ---
 
 > 一句话核心结论：TenBox 不是又一个 QEMU 包装，也不是 Docker 替代品——它把"AI Agent 跑在不可信环境里"这件事，**从"沙箱化进程"升级成了"完整虚拟机 + 内嵌 LLM 代理 + 云端配对 + 自更新"**的四件套。这套组合在 2026 年的 AI Agent 生态里，恰好填补了一个被 QEMU 复杂度和容器隔离强度都忽视的中间地带。

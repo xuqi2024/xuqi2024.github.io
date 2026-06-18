@@ -2,12 +2,14 @@
 title: 【AI Agent】（四）极简主义的AI Agent框架：Agno 深度体验
 date: 2026-04-17 13:00:00
 categories:
-- 技术科普
+- AI技术
 tags:
 - AI Agent
 - Agent框架
 - Python
 description: "📚 AI Agent 开源框架实战系列（5/6） | ⬅️ 上一篇：AutoGen：让多个 AI Agent 对话协作 | ➡️ 下一篇：Smolagents：HuggingFace 的轻量级…"
+series: ai-agent
+
 ---
 
 > 📚 **AI Agent 开源框架实战系列**（5/6） | ⬅️ 上一篇：[AutoGen：让多个 AI Agent 对话协作](/2026/04/17/autogen-multi-agent-conversation/) | ➡️ 下一篇：[Smolagents：HuggingFace 的轻量级 Agent 框架](/2026/04/17/smolagents-huggingface-lightweight-agent/) | 🔗 [配套代码仓库](https://github.com/xuqi2024/ai-agent-tutorials)

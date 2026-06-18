@@ -2,7 +2,7 @@
 title: 【More Effective C++ 中文版】第 4 篇：异常（下）—— 异常处理的 3 大工程细节（条款 13-15）
 date: 2026-06-19 15:00:00
 categories:
-- More Effective C++ 深度解读
+- C++新特性
 description: More Effective C++ 第 4 章（下）深度解读：条款 13-15 — 以 by reference 方式捕捉 exceptions 的 4 大优势、异常规格的演进（C++11 noexcept）、了解异常处理的"零成本"真相与 try 块的性能开销
 tags:
 - C++
@@ -14,6 +14,8 @@ tags:
 - 异常成本
 - 性能
 - try/catch
+series: more-effective-cpp
+
 ---
 
 > **一句话核心结论**：C++ 异常的下半部分讲 3 个工程细节——**catch by reference** 的 4 大优势（避免切片、避免拷贝、支持多态、避免重新抛出对象问题）、**异常规格**的演进（`throw()` → `noexcept`）、**异常处理的真实成本**（"零成本"模型 + try 块的代码膨胀）。

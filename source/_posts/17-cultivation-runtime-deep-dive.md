@@ -13,6 +13,8 @@ tags:
 - 缓冲
 - 构造析构
 - 运行库
+series: programmer-self-cultivation
+
 ---
 
 # 第十七章：运行库深挖——TLS、全局对象构造析构与 stdio 缓冲

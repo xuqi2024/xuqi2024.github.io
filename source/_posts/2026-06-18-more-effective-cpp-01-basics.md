@@ -2,7 +2,7 @@
 title: 【More Effective C++ 中文版】第 1 篇：基础议题 —— 指针、引用、转型、增量的 4 个真相（条款 1-4）
 date: 2026-06-19 09:00:00
 categories:
-- More Effective C++ 深度解读
+- C++新特性
 description: More Effective C++ 第 1 章深度解读：条款 1-4 — 指针与引用的本质区别、C++ 转型操作符的 4 种类型、多态与数组的危险关系、default constructor 的"非必要不提供"哲学
 tags:
 - C++
@@ -15,6 +15,8 @@ tags:
 - 增量
 - 前置
 - 后置
+series: more-effective-cpp
+
 ---
 
 > **一句话核心结论**：C++ 的"基础"远不止是语法——**指针与引用的本质区别**、**4 种转型操作符**的明确意图、**多态与数组的危险**、**default constructor 的"非必要不提供"**——这 4 个"基础议题"决定了你是"会写 C++"还是"懂 C++"。

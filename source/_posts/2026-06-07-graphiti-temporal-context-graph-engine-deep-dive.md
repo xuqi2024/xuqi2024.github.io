@@ -13,6 +13,8 @@ categories:
   - AI
   - 项目评测
 description: "Graphiti 是 Zep 开源的时序上下文图（Temporal Context Graph）引擎，为 AI Agent 提供带有效期的事实追踪、回溯溯源、双时态索引与混合检索。在 DMR…"
+series: ai-agent-memory
+
 ---
 
 ## 引子：当 Agent 的"记忆"开始有了时间轴

@@ -4,6 +4,8 @@ date: 2026-06-16 09:00:00
 tags: [Agent, AgentScope, 阿里, MCP, ReAct, 事件驱动, 架构分析, 项目评测, FastAPI, 多租户]
 categories: [AI, 项目评测]
 description: 深度剖析阿里 agentscope-ai/agentscope（⭐26.8k）的核心架构：事件流驱动的 ReAct 循环、统一 MCP 客户端、FastAPI 多租户服务、权限与沙箱隔离、Skill 与子代理模板。讲清楚它与 LangGraph、OpenAI Agents SDK、Autogen 的设计差异。
+series: ai-agent-frameworks
+
 ---
 
 > **核心观点**：AgentScope 2.0 不是又一套「LangGraph 模仿者」，而是阿里在 2026 年 5 月重做的新一代 Agent 运行时——它把 ReAct 循环拆成**事件流**，把服务层做成了**生产可用的 FastAPI 多租户应用**，并把 MCP 客户端、权限系统、Workspace 沙箱、子代理模板这些"企业级零件"全部内置到框架本体。本文将拆解它的源码，给出可运行的真实代码示例，并对比 4 个同类项目讲清楚它"重做"在哪里。

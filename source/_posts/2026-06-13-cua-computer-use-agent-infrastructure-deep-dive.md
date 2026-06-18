@@ -4,6 +4,8 @@ date: 2026-06-13 09:07:18
 tags: [Agent, Cua, Computer-Use, 沙箱, 架构分析, 项目评测, 多OS适配, 评测基准]
 categories: [AI, 项目评测]
 description: "深度剖析 trycua/cua (⭐17.9k) 核心架构：Computer 沙箱抽象层、Interface 多 OS 适配、Provider 工厂模式、Cua-Agent 决策循环、Cua-Bench 评测体系，对比 Agent-S 与 OpenAI Operator 揭示 Computer-Use 领域的基础设施范式。"
+series: ai-agent-frameworks
+
 ---
 
 ## 引子：当 Agent 学会「看屏幕」

@@ -6,6 +6,7 @@ categories:
 description: ASPICE 是汽车行业软件过程的「高考」——不是及格就行，而是分等级论输赢。本文用通俗易懂的语言，介绍 ASPICE 是什么、考什么、为什么重要，以及它和 ISO 26262 的关系。
 tags:
 - 汽车AI
+series: automotive-ai
 
 ---
 

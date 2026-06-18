@@ -2,12 +2,14 @@
 title: 【汽车座舱】CLI化实战：从CAN总线到AI Agent的完整工具链设计
 date: 2026-04-15 21:32:00
 categories:
-- 技术分析
+- 行业观察
 tags:
 - 汽车AI
 - AI Agent
 - 工具调用
 description: "如何将传统汽车座舱内的各种应用CLI化，让AI Agent能够像人类一样控制车辆，同时最大限度地减少适配工作量？"
+series: automotive-ai
+
 ---
 
 # 汽车座舱应用CLI化实战：从CAN总线到AI Agent的完整工具链设计

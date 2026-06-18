@@ -4,6 +4,8 @@ date: 2026-06-12 09:00:00
 tags: [Agent, Harbor, 评测框架, 终端Agent, 沙盒, 架构分析, 项目评测, 任务调度]
 categories: [AI, 项目评测]
 description: "深度剖析 harbor-framework/harbor（⭐2.4k）的核心架构：一个能让 Claude Code、Codex、OpenHands 等 30+ Agent 在数千沙盒中并行评测的框架。它用统一的 Task + Trial + Job 模型、ATIF 轨迹协议、Provider 抽象和 LLM-as-judge，让 Agent 评测从脚本化走向工业化。"
+series: ai-agent-frameworks
+
 ---
 
 ## 引子：从"写个 shell 跑一下"到"千级并发沙盒"

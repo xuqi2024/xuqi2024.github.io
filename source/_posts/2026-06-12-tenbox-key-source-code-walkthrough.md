@@ -2,7 +2,7 @@
 title: "tenbox 关键源码精读：5 段代码看懂现代 VMM"
 date: 2026-06-12 10:00:00
 categories:
-- 技术分析
+- AI技术
 tags:
 - TenBox
 - VMM
@@ -11,6 +11,8 @@ tags:
 - KVM
 - 架构分析
 description: "tenbox 源码精读姊妹篇。5 段关键代码拆解跨平台 hypervisor 抽象、IO Loop、VirtIO 设备、内存屏障取舍。"
+series: ai-agent-frameworks
+
 ---
 
 > 一句话核心结论：tenbox 的源码是**2026 年最值得逐行精读的 VMM 教学样本**——它比 QEMU 简单 30×，但包含了现代 VMM 几乎所有关键决策。**本文带你精读 5 段关键代码（约 400 行）**，看一个 4 个月迭代出的生产级 VMM，是怎么把"跨平台 + 高性能 + 简洁"这三件互相矛盾的事做出来的。

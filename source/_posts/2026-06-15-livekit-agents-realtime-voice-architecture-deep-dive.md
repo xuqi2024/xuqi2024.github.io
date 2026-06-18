@@ -2,7 +2,7 @@
 title: LiveKit Agents 实时语音架构深度解析
 date: 2026-06-15 08:30:00
 categories:
-- 技术分析
+- AI技术
 tags:
 - LiveKit Agents
 - 语音 Agent

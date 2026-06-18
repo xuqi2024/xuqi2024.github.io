@@ -2,7 +2,7 @@
 title: 【Effective C++ 第三版】第 9 篇：杂项讨论 + 总结 —— 55 条款的工程哲学（条款 53-55 + 系列回顾）
 date: 2026-06-18 23:30:00
 categories:
-- Effective C++ 深度解读
+- C++新特性
 description: Effective C++ 第 9 章深度解读 + 全文总结：条款 53-55 — 不要忽视 compiler warnings、与标准库的 widget 协同工作、让自己熟悉 Boost。附 55 条款工程哲学、面试宝典、学习路径
 tags:
 - C++
@@ -15,6 +15,8 @@ tags:
 - 面试
 - 学习路径
 - C++ 哲学
+series: effective-cpp
+
 ---
 
 > **一句话核心结论**：C++ 55 个条款的核心哲学可以浓缩为 4 句话——**"编译器是你的朋友，不是敌人"**、**"RAII 是 C++ 资源管理的灵魂"**、**"const 是契约，类型是文档"**、**"标准库是最好的老师，Boost 是 C++ 的未来"**。本章 3 个条款 + 全文总结带你走完 Effective C++ 第三版之旅。

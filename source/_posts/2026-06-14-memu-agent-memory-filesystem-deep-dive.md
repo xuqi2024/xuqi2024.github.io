@@ -4,6 +4,8 @@ date: 2026-06-14 09:00:00
 tags: [Agent, memU, 记忆系统, RAG, 架构分析, 项目评测, Memory, 流程引擎]
 categories: [AI, 项目评测]
 description: 深度剖析 NevaMind-AI/memU (⭐13.8k) 的核心架构：数据到记忆引擎、三层数据模型 Resource-MemoryItem-MemoryCategory、可插拔工作流引擎、Profile 路由 LLM、RAG/LLM 双路检索。附可运行代码与 Mem0/Cognee/Graphiti 的设计差异对比。
+series: ai-agent-memory
+
 ---
 
 # 【memU】核心架构与设计原理深度解析：把 Agent 记忆做成可导航的文件系统

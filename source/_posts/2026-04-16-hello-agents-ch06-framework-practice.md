@@ -9,6 +9,8 @@ tags:
 - Agent框架
 - hello-agents
 description: "单个Agent就像一个全能但疲惫的员工——什么都会，但什么都不精。多Agent框架让你能组建一支分工明确的AI团队，处理真正复杂的任务。"
+series: hello-agents
+
 ---
 
 > 单个Agent就像一个全能但疲惫的员工——什么都会，但什么都不精。多Agent框架让你能组建一支分工明确的AI团队，处理真正复杂的任务。

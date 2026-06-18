@@ -2,7 +2,7 @@
 title: 【Effective C++ 第三版】第 5 篇：实现 —— 让类"用得顺手"的 6 个工程细节（条款 26-31）
 date: 2026-06-18 16:00:00
 categories:
-- Effective C++ 深度解读
+- C++新特性
 description: Effective C++ 第 5 章深度解读：条款 26-31 — 推迟变量定义、减少隐式转换、namespace 与友元的边界、编译期依赖最小化、复合 == 三原则（Triangle Rule）、inline 的代价与控制、降低编译依赖
 tags:
 - C++
@@ -15,6 +15,8 @@ tags:
 - 模板
 - namespace
 - pimpl
+series: effective-cpp
+
 ---
 
 > **一句话核心结论**：C++ 实现细节有 6 个"看不见但影响巨大"的工程点：变量定义时机、隐式转换、namespace 与友元边界、编译期依赖、复合（inheritance vs composition vs private inheritance）、inline 的隐性代价。**掌握这 6 点，你的代码会从"能跑"升级到"跑得快、编译快、维护快"**。

@@ -14,6 +14,7 @@ tags:
 - 原子操作
 - 定时器
 - jiffies
+series: linux-kernel-architecture
 
 ---
 

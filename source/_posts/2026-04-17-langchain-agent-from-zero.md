@@ -2,13 +2,15 @@
 title: 【AI Agent】（三）从零构建你的第一个AI Agent：LangChain 完全入门
 date: 2026-04-17 09:00:00
 categories:
-- 技术科普
+- AI技术
 tags:
 - AI Agent
 - LLM
 - Agent框架
 - Python
 description: "📚 AI Agent 开源框架实战系列（1/6） | ➡️ 下一篇：LangGraph：用状态图构建有记忆的 AI 工作流 | 🔗 配套代码仓库"
+series: ai-agent
+
 ---
 
 > 📚 **AI Agent 开源框架实战系列**（1/6） | ➡️ 下一篇：[LangGraph：用状态图构建有记忆的 AI 工作流](/2026/04/17/langgraph-stateful-workflow/) | 🔗 [配套代码仓库](https://github.com/xuqi2024/ai-agent-tutorials)

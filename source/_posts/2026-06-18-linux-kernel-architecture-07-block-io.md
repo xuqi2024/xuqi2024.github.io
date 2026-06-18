@@ -15,6 +15,7 @@ tags:
 - noop
 - page cache
 - buffer I/O
+series: linux-kernel-architecture
 
 ---
 

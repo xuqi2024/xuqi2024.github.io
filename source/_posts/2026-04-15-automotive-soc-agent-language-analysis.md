@@ -2,11 +2,13 @@
 title: 【汽车SOC】Agent开发最佳编程语言深度分析
 date: 2026-04-15 09:30:00
 categories:
-- 技术报告
+- 行业观察
 tags:
 - 汽车AI
 - C++
 description: "TL;DR：如果你只看一句话结论——汽车 SoC Agent 的最优解是 C++ 主体 + Rust 安全关键 + Python AI层。Rust 爱好者说 Rust，C++ 老兵说 C++，AI…"
+series: automotive-ai
+
 ---
 
 # 汽车SOC Agent开发最佳编程语言深度分析

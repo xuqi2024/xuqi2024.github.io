@@ -11,6 +11,8 @@ tags:
 - 实现
 - malloc
 - 链接脚本
+series: programmer-self-cultivation
+
 ---
 
 > **一句话核心结论**：**glibc 有 200 万行代码、MSVC CRT 也有 30 万行，但一个能跑 printf/malloc/fopen 的 Mini CRT 只要 500 行就能搞定**。本章带我们手写一个能独立运行的迷你运行库，把前面 12 章学的链接器、可执行文件装载、系统调用、堆管理、IO、C++ ABI 全部串起来。

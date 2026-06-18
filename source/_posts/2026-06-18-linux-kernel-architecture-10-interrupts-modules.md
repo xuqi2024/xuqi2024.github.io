@@ -15,6 +15,7 @@ tags:
 - insmod
 - rmmod
 - modprobe
+series: linux-kernel-architecture
 
 ---
 

@@ -4,6 +4,8 @@ date: 2026-06-08 09:00:00
 tags: [Agent, FastMCP, MCP, 架构分析, 项目评测]
 categories: [AI, 项目评测]
 description: "深度剖析 PrefectHQ/fastmcp (⭐25.5k) 的核心架构：装饰器驱动的 Pythonic API、Mix-in 组合的服务端、Transport 抽象的客户端，以及它如何成为驱动…"
+series: ai-agent-frameworks
+
 ---
 
 ## 引子：MCP 协议的"Python 之春"
