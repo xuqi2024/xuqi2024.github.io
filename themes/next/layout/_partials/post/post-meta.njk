@@ -48,17 +48,6 @@
     </span>
   {%- endif %}
 
-  {# Series — Xu Qi custom patch 2026-06-18 #}
-  {%- if post.series and post.series_name %}
-    <span class="post-meta-item post-meta-series">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-list"></i>
-      </span>
-      <span class="post-meta-item-text">系列</span>
-      <a href="{{ url_for(post.series_url) }}" rel="series" title="{{ post.series_description or post.series_name }}">{{ post.series_icon }} {{ post.series_name }}</a>
-    </span>
-  {%- endif %}
-
   {# LeanCloud PageView #}
   {%- if theme.leancloud_visitors.enable %}
     <span id="{{ url_for(post.path) }}" class="post-meta-item leancloud_visitors" data-flag-title="{{ post.title }}" title="{{ __('post.views') }}">
