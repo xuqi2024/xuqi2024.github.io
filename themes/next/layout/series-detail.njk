@@ -1,74 +1,55 @@
-<html lang="{{ page.lang }}">
-<head>
-  {{ partial('_partials/head/head.njk', {}, {cache: theme.cache.enable}) }}
-  <title>{{ page.series_icon }} {{ page.series_name }} | {{ title }}</title>
-  {{ partial('_third-party/analytics/index.njk', {}, {cache: theme.cache.enable}) }}
-  {{ partial('_scripts/index.njk', {}, {cache: theme.cache.enable}) }}
-  {{ partial('_third-party/index.njk', {}, {cache: theme.cache.enable}) }}
-  {{- next_inject('head') }}
-  <noscript>
-    <link rel="stylesheet" href="{{ url_for(theme.css) }}/noscript.css">
-  </noscript>
-</head>
-<body itemscope itemtype="http://schema.org/WebPage"{% if theme.motion.enable %} class="use-motion"{% endif %}>
-  <div class="headband"></div>
+{% extends '_layout.njk' %}
+{% import '_macro/sidebar.njk' as sidebar_template with context %}
 
-  <main class="main">
-    <div class="column">
-      <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-        {{ partial('_partials/header/index.njk', {}, {cache: theme.cache.enable}) }}
-      </header>
+{% block title %}{{ page.series_icon }} {{ page.series_name }} | {{ title }}{% endblock %}
+{% block class %}series-detail-page{% endblock %}
+
+{% block content %}
+
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title" itemprop="name headline">
+        <span class="series-icon-large">{{ page.series_icon }}</span>
+        {{ page.series_name }}
+      </h1>
+      <div class="post-meta">
+        <span class="post-meta-item-text">共 <strong>{{ page.posts.length }}</strong> 篇</span>
+        {%- if page.series_category %}
+        <span class="post-meta-item-text"> · 分类：<a href="{{ url_for('categories/' + page.series_category + '/') }}">{{ page.series_category }}</a></span>
+        {%- endif %}
+      </div>
+    </header>
+
+    <div class="post-content">
+
+      {%- if page.series_description %}
+      <blockquote class="series-description">
+        {{ page.series_description }}
+      </blockquote>
+      {%- endif %}
+
+      <h2><i class="fa fa-list-ol"></i> 章节列表</h2>
+
+      <ol class="series-post-list">
+        {%- for post in page.posts %}
+        <li>
+          <a href="{{ url_for(post.path) }}" class="series-post-link">
+            <span class="series-post-date">{{ date(post.date, 'YYYY-MM-DD') }}</span>
+            <span class="series-post-title">{{ post.title }}</span>
+          </a>
+        </li>
+        {%- endfor %}
+      </ol>
+
+      <p class="series-back-link">
+        <a href="{{ url_for('series/') }}"><i class="fa fa-arrow-left"></i> 返回系列总览</a>
+      </p>
+
     </div>
+  </article>
 
-    <div class="main-inner series-detail-page">
-      <article class="post">
-        <header class="post-header">
-          <h1 class="post-title" itemprop="name headline">
-            <span class="series-icon-large">{{ page.series_icon }}</span>
-            {{ page.series_name }}
-          </h1>
-          <div class="post-meta">
-            <span class="post-meta-item-text">共 <strong>{{ page.posts.length }}</strong> 篇</span>
-            {%- if page.series_category %}
-            <span class="post-meta-item-text"> · 分类：<a href="{{ url_for('/categories/' + page.series_category + '/') }}">{{ page.series_category }}</a></span>
-            {%- endif %}
-          </div>
-        </header>
+{% endblock %}
 
-        <div class="post-content">
-          {%- if page.series_description %}
-          <blockquote class="series-description">
-            {{ page.series_description }}
-          </blockquote>
-          {%- endif %}
-
-          <h2><i class="fa fa-list-ol"></i> 章节列表</h2>
-
-          <ol class="series-post-list">
-            {%- for post in page.posts %}
-            <li>
-              <a href="{{ url_for(post.path) }}" class="series-post-link">
-                <span class="series-post-date">{{ date(post.date, 'YYYY-MM-DD') }}</span>
-                <span class="series-post-title">{{ post.title }}</span>
-              </a>
-            </li>
-            {%- endfor %}
-          </ol>
-
-          <p class="series-back-link">
-            <a href="{{ url_for('/series/') }}"><i class="fa fa-arrow-left"></i> 返回系列总览</a>
-          </p>
-        </div>
-      </article>
-    </div>
-  </main>
-
-  <footer class="footer">
-    <div class="footer-inner">
-      {{ partial('_partials/footer.njk', {}, {cache: theme.cache.enable}) }}
-    </div>
-  </footer>
-
-  {{ partial('_partials/widgets.njk', {}, {cache: theme.cache.enable}) }}
-</body>
-</html>
+{% block sidebar %}
+  {{ sidebar_template.render(false) }}
+{% endblock %}
