@@ -333,3 +333,11 @@ sequenceDiagram
 ---
 
 *最后更新：2026-06-18 | 维护者：Xu Qi*
+
+
+---
+
+## 修复日志
+
+- **2026-06-18T19:20:50**: 治本修复 `themes/next/source/` 目录缺失导致 CSS/JS/图片 404（之前 fork next 主题漏了 `source/` 目录，hexo generate 没复制资源到 `public/`）
+- **2026-06-18T19:20:50**: 修复 zh-CN.yml 缺 `series: 系列` 翻译
