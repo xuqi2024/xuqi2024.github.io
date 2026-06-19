@@ -8,7 +8,9 @@ tags:
 - 自指智能体
 - Self-Improving AI
 - Meta Agent
-- Agent 架构
+- 架构分析
+series: ai-agent-frameworks-deepdive
+description: Meta Research 开源的自指自改进 Agent 框架深度解读：双 Agent 架构、Archive 进化、跨 7 个 domain 的自递归源码修改机制。
 ---
 
 > 一句话核心结论：HyperAgents 把"自指（self-referential）"和"自改进（self-improving）"这两条互相纠缠的研究路线合二为一——它让一个 **Meta Agent 读自己的源代码、读历史 eval、读兄弟节点的 diff**，然后**直接修改 Task Agent 的 Python 实现**，再用 git diff 当奖励信号驱动下一代演化。这是一个真正会"读自己源码、改自己源码、跑自己改进后的版本、再决定下一步改什么"的闭环系统。
