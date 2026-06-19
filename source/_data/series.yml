@@ -93,3 +93,10 @@
   icon: 🚗
   category: AI
   order: 13
+
+- id: ai-agent-frameworks-deepdive
+  name: Agent 框架深度解析
+  description: 每周一个 AI Agent 开源项目源码深挖——HyperAgents / Honcho / SimpleMem / MemU 等
+  icon: 🧬
+  category: 技术分析
+  order: 15
