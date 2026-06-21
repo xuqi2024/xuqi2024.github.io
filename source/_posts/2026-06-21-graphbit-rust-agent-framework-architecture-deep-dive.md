@@ -118,9 +118,9 @@ pub struct WorkflowGraph {
 
 **为什么这么设计**：Python 侧频繁调用 `workflow.get_node_output(id)`，每次都遍历 petgraph 边的复杂度是 O(N)。这套缓存让读操作变成 O(1) HashMap 查询，写操作通过 `invalidate_caches()` 一次性失效——典型的 **空间换时间 + 写时失效** 模式。
 
-### 3.2 节点模板：`{{node.X}}` 占位符
+### 3.2 节点模板：`{ { node.X } }` 占位符
 
-Python 侧写 prompt 时可以用 `{{node.analyzer.output}}` 引用上游节点的输出。Rust 侧用 `LazyLock<Regex>` 静态编译这个模式：
+Python 侧写 prompt 时可以用 `{ { node.analyzer.output } }`（去掉中间空格，避免被 Hexo 解析）来引用上游节点的输出。Rust 侧用 `LazyLock<Regex>` 静态编译这个模式：
 
 ```rust
 // core/src/workflow.rs
