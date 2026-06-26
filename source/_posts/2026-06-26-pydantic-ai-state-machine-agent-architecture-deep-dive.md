@@ -13,6 +13,8 @@ categories:
 
 > Pydantic AI 不是一个"加了 Pydantic 校验"的 LangChain 包装器——它把整个 Agent 循环拆成了一个由 4 个节点组成的有向状态机，每一次"思考—调用工具—再思考"都对应着状态机中一条显式的边。这套设计的核心收益是：可观测性、可重放、可中断/恢复，所有这些都是 LangChain 的回调链或 LlamaIndex 的事件总线很难做到的。
 
+> **与 4 月文章的关系**：本文不是 4 月那篇《【Pydantic AI】类型安全的 AI Agent 框架》的重复——那篇聚焦"为什么 Pydantic AI 用类型系统"以及"Capabilities/可观测性"等概览，本文聚焦**当前最新版（18k⭐）的源码细节**：`_agent_graph.py` 状态机的具体实现、与 LangChain/smolagents 的架构差异、生产环境的取舍。读 4 月那篇可获得全景，读这篇可获得动手能力。
+
 ## 一、为什么写这篇？
 
 过去两年里我读过几乎所有主流 Python Agent 框架的源码：LangChain 的 Runnable 链、CrewAI 的角色编排、AutoGen 的群聊、LlamaIndex 的 Workflows、smolagents 的 ReAct 循环。它们都解决了一个共同问题——**把"LLM 调用 + 工具执行"封装成可复用的组件**——但实现方式五花八门。
