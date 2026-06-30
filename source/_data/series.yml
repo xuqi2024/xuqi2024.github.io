@@ -100,3 +100,10 @@
   icon: 🧬
   category: 技术分析
   order: 15
+
+- id: harness-engineering
+  name: Harness Engineering 6 件套
+  description: AI Agent 工程落地框架——Rule / Skill / Sub-Agent / Workflow / Script / MCP 六大组件源码深挖与设计哲学
+  icon: ⚙️
+  category: 技术分析
+  order: 14
