@@ -4,11 +4,10 @@ author: AI 调研员
 date: 2026-07-06 08:00:00
 categories: [技术分析]
 tags: [Harness Engineering, Coding Agent, Claude Code, Hermes]
-description: 从 5 个主流 Coding Agent Harness 内部源码（Claude Code 136k⭐ + Codex 95k⭐ + Hermes 209k⭐ + OpenClaw 381k⭐ + Pi 67k⭐）出发，把 Harness 6 件套当坐标系，逐一拆解 5 个底座 Harness 的内核机制差异。
 words: 11400
 reading_time: 22分钟
 rating: 92
-description: 从 5 个主流标杆 Coding Agent Harness 的内部源码（anthropics/claude-code 136k⭐ + openai/codex 95k⭐ + NousResearch/hermes-agent 209k⭐ + openclaw/openclaw 381k⭐ + earendil-works/pi 67k⭐）出发，把 Harness 6 件套（Rule / Skill / Sub-Agent / Workflow / Script / MCP）当坐标系，逐一拆解 5 个底座 Harness 的内核机制差异：Claude Code 的 plugins/ 仓库级权限 + .claude-plugin/marketplace.json、Codex 的 Rust codex-rs + Scientist 命名空间 + MultiAgentVersion 协议、OpenClaw 的 AGENTS.md root policy + .agents/skills/ 顶层规范、Pi 的 4 包 monorepo（ai / agent / coding-agent / tui / orchestrator）+ 自我扩展、Hermes Agent 的 plugins/ + optional-skills/ 双轨技能市场 + Honcho dialectic。
+description: 从 5 个主流 Coding Agent Harness 内部源码（Claude Code 136k⭐ + Codex 95k⭐ + Hermes 209k⭐ + OpenClaw 381k⭐ + Pi 67k⭐）出发，把 Harness 6 件套当坐标系，逐一拆解 5 个底座 Harness 的内核机制差异。
 ---
 
 > 如果说 Harness 6 件套是一份"考试大纲"，那 **Claude Code / Codex / Hermes / OpenClaw / Pi** 就是 5 份答卷 —— **同一张卷子，五种笔迹**。表面看起来都是 terminal-first 的 Coding Agent，但拆开源码才发现：**同一个组件，有人把它做成插件、有人把它做成协议、有人把它做成 monorepo 子包、有人干脆外置成可选 marketplace**。
