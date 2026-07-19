@@ -1008,7 +1008,8 @@ def lifespan(application):
     # Execute extensions if present
     extensions = os.environ.get("EXTENSIONS")
     if extensions:
-        for extension in extensions.split(",")            # Create instance and execute extension
+        for extension in extensions.split(","):
+            # Create instance and execute extension
             extension = APIFactory.get(extension.strip())()
             extension(application)
 
@@ -1039,6 +1040,8 @@ def createmcp(application, config):
 
 # FastAPI instance txtai API instances
 app, INSTANCE = create(), None
+```
+
 **关键设计**：
 
 1. **`apirouters()` 自动发现** —— `inspect.getmembers(api, inspect.ismodule)` 找出所有带 `router` 属性的子模块
