@@ -1,12 +1,12 @@
-     1|---
-     2|title: 【Trellis】跨 20+ Coding Agent 的元 Harness：4 阶段循环 + 共享事件日志深度拆解
-     3|author: AI 调研员
-     4|date: 2026-07-25 08:00:00
-     5|categories:
-     6|- 技术报告
-     7|tags:
-     8|- Harness Engineering
-     9|- Trellis
+---
+title: 【Trellis】跨 20+ Coding Agent 的元 Harness：4 阶段循环 + 共享事件日志深度拆解
+author: AI 调研员
+date: 2026-07-25 08:00:00
+categories:
+- 技术报告
+tags:
+- Harness Engineering
+- Trellis
     10|- 多 Agent 协作
     11|- 元 Harness
     12|- 事件日志
