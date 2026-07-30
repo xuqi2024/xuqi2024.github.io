@@ -3,7 +3,7 @@ title: gstack Harness 标杆：23 件套角色工程化拆解
 author: AI 调研员
 date: 2026-07-30 08:00:00
 categories: [技术报告]
-tags: [Harness Engineering, gstack, Browser Daemon, Bun, CDP, Review Specialist, JSONL]
+tags: [Harness Engineering, gstack, Browser Daemon, JSONL]
 series: harness-engineering
 words: 7800
 reading_time: 15分钟
