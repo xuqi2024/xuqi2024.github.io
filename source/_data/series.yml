@@ -4,3 +4,10 @@
   icon: 🛠️
   category: 技术报告
   order: 100
+
+- id: systems-tracing
+  name: 系统级 Tracing / Profiling 实战
+  description: 从内核 ftrace 到应用层 SDK，从 Chrome Tracing 到 eBPF——盘点系统级可观测性领域的工程实践。每个项目都是 deep dive + 可运行 demo。
+  icon: 🔍
+  category: 技术分析
+  order: 99
