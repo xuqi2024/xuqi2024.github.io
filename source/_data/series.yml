@@ -4,10 +4,9 @@
   icon: 🛠️
   category: 技术报告
   order: 100
-
-- id: systems-tracing
-  name: 系统级 Tracing / Profiling 实战
-  description: 从内核 ftrace 到应用层 SDK，从 Chrome Tracing 到 eBPF——盘点系统级可观测性领域的工程实践。每个项目都是 deep dive + 可运行 demo。
-  icon: 🔍
-  category: 技术分析
-  order: 99
+- id: qnx-internals
+  name: QNX Neutrino 内核深潜
+  description: 从 QNX SDP 7.1 官方文档出发，对比 Linux 解析 QNX 微内核独有 / 优于 Linux 的能力——IPC、Adaptive Partitioning、PPS、Resource Manager、SAT、io-sock 等。
+  icon: 🪨
+  category: 技术报告
+  order: 90
