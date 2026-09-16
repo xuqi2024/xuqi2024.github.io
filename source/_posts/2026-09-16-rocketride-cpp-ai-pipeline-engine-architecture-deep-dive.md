@@ -789,7 +789,7 @@ sequenceDiagram
     A->>M: scratch += "researcher returned success"
     A->>L: call_llm(Wave Planner 第 2 波)
     L-->>A: {done: true, answer: "Got it. I'll remember you prefer Rust."}
-    A->>A: resolve {{memory.ref:...}}<br/>模板替换
+    A->>A: resolve memory.ref 模板<br/>替换实际值
     A->>C: writeAnswers(answer JSON)<br/>output.lane=answers
     C-->>U: SSE 流式输出
 ```
@@ -799,7 +799,7 @@ sequenceDiagram
 1. **「问题转译为子任务」**——Writer Agent 把「记住 Rust」转译成「让 Researcher 调用 tool_cognee.remember」，**意图识别在 Wave Planner 完成**
 2. **「Agent-as-Tool 调用」**——Writer 调用 Researcher 是通过 `agent_researcher_1.run_agent` 这个「虚拟 tool」，实际经过 `@tool_function` 装饰器 + RPC 路由到 Researcher Agent 的 `IInstance`
 3. **「scratch 跨迭代累积」**——Researcher 跑了 2 次 Wave，第 1 次「存 1 fact」，第 2 次「done=true」，scratch 字段累积了 2 步上下文
-4. **「{{memory.ref:...}} 模板替换」**——Writer 的最终 answer 可能包含 `{{memory.ref:user_facts}}` 引用，`resolve_answer_refs` 在 done 后统一替换为实际值
+4. **「memory.ref 模板替换」**——Writer 的最终 answer 可能包含 `&#123;&#123;memory.ref:user_facts&#125;&#125;` 引用，`resolve_answer_refs` 在 done 后统一替换为实际值
 5. **「Memory 是跨 Agent 共享的」**——Writer 与 Researcher 都连同一个 `memory_internal_writer_1`（虽然 Researcher 是子 Agent 但用了自己的 memory 节点），保证 scratch / 上下文隔离
 
 ## 与同类项目对比
