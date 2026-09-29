@@ -10,3 +10,9 @@
   icon: 🪨
   category: 技术报告
   order: 90
+- id: audio-tech-deep-dive
+  name: 音频技术深度实战
+  description: 从 PCM 数字音频、声学前端（麦克风阵列 / ECNR 回声消除 / 波束成形 BF / 降噪 / VAD）、到端侧 ASR/TTS，再深入车载语音、Android AudioFlinger、WebRTC AEC3 等真实工程。30 天从浅入深连载。
+  icon: 🎙️
+  category: 技术报告
+  order: 85
