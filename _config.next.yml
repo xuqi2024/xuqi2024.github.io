@@ -21,7 +21,6 @@ menu:
   home: / || fa fa-home
   archives: /archives/ || fa fa-archive
   categories: /categories/ || fa fa-folder-open
-  series: /series/ || fa fa-list
   tags: /tags/ || fa fa-tags
   about: /about/ || fa fa-user
 
@@ -74,9 +73,6 @@ post:
 highlight_theme: normal
 codeblock:
   highlight_shrink: true
-  theme:
-    light: tomorrow-night-eighties
-    dark: tomorrow-night-eighties
   copy_button:
     enable: true
     show_result: true
@@ -106,37 +102,13 @@ comments:
     pageSize: 10
     reaction: true 
 
-# Custom file paths for overriding theme styles
-custom_file_path:
-  head: source/_data/head.njk
-  style: source/_data/styles.styl
-
 # Mermaid 图表
 mermaid:
   enable: true
   theme:
-    light: neutral
+    light: default
     dark: dark
 
-# CDN providers
-# internal: NexT internal scripts (local keeps them on your server for reliability)
-# plugins: jsdelivr loads mermaid + other libs from a fast global CDN
-vendors:
-  internal: local
-  plugins: jsdelivr
-
-# Lazy-load images (improves LCP on image-heavy pages)
-lazyload: true
-
-# Page entry animations: async prevents animations from blocking content render
-motion:
-  enable: true
-  async: true
-  duration: 200
-  transition:
-    menu_item: fadeInDown
-    post_block: fadeIn
-    post_header: fadeInDown
-    post_body: fadeInDown
-    coll_header: fadeInLeft
-    sidebar: fadeInUp
+# 自定义文件钩子 - bodyEnd 用于加载 mermaid-fix.js (hexo-renderer-marked 兼容性补丁)
+custom_file_path:
+  bodyEnd: source/_data/body-end.njk
