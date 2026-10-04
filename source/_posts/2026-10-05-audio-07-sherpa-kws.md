@@ -69,7 +69,7 @@ description: 端侧 KWS 唤醒到底怎么落地？用 k2-fsa 官方 WenetSpeech
 
 ONNX 的核心数据结构是**计算图（Computational Graph）**：
 
-<div class="mermaid">
+```mermaid
 flowchart LR
     A[输入 Tensor] -->|MatMul| B[权重 Tensor]
     B -->|Add| C[Bias Tensor]
@@ -82,7 +82,7 @@ flowchart LR
     style C fill:#FFF9C4
     style D fill:#B5EAD7
     style E fill:#C7CEEA
-</div>
+```
 
 *（每个节点是一个算子 op，每个边是一个多维数组 tensor）*
 
@@ -120,7 +120,7 @@ sherpa-onnx 的设计是**两层**：
 
 ### 2.2 这个 KWS 模型怎么预训练出来的？
 
-<div class="mermaid">
+```mermaid
 flowchart TB
     A[阶段1: 数据准备<br/>WenetSpeech L 子集<br/>10000小时中文标注语音] --> B[阶段2: 训练 ZipFormer ASR 基座<br/>epoch 1-12<br/>~7天多GPU]
     B --> C[阶段3: 蒸馏成 KWS<br/>关键词列表<br/>~1天]
@@ -134,7 +134,7 @@ flowchart TB
     style D fill:#B5EAD7
     style E fill:#C7CEEA
     style F fill:#E8D5F5
-</div>
+```
 
 **5 个阶段详解**：
 
@@ -191,7 +191,7 @@ flowchart TB
 ### 3.2 ZipFormer 三个核心创新
 
 **创新 1：多尺度下采样拼接（Zip拼接）**
-<div class="mermaid">
+```mermaid
 flowchart LR
     A[输入音频<br/>16kHz × T帧] --> B[Conv 下采样<br/>stride=2<br/>T/2 帧]
     B --> C[Conv 下采样<br/>stride=2<br/>T/4 帧]
@@ -207,7 +207,7 @@ flowchart LR
     style E fill:#C7CEEA
     style F fill:#E8D5F5
     style G fill:#FFB3C6
-</div>
+```
 
 ZipFormer 把音频**按不同时间尺度同时处理**：
 - 慢尺度（T/8 帧）——看**长时上下文**（"用户是不是在和车机说话"）
@@ -270,7 +270,7 @@ sherpa-onnx 提供了**两套**语音 API，**完全不同的用途**：
 
 **两者共享同一个底层 ONNX 模型**——KWS 模式本质上是 "ASR + 关键词匹配" 的融合，**decoder 输出时实时检查每个 token 是否落在 `keywords.txt` 里**。
 
-<div class="mermaid">
+```mermaid
 sequenceDiagram
     participant Mic as 麦克风
     participant Stream as sherpa_onnx.Stream
@@ -293,7 +293,7 @@ sequenceDiagram
     style Stream fill:#FFDAB9
     style Spotter fill:#FFF9C4
     style Detector fill:#B5EAD7
-</div>
+```
 
 *（注意 `is_ready` 是关键——它告诉上层"这一帧有没有完整 token 可以输出"）*
 
