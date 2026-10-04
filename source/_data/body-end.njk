@@ -1,0 +1,5 @@
+{# Hermes 自定义 bodyEnd - 加载 mermaid 兼容性修复脚本 #}
+{# 背景:hexo-renderer-marked 把 ```mermaid 渲染成 <pre><code class="language-mermaid"> #}
+{#      Next 主题 8.23 只识别 <pre class="mermaid"> 或 <div class="mermaid">          #}
+{#      mermaid-fix.js 在客户端把 language-mermaid 代码块重写成 div.mermaid           #}
+<script src="/js/mermaid-fix.js" defer></script>
