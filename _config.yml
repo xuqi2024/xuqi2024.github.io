@@ -119,6 +119,6 @@ neat_js:
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repo: git@github.com:xuqi1987/NoteBook.git
-  branch: gh-pages
+  repo: https://github.com/xuqi2024/xuqi2024.github.io.git
+  branch: main
   message: "Site updated: {{ now('YYYY-MM-DD HH:mm:ss') }}"
