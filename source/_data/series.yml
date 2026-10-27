@@ -16,3 +16,9 @@
   icon: 🎙️
   category: 技术报告
   order: 85
+- id: ai-business-zengming
+  name: 智能AI时代的商业、组织与战略
+  description: 曾鸣新书深度解读——AI 产业化三阶段、智能复利与黑洞效应、一人千面智能商业、AI 时代组织新逻辑、愿景驱动的战略生成、新文明的起点。7 篇讲透商业范式变革。
+  icon: 🧭
+  category: 行业观察
+  order: 80
