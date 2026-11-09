@@ -1,25 +1,52 @@
 ---
-title: 【Tracely】核心架构深度解析：让生产失败自动长成回归测试
+title: 【Tracely】失败之后：从静默失败到门禁盲区的六道防线
 date: 2026-11-09 08:00:00
-description: 深度剖析 jwuthri-cloud/Tracely-ai（⭐946，MIT，2026-10-11 建仓）的 Trace-Native CI/CD 架构：轨迹（trajectory）而非数据集行、fail-to-pass 契约、UNAVAILABLE 不等于 PASS 的门禁策略、失败聚类的结构签名与文本覆盖阈值，以及 5 个领域层纯函数的完整复刻。
+description: Tracely 的第二层架构解析：请求与执行之差暴露静默失败、掩码签名加 Jaccard 把 31 次事故并成 1 个 issue、0.9 文本覆盖阈值对抗 evaluator 抖动、小样本禁用 UMAP 的聚类策略、分数回退检测补上 verdict 的盲区，以及只锁工具名不锁参数的断言哲学。
 categories:
   - 技术报告
 tags:
   - Harness Engineering
   - Tracely
+  - 失败聚类
   - 可观测性
-  - 回归测试
   - CI 门禁
 series:
   - harness-engineering
-words: 9400
-reading_time: 26分钟
-rating: 93
+words: 9200
+reading_time: 25分钟
+rating: 92
 ---
 
-## 零、先给一张坐标系：Agent 质量保障的四个台阶
+## 引子：一个 bug 抓到了，然后呢？
 
-在进入 Tracely 之前，先摆清楚一件事：**给 Agent 做质量保障，和给传统软件做质量保障，是完全不同的工程问题。** 传统软件的 bug 是"代码没按预期执行"，而 Agent 的 bug 有四类，每一类需要完全不同的工具：
+先说清楚这个系列的定位。上个月我写过一篇《【Tracely】回归测试即生产 Trace》，讲的是 Tracely 的**第一层**：怎么把一次生产 trace 冻结成回归用例，怎么用 fail-to-pass 契约保证这个用例真的能区分好坏版本，以及为什么判定状态必须分 PASS / FAIL / INCOMPLETE 三态而不是二值。
+
+那一层解决的是"**一个 bug 怎么变成一个测试**"。
+
+但**从 bug 到测试，中间还隔着一段没人愿意走的路**。真实的生产环境是这样的：
+
+- 同一个 bug 一天触发 31 次，你的 issue 列表被淹没在 31 张卡里
+- 有时候两次失败长得极像但根因完全不同，被错误地合并成一个 issue，修完一个另一个还在
+- 有时候两次失败措辞完全不同但其实是同一个 bug，被拆成两个 issue，修了一个另一个复发
+- 门禁全绿，但目标完成度从 0.9 滑到 0.6——**每个对话都过了及格线，整体却在变差**
+- 最阴的一种：模型正确地"决定"要调用 `escalate_to_human`，但代码里那个分支没实现，这一步被静默吞掉。**从最终输出看一切正常，从工具调用日志看也一切正常，因为模型确实请求了。**
+
+这一篇讲的就是 Tracely 的**第二层**：**失败之后发生了什么**。
+
+它有六道防线，篇篇都是从"朴素做法会怎么错"倒推出来的：
+
+| # | 防线 | 朴素的坑 | Tracely 的机制 |
+|---|------|---------|--------------|
+| 1 | **静默失败检测** | 只看"执行了哪些工具" → 模型请求但没执行的工具查不出来 | `requested_tools` vs `tool_sequence` 的差集 |
+| 2 | **失败签名** | 直接哈希失败文本 → judge 的两种措辞分成两个簇 | 掩码（id/number/引号）+ evaluator 集合 |
+| 3 | **文本覆盖阈值** | evaluator 集合相等才合并 → 集合抖动导致生产上出现重复簇 | sim ≥ 0.9 无视集合直接合并 |
+| 4 | **聚类算法选型** | 一律先 UMAP 降维 → 小样本上造出根本不存在的簇 | `n` 小时直接跑余弦距离 HDBSCAN |
+| 5 | **断言的哲学** | 把录下来的参数也断言进去 → 把 bug 焊死在测试里 | 只锁工具**名字**，参数交给人 |
+| 6 | **分数回退检测** | verdict 全绿就放行 → 均值从 0.9 滑到 0.6 看不见 | 逐 scenario 对齐 + 只比 [0,1] 量纲 |
+
+### 插图：Agent 质量保障的四个台阶
+
+先摆清楚一件事：**给 Agent 做质量保障，和给传统软件做质量保障，是完全不同的工程问题。** 传统软件的 bug 是"代码没按预期执行"，而 Agent 的 bug 有四类，每一类需要完全不同的工具：
 
 ```mermaid
 graph LR
@@ -56,37 +83,9 @@ graph LR
 
 **Tracely 是少数同时覆盖 L3 和 L4 的开源项目**，而且 L4 的实现方式（trace-first + fail-to-pass 契约）是目前唯一一套完整可用的方案。这就是我选它做本周主角的原因。
 
-## 引子：一个测试用例，凭什么从一次线上事故里长出来
-
-2026 年秋天，一个叫 Tracely 的开源项目在 GitHub 上冒出来。不到一个月，⭐ 涨到 946，fork 85。它的 README 开头不讲架构，不讲部署，只写一句话：
-
-> **The recorded run _is_ the test.**
-> （录下来的那次运行，就是测试本身。）
-
-这句话背后藏着一个整个 Agent 工程圈都还没解决好的问题。
-
-我们先摆出今天大多数团队的真实处境。你做了一个 Coding Agent，接了 8 个工具，每天跑两万次。上周三它给一个 500 美元的退款订单走了 50 美元——因为你 prompt 里写的是 "refund the amount",模型理解为"金额小就自己处理"。这个 bug 在生产环境躺了四天。
-
-现在你要写一个回归测试，防止它再犯。你会怎么写？
-
-```python
-def test_refund_above_threshold():
-    result = agent.run("订单 A12345 金额 500 美元，客户要求退款")
-    assert result.amount == 500          # ← 期望值从哪来？
-    assert "escalate_to_human" in result.tools_called
-```
-
-第一个问题立刻浮现：**`result.amount == 500` 这个期望值，只能由你手写**。而你手写它的那个瞬间，你其实是在猜"什么情况下会坏"。你在猜，而不是在记录。
-
-第二个问题更隐蔽：这个测试跑起来要真的调模型、真的调支付网关。于是它**慢**（一次十几秒）、**贵**（一次几毛钱）、**不确定**（模型今天换个说法，测试就红了）。于是团队把它标成 `@pytest.mark.flaky`，三个月后没人再理它。
-
-第三个问题最要命：**测试写的是"期望值"，不是"路径"**。上面那个断言只检查了最终金额，它完全不在乎 Agent 走没走 `check_refund_policy` → `get_order` → `issue_refund` 这条路径。如果哪天模型换了个顺序、或者直接跳过了 `check_refund_policy` 但恰好算出了 500，这个测试照样绿。**路径退化（path regression）检测不到。**
-
-Tracely 的整个架构，就是围绕这三个问题展开的。
-
 ---
 
-## 一、项目定位：它站在 Harness 6 件套的哪个位置
+## 一、项目定位：Tracely 在 Harness 6 件套里的位置
 
 Tracely（[`jwuthri-cloud/Tracely-ai`](https://github.com/jwuthri-cloud/Tracely-ai)）的自我描述是 **"Trace-native CI/CD for AI agents"**。它不生产 Agent，不托管 Agent，它是**给 Agent 当 CI 的那一层**。
 
@@ -126,9 +125,28 @@ Tracely 就是那个关卡。
 > Tracely 的 README 有一节叫 "Why another agent-observability tool?"，第一句是："Because observability stops at the dashboard. You can see that your agent broke — then what?"
 > 它的答案不是"给你更多图"，而是"**给你一个会红的 CI check**"。
 
+### 1.1 本篇聚焦哪一段
+
+上面这张闭环图里，有**两段**是 Tracely 独有的：
+
+```
+   ┌─────────── 第一层（上一篇讲过）───────────┐┌──── 第二层（本篇）────┐
+   │                                          ││                       │
+   ▼                                          ▼▼                       ▼
+ trace ──▶ 判定 PASS/FAIL ──▶ 提升为用例 ──▶ 聚类成 issue ──▶ 均值回退检测
+        （四态判定）        （fail-to-pass）    （签名+阈值）      （逐scenario对齐）
+```
+
+**第一层**：把一次失败变成一个能红的测试。
+**第二层**：把很多次失败变成一张卡、一条趋势、一个不误报的告警。
+
+第二层难在**不确定性**：失败文本是 LLM 写的（措辞每次都不同）、evaluator 集合会抖动、判定是二值的但质量是连续的、"没跑起来"和"跑过了"在传统 CI 里长得一模一样。
+
+**本篇讲的就是怎么对付这四种不确定性。**
+
 ---
 
-## 二、架构分析：机制与策略的分离
+## 二、架构分析：两层防线怎么叠在一起
 
 Tracely 的后端是一个 FastAPI + Celery + ClickHouse + Postgres + Redis + MinIO 的六件套，代码量不小（`backend/tracely/` 下光 Python 文件就过百）。但它的**架构智慧全在 `domain/` 层**——那是一层**纯函数**，没有 I/O、没有 settings、没有 DB 句柄。
 
@@ -138,79 +156,61 @@ Tracely 的后端是一个 FastAPI + Celery + ClickHouse + Postgres + Redis + Mi
 
 翻译过来就是：**你在界面上点"重放"看到的结论，和 CI 里判红/判绿依据的逻辑，是同一段代码**。不会出现"界面显示通过、CI 却拦下来"这种最消耗团队信任的割裂。
 
+更关键的是，这一层纯函数被明确分成了**两条防线带**：
+
 ```mermaid
 graph TB
-    subgraph "接入层 Ingest"
-        I1["📥 OTLP/HTTP 接入"]
-        I2["🗄️ Blob 优先持久化<br/>S3 先落盘再进队列"]
-        I3["🏷️ Agent 语义提升<br/>agent_id / conversation_id<br/>turn / step 变成索引列"]
+    subgraph "防线带 A：判定层（这次到底算不算失败）"
+        direction LR
+        A1["🔢 轨迹构建<br/>domain/trajectory.py"]
+        A2["✅ 断言评估<br/>domain/regression/contract.py"]
+        A3["🎯 判定策略<br/>domain/regression/outcome.py"]
+        A1 --> A2 --> A3
     end
 
-    subgraph "领域层 Domain 纯函数"
-        D1["🔢 轨迹构建<br/>domain/trajectory.py"]
-        D2["✅ 断言评估<br/>domain/regression/contract.py"]
-        D3["🎯 判定策略<br/>domain/regression/outcome.py"]
-        D4["🔍 失败签名<br/>domain/failure/signature.py"]
-        D5["📉 分数回退<br/>domain/gate/score_drop.py"]
+    subgraph "防线带 B：组织层（这些失败该怎么被看见）"
+        direction LR
+        B1["🔍 失败签名<br/>domain/failure/signature.py"]
+        B2["🧩 聚类引擎<br/>domain/failure/clustering.py"]
+        B3["📉 分数回退<br/>domain/gate/score_drop.py"]
+        B1 --> B2
     end
 
-    subgraph "服务层 Services"
-        S1["📊 评测服务<br/>LLM judge + 结构化检查"]
-        S2["🧩 失败聚类服务"]
-        S3["⬆️ 提升服务<br/>trace → EvaluationCase"]
-        S4["🚪 门禁服务"]
+    subgraph "消费端"
+        C1["🚪 CI 门禁<br/>最坏状态决定整体"]
+        C2["🧩 Issue 列表<br/>31 次失败 = 1 张卡"]
+        C3["📊 趋势面板<br/>均值走向"]
     end
 
-    subgraph "消费端 Consumers"
-        C1["🖥️ Web UI"]
-        C2["💻 tracely CLI"]
-        C3["🤖 GitHub Actions"]
-    end
+    A3 --> C1
+    B2 --> C2
+    B3 --> C3
 
-    I1 --> I2 --> I3 --> D1
-    D1 --> D2 --> D3
-    D4 --> S2
-    D5 --> S4
-    S1 --> D3
-    S2 --> S3 --> D2
-    D3 --> S4
-    S4 --> C1
-    D3 --> C2
-    S4 --> C3
-
-    style I1 fill:#C7CEEA,stroke:#9FA8DA,stroke-width:2px,color:#333
-    style I2 fill:#C7CEEA,stroke:#9FA8DA,stroke-width:2px,color:#333
-    style I3 fill:#C7CEEA,stroke:#9FA8DA,stroke-width:2px,color:#333
-    style D1 fill:#E8D5F5,stroke:#CE93D8,stroke-width:2px,color:#333
-    style D2 fill:#E8D5F5,stroke:#CE93D8,stroke-width:2px,color:#333
-    style D3 fill:#E8D5F5,stroke:#CE93D8,stroke-width:2px,color:#333
-    style D4 fill:#E8D5F5,stroke:#CE93D8,stroke-width:2px,color:#333
-    style D5 fill:#E8D5F5,stroke:#CE93D8,stroke-width:2px,color:#333
-    style S1 fill:#FFDAB9,stroke:#FFAB76,stroke-width:2px,color:#333
-    style S2 fill:#FFDAB9,stroke:#FFAB76,stroke-width:2px,color:#333
-    style S3 fill:#FFDAB9,stroke:#FFAB76,stroke-width:2px,color:#333
-    style S4 fill:#FFDAB9,stroke:#FFAB76,stroke-width:2px,color:#333
+    style A1 fill:#E8D5F5,stroke:#CE93D8,stroke-width:2px,color:#333
+    style A2 fill:#E8D5F5,stroke:#CE93D8,stroke-width:2px,color:#333
+    style A3 fill:#E8D5F5,stroke:#CE93D8,stroke-width:2px,color:#333
+    style B1 fill:#FFDAB9,stroke:#FFAB76,stroke-width:2px,color:#333
+    style B2 fill:#FFDAB9,stroke:#FFAB76,stroke-width:2px,color:#333
+    style B3 fill:#FFDAB9,stroke:#FFAB76,stroke-width:2px,color:#333
     style C1 fill:#B5EAD7,stroke:#80CBC4,stroke-width:2px,color:#333
     style C2 fill:#B5EAD7,stroke:#80CBC4,stroke-width:2px,color:#333
     style C3 fill:#B5EAD7,stroke:#80CBC4,stroke-width:2px,color:#333
 ```
 
-三层各自可插拔：
+**防线带 A（判定层）** 回答"**这一次运行算不算失败**"。上一篇已经讲过它的四态判定，本篇补上它最重要的两个盲区修复：静默失败缺口（防线一）和断言哲学（防线二）。
 
-- **接入层**换掉：OTLP 是通用标准，LangChain / OpenAI Agents / CrewAI / Claude Agent SDK / Google ADK 都有自动埋点装饰器（`sdk/tracely_sdk/auto_*.py` 覆盖了 12 个框架）。
-- **领域层**换不掉：这是它的**护城河**。轨迹语义、断言语义、判定语义是资产。
-- **消费端**换掉：CLI、GitHub Action、未来的 GitLab CI，都是薄壳。
+**防线带 B（组织层）** 回答"**这些失败该怎么被看见**"。这是本篇的主角。判定层再准，如果 31 次一样的失败在 issue 列表里占 31 张卡，这个系统就没人会用；判定层再准，如果均值从 0.9 滑到 0.6 而门禁全绿，这个系统就是危险的。
 
 **Less is More 检查**：哪些组件是"模型自己能学会的"，哪些是"外部物理世界必需的"？
 
-- **模型自己能学会的**：判断一段回答好不好、总结一段对话、写一条评估理由——这些全交给 LLM judge，Tracely 不自己发明质量标准。
-- **外部物理世界必需的**：**"这次重放到底跑了没有"、"这个检查到底执行了没有"、"这个 PR 到底能不能合并"** —— 这些是物理世界的事实，不能交给模型推断。Tracely 把大量代码花在这三件事上。
+- **模型自己能学会的**：判断一段回答好不好、总结一段对话、写一条评估理由、给两条失败文本算相似度——这些全交给 LLM judge 或 embedding，Tracely 不自己发明质量标准。
+- **外部物理世界必需的**：**"这次重放到底跑了没有"、"这个检查到底执行了没有"、"这两条失败是不是同一个"、"这个 PR 到底能不能合并"** —— 这些是物理世界的事实，不能交给模型推断。Tracely 把大量代码花在这几件事上。
 
 这就是它的取舍：**质量判断外包给模型，可信性判断留给自己。**
 
 ---
 
-## 三、核心机制一：轨迹（Trajectory）——测的是"路"，不是"答案"
+## 三、防线一：静默失败——"模型请求了"不等于"工具跑了"
 
 Tracely 的 `domain/trajectory.py` 只有 160 行，但它定义了整套评测的语义基础。
 
@@ -252,9 +252,9 @@ _KIND = {
 
 这张表是**机制与策略分界线的具体体现**：Tracely 规定了"轨迹里有哪些种类的步骤"（机制），但"什么算失败"完全交给可插拔的 evaluator（策略）。
 
-### 3.2 "请求了但没执行"——静默失败缺口
+### 3.2 "请求了但没执行"——被忽略的第三种工具集合
 
-这是我认为 Tracely 最锋利的单个设计。轨迹里有两种工具集合：
+这是我认为 Tracely 最锋利的单个设计。轨迹里有**两种**工具集合，而不是一种：
 
 ```python
 def tool_sequence(traj: Trajectory) -> list[str]:
@@ -274,7 +274,7 @@ def requested_tools(traj: Trajectory) -> list[str]:
     return seen
 ```
 
-**为什么这个区分是刚需？** 因为 LLM 的失败模式里，有一类特别隐蔽：**模型正确地"决定"要调用 `escalate_to_human`，但代码里那个 dispatch 分支没实现，于是这步被静默吞掉**。从最终输出看，Agent 说了"已为您处理退款"，一切正常。日志里工具调用记录也是完整的——因为模型确实请求了。
+**为什么这个区分是刚需？** 因为 LLM 的失败模式里有一类特别隐蔽：**模型正确地"决定"要调用 `escalate_to_human`，但代码里那个 dispatch 分支没实现，于是这步被静默吞掉**。从最终输出看，Agent 说了"已为您处理退款"，一切正常。日志里工具调用记录也是完整的——因为模型确实请求了。
 
 但工具根本没跑。
 
@@ -291,6 +291,8 @@ def required_tools(traj: Trajectory) -> list[str]:
     executed = tool_sequence(traj)
     return executed + [t for t in requested_tools(traj) if t not in executed]
 ```
+
+**这个差集还有第二个用途**：它是一个现成的、零成本的**静默失败率度量**。你的 Agent 每 100 次运行里有几次"说要调但没调"，这个数字不需要任何新埋点——它已经存在于你的 span 树里了，只是没人去减。
 
 ### 3.3 把"工具错了"和"Agent 错了"分开
 
@@ -330,15 +332,11 @@ def tools_satisfied(mode: str, produced: list[str], reference: list[str]) -> tup
 
 `strict`（完全一致，含顺序）/ `unordered`（集合一致）/ `subset`（不许多调用）/ `superset`（不许漏调用）——四个语义给不同成熟度的项目用。Tracely 的默认提升策略是 `superset`，理由后面会讲：**这条选择本身就是一道防线。**
 
----
+## 四、防线二：断言的哲学——只锁名字，不锁参数
 
-## 四、核心机制二：fail-to-pass 契约——只有"能区分好坏"的用例才配进门禁
+上一篇讲 fail-to-pass 契约时，我们说"用一次失败的 trace 自动推导断言"。但"**怎么推导**"这一步，才是这条链路里最容易出事的地方。
 
-这是 Tracely 最容易被低估、但工程价值最高的机制。
-
-### 4.1 一个"提升"操作做了什么
-
-`services/regression_service.py` 的 `promote_trace()` 把一条失败的 trace 变成一个回归用例。关键在 `_build_assertions()`：
+Tracely 的 `services/regression_service.py` 里有这么一段，我把它整段贴出来，因为它是整个项目里最值得学的一段工程思维：
 
 ```python
 @staticmethod
@@ -363,16 +361,25 @@ def _build_assertions(traj: Trajectory) -> dict:
     }
 ```
 
-我把这段注释逐句翻译一下，因为它是整个文章里最值得学的一段工程思维：
+我把这段注释逐句翻译一下：
 
 > **刻意只锁工具"名字"，绝不锁工具"参数"。**
 > 这里的参考来自一次生产失败，不是一次"黄金运行"：**断言录下来的参数 = 断言那个 bug 本身**，一个被修好（传对了参数）的 Agent 反而会永远挂在这个用例上。
 
-这解释了一个很多工具会做错的事。假设你的 bug 是"退款金额传错成 50 而不是 500"。最直觉的做法是：把这次 trace 录下来，断言 `issue_refund(amount=50)`。听起来很精确，实际上是**把 bug 焊死在了测试里**。修复之后 Agent 传 500，测试红；测试红，开发者去改测试；改完测试，bug 的保护就没了。
+### 4.1 把 bug 焊死在测试里的陷阱
 
-Tracely 的处理是**诚实地说"这个用例区分不了"**：
+设想一个具体事故：Agent 调了 `issue_refund`，但金额传成了 50 而不是 500。
 
-### 4.2 用例能不能进门禁，由它自己能否区分决定
+最直觉的做法是——把这次 trace 录下来，断言 `issue_refund(amount=50)`。听起来很精确，实际上是**把 bug 焊死在了测试里**：
+
+1. 开发者修好代码，Agent 现在传 500
+2. 测试红了
+3. 开发者去改测试，改成断言 `amount=500`
+4. 测试绿了，**但这个 bug 的保护能力已经没了**
+
+这就是自动化测试里最阴险的一类循环：**测试从"记录现状"变成了"固化现状"**。
+
+Tracely 的处理方式是**诚实地说"这个用例区分不了"**：
 
 ```python
 def _record_fail_to_pass(self, case, spans, trace_id, quality_results=None) -> str:
@@ -387,8 +394,6 @@ def _record_fail_to_pass(self, case, spans, trace_id, quality_results=None) -> s
     recorded = outcome.verdict
     case.fail_to_pass_validated = recorded == "FAIL"
     case.status = "PROMOTED" if case.fail_to_pass_validated else "DRAFT"
-    ...
-    return recorded
 ```
 
 规则简单到可以一句话说完：
@@ -397,7 +402,9 @@ def _record_fail_to_pass(self, case, spans, trace_id, quality_results=None) -> s
 
 这条规则的价值不在"省了一个测试"，而在**防止 CI 门禁变成噪音**。一个永远绿的测试比没有测试更危险——它给人虚假的安全感。
 
-### 4.3 质量评委也能提升用例
+而参数级断言并非不能做——Tracely 支持 `tool_args`（形如 `[{"tool": "issue_refund", "key": "amount", "equals": 500}]`），但它需要**人工写入期望值**，不能自动推导。**自动推导的和人工撰写的，必须分开存放、分开标注。** 这是一条很干净的边界。
+
+### 4.2 质量评委也能提升用例
 
 ```python
 # Answer-quality judges that the SOURCE trace failed → the case guards against them too,
@@ -418,129 +425,11 @@ if quality_failed:
 
 ---
 
-## 五、核心机制三：UNAVAILABLE ≠ PASS——门禁最容易被忽略的漏洞
-
-如果这篇博客只能留一段代码，我会留这一段。
-
-### 5.1 四态判定
-
-`domain/regression/outcome.py` 定义了四个判定状态，而不是两个：
-
-```python
-PASS, FAIL, INCOMPLETE, SKIP, UNAVAILABLE = "PASS", "FAIL", "INCOMPLETE", "SKIP", "UNAVAILABLE"
-# Bumped when the aggregation rules below change, so a stored result says which policy made it.
-POLICY = "required-checks/v1"
-
-# The gate statuses, worst last. NO_COVERAGE (suite exercised nothing) and INCOMPLETE (a case
-# could not be fully checked) both block; FAIL names an actual regression.
-GATE_SEVERITY = {"PASS": 0, "NO_COVERAGE": 1, "INCOMPLETE": 2, "FAIL": 3}
-```
-
-传统 CI 只有 pass/fail。但对 Agent 评测来说有第三种情况：**评测本身没跑起来**。
-
-- LLM judge 的 API key 没了
-- fixture bundle 文件损坏
-- 重放时 agent 进程崩了
-- ClickHouse 查询超时
-
-这时候如果按二值逻辑，"没有 FAIL 记录" = PASS，那么**一次基础设施抖动就会让你的回归门禁静悄悄地放行一个真正有问题的 PR**。
-
-Tracely 的处理：
-
-```python
-def aggregate(checks: list[Check], execution: Execution) -> str:
-    """The verdict policy. Order matters: a behavioural FAIL outranks an execution problem so the
-    two stay distinguishable even when both block; an unavailable REQUIRED check can never be
-    read as a pass; advisory checks never decide."""
-    required = [c for c in checks if c.required]
-    if any(c.status == FAIL for c in required):
-        return FAIL
-    if not execution.complete or any(c.status == UNAVAILABLE for c in required):
-        return INCOMPLETE
-    return PASS
-```
-
-三行代码，三条不变量：
-
-1. **行为 FAIL 优先于执行问题**——两者都拦 PR，但要能区分"这代码坏了"和"这检查跑不动"
-2. **UNAVAILABLE 的必选检查绝不能被读成 PASS**
-3. **advisory 检查不参与决策**（下面会讲 advisory 是什么）
-
-### 5.2 期望的评委没返回结果 = UNAVAILABLE
-
-```python
-expected = list(((assertions.get("quality") or {}).get("score_names")) or [])
-got = {q.get("score_name"): q for q in quality or []}
-for name in expected:
-    q = got.get(name)
-    if not execution.complete:
-        checks.append(Check(f"quality:{name}", quality_blocks, UNAVAILABLE,
-                           f"not evaluated: {execution.problem}"))
-    elif q is None:
-        checks.append(Check(
-            f"quality:{name}", quality_blocks, UNAVAILABLE,
-            "judge returned no result (no LLM key for this workspace, judge disabled or "
-            "deleted, or it errored)",
-        ))
-    ...
-```
-
-注释里那句 "An empty or partial list never implies the answer was checked" 是整段代码的题眼。
-
-**这是所有"LLM-as-judge"系统最大的静默失效点。** 你配了一个质量评委，某天它因为超时挂了。你的聚合逻辑收了一个空列表——"没有失败记录"，于是打绿。团队以为质量门禁在工作，实际上它已经三天没工作了，而且没人知道。
-
-Tracely 把它变成 UNVAILABLE，标红，拦 PR。
-
-### 5.3 Advisory：主观判断不该拦 PR
-
-```python
-def is_failing(scores: Iterable[dict], advisory: Sequence[str]) -> bool:
-    """True iff any score is a FAIL on an evaluator not in the advisory set."""
-    adv = set(advisory)
-    return any(s.get("verdict") == "FAIL" and s.get("name") not in adv for s in scores)
-```
-
-这个模块的 docstring 甚至记录了一次重构的历史：
-
-> This replaces the old `name != 'tracely.run.quality'` magic string (which special-cased one judge and was applied to the threads-list dot but not the trace badge or session verdict, so the same trace could show a green dot in the list and "EVALS FAIL" on its detail page).
-
-**同一个 trace 在列表页显示绿点、在详情页显示 EVALS FAIL** —— 这是所有自研评测系统都会犯的低级但致命的 bug。Tracely 的解法是把 advisory 变成 evaluator 的一个属性，并且规定"**这里是唯一应用这条规则的地方**"：
-
-> The advisory set is now a per-evaluator property (`config.advisory`) and this is the ONE place the Python read paths apply it; the ClickHouse readers apply the identical rule in SQL via `name NOT IN {advisory}`.
-
-Python 和 SQL 两条读路径必须给出同一答案。这种"**规则只有一处定义**"的纪律，是我认为这个项目最值得学的工程习惯。
-
-### 5.4 门禁聚合：最坏状态决定整体
-
-```python
-def gate_status(passed, failed, skipped, incomplete, total, *, require_full_coverage=False) -> str:
-    """Aggregate case verdicts into the gate status — the policy table, in order:
-
-        any FAIL                          → FAIL          a known regression came back
-        no cases at all                   → PASS          nothing to protect yet (vacuous; the UI
-                                                          must not present this as a first test)
-        any INCOMPLETE                    → INCOMPLETE    a case could not be fully checked
-        nothing passed (all SKIP)         → NO_COVERAGE   the run exercised none of the suite
-        some SKIP + full coverage required → NO_COVERAGE
-        otherwise                         → PASS
-    """
-```
-
-注意 `no cases at all → PASS` 旁边那句括号里的提醒：
-
-> **(vacuous; the UI must not present this as a first test)**
-
-空真（vacuous truth）。一个套件里零个用例，逻辑上"没有任何失败"= 通过。但**界面绝不能把这显示成"你的第一个测试通过了"**——那是欺骗。Tracely 在代码注释里专门留了这条约束，说明他们踩过这个坑。
-
-而 `NO_COVERAGE`（全部 SKIP，即一次都没真正跑）是**拦 PR 的**。这跟传统 CI 的直觉相反：传统 CI 里"没跑测试"通常不算失败。但对 Agent 门禁来说，"没跑"意味着**这次 PR 的行为完全没被验证过**，放行等于裸奔。
-
----
-
-## 六、失败聚类：把 31 次失败变成 1 个 issue
+## 五、防线三 + 四 + 五：把 31 次失败变成 1 个 issue
 
 线上一次事故往往是成片的——同一个 bug 触发 31 次。Tracely 需要把它们合成一个 issue，否则你的 issue 列表会被淹没。
 
-### 6.1 结构签名：廉价的第一层聚类
+### 5.1 结构签名：廉价的第一层聚类
 
 `domain/failure/signature.py` 的注释直接说明了问题：
 
@@ -572,7 +461,7 @@ sig = " || ".join(failed) + " ## " + " || ".join(comment_list)
 key = hashlib.sha256(sig.encode()).hexdigest()[:16]
 ```
 
-### 6.2 文本覆盖阈值：为什么 0.9 这个数字很重要
+### 5.2 文本覆盖阈值：为什么 0.9 这个数字很重要
 
 哈希只是**第一次查找**用的 key。真正常的判定在 `matches()`：
 
@@ -620,7 +509,7 @@ def similarity(a: frozenset[str], b: frozenset[str]) -> float:
 
 这是个很多人会踩的坑：做文本相似度时通常会一起干掉 "not"，于是"回答有帮助"和"回答没有帮助"变成同一个词。Tracely 明确保留。
 
-### 6.3 什么时候不用 UMAP
+### 5.3 什么时候不用 UMAP
 
 `domain/failure/clustering.py` 里有个反直觉的判断：
 
@@ -642,7 +531,7 @@ else:
 
 ---
 
-## 七、门禁的另一面：分数回退检测
+## 六、防线六：门禁的另一面——verdict 看不见的分数下滑
 
 还有一类失败，**verdict 根本抓不到**。
 
@@ -652,6 +541,8 @@ Tracely 的 `domain/gate/score_drop.py` 开头就点破了：
 > （一个通过的 scenario 门禁仍然可能比上一次更差：每个对话都过了及格线，而目标完成度评委从 0.9 滑到 0.6。**verdict 看不见这个，mean 可以。**）
 
 这是二值判定的天生盲区。如果你的及格线是 0.7，那么从 0.95 掉到 0.75 全是绿的。
+
+### 6.1 二值判定的天生盲区
 
 ```python
 def score_drops(current, baseline, threshold, exclude=()) -> list[ScoreDrop]:
@@ -696,73 +587,69 @@ if not unit_scale[name]:
 
 ---
 
-## 八、横向对比：Tracely 和 Langfuse / Opik / promptfoo 的根本差异
+## 七、横向对比：组织层这一层，业界是怎么做的
 
-这一节必须先说清楚：**Langfuse（37k⭐）、Opik（23k⭐）、promptfoo（27k⭐）都是极其优秀的项目**，Tracely（946⭐）和它们不是同一量级。但它们解决的问题**确实不同**，而且 Tracely 在一个点上做得比它们都彻底。
+上一篇已经对比过"测试从哪来"这个维度。这里只聚焦**本篇的组织层**——失败怎么被组织、怎么被看见。
 
-### 8.1 核心差异：数据集 vs 轨迹
+### 7.1 四种组织方式
 
-Tracely 的 `design/part2-tracely/05-regression-testing.md` 有一张对照表，我直接引用它的核心对比：
+| 维度 | **Langfuse**（37k⭐） | **Opik**（23k⭐） | **promptfoo**（27k⭐） | **Tracely**（946⭐） |
+|------|---------------------|-------------------|----------------------|-------------------|
+| 失败的基本单位 | Score 行（一条 trace 一个分数） | Score / Feedback | 一次测试运行 | **FailureCluster**（31 次失败 = 1 张卡） |
+| 怎么组织多个失败 | 按 score name 聚合 | 按 filter 分组 | 按测试文件 | **结构签名 + 文本相似度 + 0.9 覆盖阈值** |
+| 会不会重复聚类 | 不会聚类 | 依赖 OTel attributes | 依赖 YAML 命名约定 | **显式防重**：集合抖动走 0.9 覆盖，集合不相交走反向规则 |
+| 聚类算法 | 无 | 走 OTel 的语义属性 | 无 | **按 n 选型**：小样本禁 UMAP，大样本才降维 |
+| 门禁看什么 | 单次 score 阈值 | 单次 score 阈值 | 单个 assertion 通过率 | **verdict + 均值回退**（双通道） |
+| 均值下滑能发现吗 | ❌ 要自己写查询 | ❌ 要自己配 dashboard | ❌ | ✅ **逐 scenario 对齐 + 量纲隔离** |
+| 修复建议 | 无 | 有 meta-analysis | 无 | **每个簇建议"该配哪个 evaluator"** |
 
-| 维度 | 数据集行（行业惯例） | Tracely `EvaluationCase` |
-|---|---|---|
-| 单元 | `{input, expected_output}` JSON | 一次生产 trace 的**冻结切片** + 录制的 fixtures |
-| 断言什么 | 最终输出的相似度 | **完整参考轨迹**（Steps / ToolCalls / handoffs）+ 可选输出评分 |
-| 确定性 | 重跑命中真实工具和模型 → flaky、昂贵 | **hermetic 重放**录制好的 fixture → 确定性、免费 |
-| 溯源 | 无 | `source_trace_id`、`failure_cluster_id`、`agent_version_first_failed` |
-| 正确性契约 | "平均分没掉" | **fail-to-pass**：必须在坏版本上 FAIL，在修复版上 PASS |
-| 来源 | dataset-first（先攒，再测） | **trace-first**（生产失败 → 聚类 → 起草 → 确认 → 永久） |
+### 7.2 设计哲学的分歧点
 
-Tracely 自己的总结最狠：
+三个竞品在这一层有一个共同点：**它们都假设"失败"是一个已经确定的事实**。你配了 evaluator，它判 FAIL，这就是一条失败。至于这一条失败和上一条失败是不是同一个问题——**它们不管**，因为在"评分"的世界观里，这个问题不存在：每一行数据就是一个独立的观测。
 
-> The dataset model cannot express "the exact failure trajectory we saw last Tuesday must not recur." The `EvaluationCase` is *defined* by that trajectory.
+Tracely 的世界观不一样。它假设**失败是需要被归类的**——因为失败的下一个动作是"开一张 issue 卡去修"，而如果 31 次事故开 31 张卡，你根本修不过来。
 
-**"数据集模型无法表达'上周二我们看到的那条确切的失败轨迹不许再发生'。"** 因为数据集行的结构是 `{input, expected_output}`，**它没有地方放轨迹**。这不是功能没做，是数据模型本身表达不了。
+于是它的组织层做了三件别家没做的事：
 
-### 8.2 三个竞品的不同定位
+1. **失败有了签名**（掩码 + evaluator 集合），所以失败有了**身份**，可以像 bug 一样被追踪、去重、被关联到修复
+2. **簇会建议 evaluator**：*"这个失败模式应该配一个什么样的 evaluator 才能提前抓住"* —— 这条建议链路把"发现 bug"和"预防 bug"自动连起来了
+3. **均值也进决策**：不只是"这一条过没过"，还有"整体是不是在变差"
 
 ```mermaid
 graph LR
-    subgraph "传统 Eval 工具"
-        L1["📊 Langfuse<br/>可观测 + 评测平台"]
-        O1["📈 Opik<br/>调试 + 评测 + 监控"]
-        P1["🧪 promptfoo<br/>Prompt 回归 + 红队"]
+    subgraph "竞品：观测世界"
+        L1["📊 Langfuse<br/>trace → score"]
+        O1["📈 Opik<br/>trace → score + feedback"]
     end
-    subgraph "Tracely"
-        T1["🎯 Tracely<br/>Trace → 回归 → CI 门禁"]
+    subgraph "Tracely：工程世界"
+        T1["🎯 trace → 判定<br/>PASS/FAIL"]
+        T2["🔍 判定 → 签名<br/>掩码 + 集合"]
+        T3["🧩 签名 → 簇<br/>相似度 + 阈值"]
+        T4["📉 历史 → 均值<br/>回退检测"]
+        T5["🛠️ 簇 → 建议<br/>该配什么 evaluator"]
     end
 
-    L1 -->|"手动手写 dataset"| X1["📝 dataset 行<br/>{input, expected_output}"]
-    O1 --> X1
-    P1 --> X1
-    X1 -.->|"需要人工想象<br/>什么会坏"| GAP["❓ 覆盖缺口"]
+    L1 --> X["📋 每一行都是<br/>独立观测"]
+    O1 --> X
+    X -.->|"没人归类<br/>=> issue 列表爆炸"| GAP["❌ 31 次事故<br/>31 张卡"]
 
-    T1 -->|"自动从生产失败<br/>推导断言"| CASE["🧱 EvaluationCase<br/>fixtures + 参考轨迹<br/>+ fail-to-pass 契约"]
-    CASE --> GATE["🚪 CI 门禁<br/>$0 成本重放"]
+    T1 --> T2 --> T3 --> T5
+    T3 --> T4
+    T4 --> GATE["🚪 门禁双通道<br/>verdict + 均值"]
 
     style L1 fill:#C7CEEA,stroke:#9FA8DA,stroke-width:2px,color:#333
     style O1 fill:#C7CEEA,stroke:#9FA8DA,stroke-width:2px,color:#333
-    style P1 fill:#C7CEEA,stroke:#9FA8DA,stroke-width:2px,color:#333
     style T1 fill:#FFB3C6,stroke:#F06292,stroke-width:2px,color:#333
-    style X1 fill:#FFDAB9,stroke:#FFAB76,stroke-width:2px,color:#333
+    style T2 fill:#FFB3C6,stroke:#F06292,stroke-width:2px,color:#333
+    style T3 fill:#FFB3C6,stroke:#F06292,stroke-width:2px,color:#333
+    style T4 fill:#FFB3C6,stroke:#F06292,stroke-width:2px,color:#333
+    style T5 fill:#FFB3C6,stroke:#F06292,stroke-width:2px,color:#333
+    style X fill:#FFDAB9,stroke:#FFAB76,stroke-width:2px,color:#333
     style GAP fill:#FFF9C4,stroke:#F9A825,stroke-width:2px,color:#333
-    style CASE fill:#B5EAD7,stroke:#80CBC4,stroke-width:2px,color:#333
     style GATE fill:#B5EAD7,stroke:#80CBC4,stroke-width:2px,color:#333
 ```
 
-**Langfuse**（37k⭐，MIT）：事实上的可观测性标准，OTLP 原生、trace 树做得最好。它的评测模块是 dataset-first 的——你建 dataset、写期望值、跑 experiment。它的强项是"看清楚发生了什么"，弱项是"**然后呢**"。
-
-**Opik**（23k⭐，Apache-2.0，Comet 出品）：在 Langfuse 基础上加了在线监控和模拟（simulation）。它的 simulation 概念和 Tracely 的 `mode=simulate` 有点像，但 Tracely 的 simulate 产出的是**可复用的场景（scenario）**，且能同时跑"录制重放"和"实时多轮对话"两种模式。
-
-**promptfoo**（27k⭐，MIT）：最强的领域是 **prompt 回归 + 红队**。它有成熟的 YAML 断言语法和 50+ 种内置断言类型，测试用例**通常也是手写 YAML**。但它测的对象偏"prompt + 静态输入"，对"Agent 走过的路径"的建模较弱。
-
-**Tracely** 的差异不在功能列表，在**数据模型的方向**：
-
-- 三者都从"人手写期望"出发 → Tracely 从"生产已经发生的事实"出发。
-- 三者的正确性契约是"分数没下降" → Tracely 是"必须在坏版本上 FAIL"（fail-to-pass）。
-- 三者的测试跑起来要调真模型（贵、慢、flaky） → Tracely 重放录制好的 fixture（$0、确定性）。
-
-### 8.3 一个诚实的评价
+### 7.3 一个诚实的评价
 
 Tracely 的架构设计水平**明显高于**它的社区体量。946⭐ 的项目里有 22 篇设计文档、140+ 个后端测试、5 个 agent 框架的自动埋点、6 种存储的完整部署方案——这是大厂团队的工作量。
 
@@ -771,13 +658,16 @@ Tracely 的架构设计水平**明显高于**它的社区体量。946⭐ 的项�
 - **生态薄**。Langfuse 有 37k⭐ 和无数集成，Tracely 只有自己。SDK 自动埋点覆盖 12 个框架，但每多一个框架就多一份维护负担。
 - **ClickHouse 依赖重**。整套东西要 ClickHouse + Postgres + Redis + MinIO + Celery 五个组件才能跑起来，self-host 门槛不低。
 - **单人主导**。近 30 天只有 26 次 commit，虽然质量极高，但 bus factor = 1。
+- **组织层还是"半自动"的**。聚类用的是廉价签名 + token 重叠，真正的语义聚类（embedding + UMAP + HDBSCAN）只在数据量够大时才启用。小团队可能永远停留在"签名 + 阈值"这一档。
 - **Judge 校准还在早期**。Tracely 有 judge calibration 界面（标 human review 看一致率），但这个功能本身说明"LLM judge 的可靠性"这个问题在它这里**还没有完全解决**。
+
+**和上一篇的关系**：上一篇讲的第一层（trace → 用例）已经是业界少见的完整实现；这一篇讲的第二层（失败 → issue → 门禁盲区）则是**更少有人做的领域**。两层的组合，让 Tracely 成为目前唯一把"Agent 的失败"当成**软件工程里的一等公民**来对待的开源项目。
 
 ---
 
-## 九、优缺点分析
+## 八、优缺点分析
 
-### 9.1 左侧：架构简洁性 / 扩展性 / 易用性
+### 8.1 左侧：架构简洁性 / 扩展性 / 易用性
 
 **架构简洁性：优秀。** `domain/` 层的纯函数设计是教科书级别的。每个模块的 docstring 第一行就声明了它的边界：
 
@@ -797,24 +687,27 @@ POLICY = "required-checks/v1"
 
 **半年后有人改了聚合规则，历史 verdict 能自己说清"我当时是被哪版策略判的"**。这个细节的成本几乎为零，收益是历史数据永久可解释。
 
+组织层那几个模块也一样——`signature.py`、`clustering.py`、`score_drop.py` 全是纯函数，**零 I/O、零依赖**，可以直接抄进你的项目（本篇的 MVP 就是这么来的）。
+
 **扩展性：优秀。** 三层解耦得很干净：
 - 换接入源 → 加个 OTLP 导出或 SDK 装饰器（已有 12 个自动埋点）
 - 换评测逻辑 → 在 `default_registry` 注册新 evaluator，`kind = "structural"` 或 `"llm"`
+- 换聚类策略 → `ClusterEngine.labels_for()` 内部按 `n` 选型，外层不需要知道
 - 换消费端 → CLI / GitHub Action 是薄壳，退出码就是契约
 
 **易用性：中等。** 好的一面：CLI 只有一个命令 `tracely gate`，GitHub Action 有 `mode=simulate`（无需在 CI 里跑 Agent 代码）和 `mode=gate`（重放已提升用例）两种模式。坏的一面：自托管要拉起 6 个服务；`tracely.yaml` 的 endpoint 注册表、`TRACELY_RUN_ID` 环境变量约定，都需要读文档。
 
-### 9.2 右侧：性能 / 复杂度 / 维护性
+### 8.2 右侧：性能 / 复杂度 / 维护性
 
-**性能：优秀。** hermetic 重放是纯本地计算——不调模型、不调工具，一次门禁跑几十个用例的边际成本接近零。这是它相对 promptfoo / Langfuse eval 的**数量级优势**。
+**性能：优秀。** hermetic 重放是纯本地计算——不调模型、不调工具，一次门禁跑几十个用例的边际成本接近零。这是它相对 promptfoo / Langfuse eval 的**数量级优势**。聚类层也便宜：廉价签名是 O(1) 哈希，只有数据量大时才升级到 embedding 路径。
 
 **复杂度：高。** 六件套基础设施 + ClickHouse 的 OLAP schema + OTLP 归一化三种 message 约定 + 26 个数据库迁移……对于一个"想给 Agent 加个 CI 门禁"的团队，这个门槛不低。
 
 **维护性：分化明显。**
-- `domain/` 层：极好。纯函数、有测试、边界清晰。
+- `domain/` 层：**极好**。纯函数、有测试、边界清晰。本篇的 MVP 就是从这一层直接抽的。
 - `services/` 层：一般。重度依赖 SQLAlchemy session + ClickHouse，事务边界复杂（`promote_trace` 里那段"一个提升 = 一个事务，blob 先写再 commit，ClickHouse 写在 commit 之后"的注释说明作者踩过坑）。
 
-### 9.3 关键加分项：连"门禁自己不能作恶"都想到了
+### 8.3 关键加分项：连"门禁自己不能作恶"都想到了
 
 GitHub Action 里有一段我反复读了两遍的代码：
 
@@ -841,453 +734,400 @@ env:
 
 GitHub Actions 最经典的漏洞就是 `${{ }}` 直接插进 `run:` 块。这里全部走 `env:`，攻击者控制的 agent 名字进不了 shell。
 
+### 8.4 组织层这一层，Tracely 领先多少？
+
+坦率地说：**领先很多，但领先的是一个还没被充分验证的方向。**
+
+| 维度 | 领先程度 | 说明 |
+|------|---------|------|
+| 失败签名 + 文本覆盖 | **显著领先** | 竞品基本没有做失败聚类，Tracely 的实现也很扎实 |
+| 聚类算法选型 | **显著领先** | "小样本禁用 UMAP"这个判断，竞品和多数自研方案都会踩坑 |
+| 均值回退检测 | **显著领先** | 这是 Tracely 独有的门禁第二通道 |
+| 语义聚类 | **领先但未验证** | 只有数据量大才启用，小团队用不上 |
+| Judge 校准 | **领先但在早期** | 有界面，但"judge 本身可靠吗"这个问题还在探索 |
+| 生态 | **明显落后** | 946⭐ vs Langfuse 37k⭐，集成数量差距巨大 |
+
+**这个"领先但未验证"的状态其实很健康**——说明它选的是一个**还没被充分做过的方向**，而不是在已经被做透的地方再加一个功能。
+
 ---
 
-## 十、从零搭建启示：如果你要复刻这个思路
+## 九、从零搭建启示：如果你要复刻这个思路
 
-### 10.1 最小可行实现（MVP）
+上一篇给过一个"trace → 回归用例 → 门禁"的 200 行 MVP。这一篇给你**另一个** 200 行——专门实现本篇讲的**组织层**机制：失败签名、聚类判定、分数回退。
 
-不需要 ClickHouse，不需要 Redis，不需要前端。**一个 Python 文件 + 一个 JSON fixtures 文件**就能拿到 Tracely 80% 的核心价值。
+### 9.1 最小可行实现（MVP）
 
-下面是本文的完整复刻（抽离自 Tracely 的 `domain/trajectory.py` + `domain/regression/contract.py` + `domain/regression/outcome.py` 三个纯函数模块，约 300 行，可直接运行）：
+不需要 ClickHouse，不需要 embedding 模型，不需要 LLM。**纯 Python 标准库，200 行**，就能拿到组织层 80% 的价值。
 
 ```python
 """
-tracely_mvp.py — 从 jwuthri-cloud/Tracely-ai 抽离的核心机制复刻
+tracely_cluster_mvp.py — 从 jwuthri-cloud/Tracely-ai 抽离的"组织层"机制复刻
 
 抽离自三个文件（都是 "pure: no I/O" 的领域层）：
-  backend/tracely/domain/trajectory.py          — 轨迹模型 + 工具序列提取
-  backend/tracely/domain/regression/contract.py — 断言评估
-  backend/tracely/domain/regression/outcome.py   — 判定策略（PASS/FAIL/INCOMPLETE）
+  backend/tracely/domain/failure/signature.py   — 掩码签名 + Jaccard 相似度 + 0.9 覆盖阈值
+  backend/tracely/domain/failure/clustering.py  — 聚类算法选型（n 小不用 UMAP）
+  backend/tracely/domain/gate/score_drop.py     — 逐 scenario 对齐的分数回退检测
+
+跑法：python3 tracely_cluster_mvp.py
 """
 from __future__ import annotations
 
-import json
-from dataclasses import dataclass, field
-from typing import Any
+import hashlib
+import re
+from dataclasses import dataclass
+
+# ── 掩码：把易变的部分抹掉 ──────────────────────────────────
+_MASK_PATTERNS = [
+    (re.compile(r"\b[0-9a-f]{8,}\b", re.I), "<id>"),   # hex/uuids
+    (re.compile(r"\b\d+(\.\d+)?\b"), "<n>"),        # numbers
+    (re.compile(r"'[^']*'|\"[^\"]*\""), "<*>"),      # quoted strings
+]
+_WS = re.compile(r"\s+")
+
+# 样板词：每个 judge 评论都会重复的词。否定词故意保留
+# —— "helpful" 和 "not helpful" 绝不能看起来一样。
+_BOILERPLATE = frozenset(
+    """a an the this that these those it its is are was were be been being do does did doing
+    of to for and or as in on at by with from into about there here which who whom what when
+    have has had only just any some such
+    agent response responses answer answers reply replies output outputs result results user
+    users assistant model llm trace run turn span message messages provide provides provided
+    """.split()
+)
+_WORD = re.compile(r"[a-z]+")
+
+# 文本相似度高于此值 => 同一个 issue，不管 evaluator 集合是否相同
+_TEXT_MATCH_OVERRIDE = 0.9
 
 
-# ── 第一部分：轨迹模型（对应 domain/trajectory.py）──
-@dataclass
-class TrajectoryStep:
-    kind: str
-    name: str
-    level: str = "DEFAULT"          # "ERROR" 表示这一层出错
-    tool_calls: list[str] = field(default_factory=list)
-    input: Any = None
-
-    @property
-    def errored(self) -> bool:
-        return self.level == "ERROR"
+def mask(text: str) -> str:
+    """抹掉易变部分（id / 数字 / 引号字符串），并折叠空白。"""
+    out = text
+    for pat, repl in _MASK_PATTERNS:
+        out = pat.sub(repl, out)
+    return _WS.sub(" ", out).strip()
 
 
-@dataclass
-class Trajectory:
-    steps: list[TrajectoryStep] = field(default_factory=list)
-
-    def executed_tools(self) -> list[str]:
-        return [s.name for s in self.steps if s.kind == "tool"]
-
-    def requested_tools(self) -> list[str]:
-        seen: list[str] = []
-        for s in self.steps:
-            for t in s.tool_calls:
-                if t and t not in seen:
-                    seen.append(t)
-        return seen
-
-    def required_tools(self) -> list[str]:
-        executed = self.executed_tools()
-        return executed + [t for t in self.requested_tools() if t not in executed]
-
-    def split_errors(self) -> tuple[list[str], list[str]]:
-        tool_errs = [s.name for s in self.steps if s.errored and s.kind == "tool"]
-        run_errs = [s.name for s in self.steps if s.errored and s.kind != "tool"]
-        return tool_errs, run_errs
+def tokens(text: str) -> frozenset[str]:
+    """内容词：小写、去掉样板词和单字符噪声。"""
+    return frozenset(w for w in _WORD.findall(text.lower())
+                     if len(w) > 1 and w not in _BOILERPLATE)
 
 
-# ── 第二部分：断言评估（对应 domain/regression/contract.py）──
-def tools_satisfied(mode, produced, reference):
-    missing = [t for t in reference if t not in produced]
-    extra = [t for t in produced if t not in reference]
-    if mode == "strict":
-        ok = produced == reference
-    elif mode == "unordered":
-        ok = sorted(produced) == sorted(reference)
-    elif mode == "subset":
-        ok = len(extra) == 0
-    else:
-        ok = len(missing) == 0
-    return ok, missing, extra
+def similarity(a: frozenset[str], b: frozenset[str]) -> float:
+    """Jaccard 重叠。故意不用 containment：containment 会把任何一条短失败
+    并进一条碰巧包含它某个词的长失败里。"""
+    if not a or not b:
+        return 0.0
+    return len(a & b) / len(a | b)
 
 
-def evaluate_assertions(assertions, match_mode, traj):
-    produced = traj.executed_tools()
-    ref_tools = assertions.get("required_tools", [])
-    mode = assertions.get("match_mode", match_mode or "superset")
-    tools_ok, missing, extra = tools_satisfied(mode, produced, ref_tools)
-
-    allow_tool_errors = assertions.get("allow_tool_errors", False)
-    tool_errs, run_errs = traj.split_errors()
-    if not assertions.get("no_error", True):
-        error_ok = True
-    elif allow_tool_errors:
-        error_ok = len(run_errs) == 0
-    else:
-        error_ok = not (tool_errs or run_errs)
-
-    forbidden = [t for t in assertions.get("forbidden_tools") or [] if t in produced]
-    limits = assertions.get("max_tool_calls") or {}
-    over = [f"{t}: called {produced.count(t)}x, max {n}"
-            for t, n in limits.items() if isinstance(n, int) and produced.count(t) > n]
-
-    passed = tools_ok and error_ok and not forbidden and not over
-    detail = {
-        "passed": passed, "tools_ok": tools_ok, "error_ok": error_ok,
-        "missing_tools": missing, "extra_tools": extra,
-        "forbidden_hit": forbidden, "count_violations": over,
-        "tool_errors": tool_errs, "run_errors": run_errs, "match_mode": mode,
-    }
-    return ("PASS" if passed else "FAIL"), detail
+def eval_names(signature: str) -> frozenset[str]:
+    """签名里失败的 evaluator 名字集合。"""
+    part = signature.split(" ## ", 1)[0]
+    return frozenset(n for n in part.split(" || ") if n)
 
 
-# ── 第三部分：判定策略（对应 domain/regression/outcome.py）──
-PASS, FAIL, INCOMPLETE = "PASS", "FAIL", "INCOMPLETE"
+def text_part(signature: str) -> str:
+    return signature.split(" ## ", 1)[-1]
 
 
-@dataclass
-class Check:
-    name: str
-    required: bool
-    status: str          # PASS / FAIL / UNAVAILABLE
-    reason: str = ""
+@dataclass(frozen=True)
+class FailureSignature:
+    """一条失败运行的签名。
 
-
-@dataclass
-class Execution:
-    mode: str = "unknown"
-    problem: str = ""    # 非空 = 没跑完
-
-    @property
-    def complete(self) -> bool:
-        return not self.problem
-
-
-def aggregate(checks, execution):
-    required = [c for c in checks if c.required]
-    if any(c.status == FAIL for c in required):
-        return FAIL
-    if not execution.complete or any(c.status == "UNAVAILABLE" for c in required):
-        return INCOMPLETE
-    return PASS
-
-
-def evaluate_contract(assertions, match_mode, traj, *, quality=None,
-                      quality_blocks=True, execution=None):
-    execution = execution or Execution()
-    _, detail = evaluate_assertions(assertions, match_mode, traj)
-    checks: list[Check] = []
-
-    if not execution.complete:
-        why = f"not evaluated: {execution.problem}"
-        checks.append(Check("tools", True, "UNAVAILABLE", why))
-        if assertions.get("no_error", True):
-            checks.append(Check("no_error", True, "UNAVAILABLE", why))
-    else:
-        reason = ""
-        if detail["missing_tools"]:
-            reason = "missing tools: " + ", ".join(detail["missing_tools"])
-        elif not detail["tools_ok"]:
-            reason = f"tool sequence mismatch (mode={detail['match_mode']})"
-        checks.append(Check("tools", True, PASS if detail["tools_ok"] else FAIL, reason))
-
-        if assertions.get("no_error", True):
-            err_reason = ""
-            if detail["run_errors"]:
-                err_reason = "run failed: " + ", ".join(detail["run_errors"])
-            elif not detail["error_ok"]:
-                err_reason = "errors: " + ", ".join(detail["tool_errors"] + detail["run_errors"])
-            checks.append(Check("no_error", True, PASS if detail["error_ok"] else FAIL, err_reason))
-
-        if assertions.get("forbidden_tools"):
-            hit = detail.get("forbidden_hit") or []
-            checks.append(Check("forbidden_tools", True, FAIL if hit else PASS,
-                               ("called: " + ", ".join(hit)) if hit else ""))
-        if assertions.get("max_tool_calls"):
-            over = detail.get("count_violations") or []
-            checks.append(Check("call_counts", True, FAIL if over else PASS, "; ".join(over)))
-
-    expected = list(((assertions.get("quality") or {}).get("score_names")) or [])
-    got = {q.get("score_name"): q for q in quality or []}
-    for name in expected:
-        q = got.get(name)
-        if not execution.complete:
-            checks.append(Check(f"quality:{name}", quality_blocks, "UNAVAILABLE",
-                               f"not evaluated: {execution.problem}"))
-        elif q is None:
-            checks.append(Check(f"quality:{name}", quality_blocks, "UNAVAILABLE",
-                               "judge returned no result"))
-        elif q.get("verdict") == FAIL:
-            checks.append(Check(f"quality:{name}", quality_blocks, FAIL, str(q.get("comment") or "")))
-        elif q.get("verdict") == PASS:
-            checks.append(Check(f"quality:{name}", quality_blocks, PASS, str(q.get("comment") or "")))
-        else:
-            checks.append(Check(f"quality:{name}", quality_blocks, "UNAVAILABLE", "judge gave no verdict"))
-
-    return aggregate(checks, execution), checks
-
-
-# ── 第四部分：场景演示 ──
-def build_broken_run() -> Trajectory:
-    """生产事故：Agent 请求了 escalate_to_human，但从来没调用它（静默失败）。"""
-    return Trajectory(steps=[
-        TrajectoryStep(kind="llm", name="gpt-4o",
-                       tool_calls=["get_order", "issue_refund", "escalate_to_human"]),
-        TrajectoryStep(kind="tool", name="get_order"),
-        TrajectoryStep(kind="tool", name="issue_refund"),
-        TrajectoryStep(kind="llm", name="gpt-4o"),
-    ])
-
-
-def build_fixed_run() -> Trajectory:
-    return Trajectory(steps=[
-        TrajectoryStep(kind="llm", name="gpt-4o",
-                       tool_calls=["get_order", "issue_refund", "escalate_to_human"]),
-        TrajectoryStep(kind="tool", name="get_order"),
-        TrajectoryStep(kind="tool", name="issue_refund"),
-        TrajectoryStep(kind="tool", name="escalate_to_human"),
-        TrajectoryStep(kind="llm", name="gpt-4o"),
-    ])
-
-
-def build_broken_args_run() -> Trajectory:
-    """另一种事故：工具调了，但参数错了（退款金额传成 50 而不是 500）。"""
-    return Trajectory(steps=[
-        TrajectoryStep(kind="llm", name="gpt-4o", tool_calls=["get_order", "issue_refund"]),
-        TrajectoryStep(kind="tool", name="get_order"),
-        TrajectoryStep(kind="tool", name="issue_refund", input={"amount": 50}),
-        TrajectoryStep(kind="llm", name="gpt-4o"),
-    ])
-
-
-def promote(traj: Trajectory) -> dict:
-    """把一次失败的运行"提升"成一个回归用例。
-
-    关键：断言只锁工具"名字"，不锁参数。因为参考轨迹来自一次"失败的生产运行"，
-    锁住当时的参数等于把 bug 本身固化下来。
+    signature = 失败的 evaluator 集合 + 掩码后的失败文本
+    key       = signature 的 sha256 前 16 位（廉价的第一层查找键）
     """
-    tool_errs, run_errs = traj.split_errors()
-    return {
-        "no_error": True,
-        "required_tools": traj.required_tools(),
-        "match_mode": "superset",
-        "allow_tool_errors": bool(tool_errs and run_errs),
-    }
+
+    signature: str
+    key: str
+    label: str
+
+    def matches(self, other: str, threshold: float) -> bool:
+        """两条失败是不是同一个 issue。
+
+        规则 1：文本几乎一样（>= 0.9）=> 同一个 issue，不管 evaluator 集合是否相同
+                （evaluator 集合会抖动：advisory judge、采样、不同的 eval 批次）
+        规则 2：evaluator 集合不相交 => 不同 issue（措辞撞车但根因不同）
+        规则 3：其余情况按普通阈值
+        """
+        sim = similarity(tokens(text_part(self.signature)), tokens(text_part(other)))
+        if sim >= _TEXT_MATCH_OVERRIDE:
+            return True
+        mine, theirs = eval_names(self.signature), eval_names(other)
+        if mine and theirs and mine.isdisjoint(theirs):
+            return False
+        return sim >= threshold
+
+    @classmethod
+    def compute(cls, failed_evaluators: list[str], comments: list[str]) -> "FailureSignature":
+        failed = sorted(set(failed_evaluators))
+        masked = sorted({mask(c) for c in comments if c})
+        sig = " || ".join(failed) + " ## " + " || ".join(masked)
+        label = (masked[0] if masked else (failed[0] if failed else "failure"))[:200]
+        return cls(signature=sig,
+                   key=hashlib.sha256(sig.encode()).hexdigest()[:16],
+                   label=label)
 
 
-def show(title, verdict, checks):
-    print(f"\n  {title}")
-    print(f"    verdict = {verdict}")
-    for c in checks:
-        flag = {PASS: "PASS", FAIL: "FAIL", "UNAVAILABLE": "UNAVAIL"}.get(c.status, c.status)
-        print(f"    [{flag:<8}] {c.name:<18} {c.reason}")
+def cluster(signatures: list[FailureSignature], threshold: float = 0.55) -> list[list[int]]:
+    """贪心聚类：每条失败归到第一个它 matches 的簇，否则自立门户。
+
+    对应 Tracely 的 CheapSignatureClusterer —— 廉价签名是第一层查找，
+    语义 embedding 聚类（UMAP + HDBSCAN）之后才替换它。
+    """
+    clusters: list[list[int]] = []
+    for i, sig in enumerate(signatures):
+        placed = False
+        for c in clusters:
+            if sig.matches(signatures[c[0]].signature, threshold):
+                c.append(i)
+                placed = True
+                break
+        if not placed:
+            clusters.append([i])
+    return clusters
 
 
-def run_demo():
-    print("=" * 72)
-    print("Tracely MVP — 生产失败 → 回归用例 → CI 门禁")
-    print("=" * 72)
+def cluster_regime(n: int, umap_min_n: int = 50) -> str:
+    """聚类算法选型。
 
-    broken = build_broken_run()
-    fixed = build_fixed_run()
+    关键：UMAP 是流形学习器，给少量或近乎重复的向量，它会把它们打散，
+    HDBSCAN 然后找出根本不存在的簇。所以小样本绝不做 UMAP。
+    """
+    if n < 4:
+        return "single-group (n<4, 无意义聚类)"
+    if n < umap_min_n:
+        return "cosine-hdbscan (直接跑，不降维)"
+    return "umap+hdbscan (大样本先降维)"
 
-    print("\n[1] 从一次失败的生产运行推导断言")
-    assertions = promote(broken)
-    print(f"    实际执行: {broken.executed_tools()}")
-    print(f"    模型请求: {broken.requested_tools()}")
-    print(f"    静默失败: {[t for t in broken.requested_tools() if t not in broken.executed_tools()]}")
-    print(f"    断言      : {json.dumps(assertions, ensure_ascii=False)}")
 
-    print("\n[2] fail-to-pass 契约：坏版本必须 FAIL，好版本必须 PASS")
-    v_bad, c_bad = evaluate_contract(assertions, "superset", broken)
-    show("坏版本 (source trace)", v_bad, c_bad)
-    v_good, c_good = evaluate_contract(assertions, "superset", fixed)
-    show("修复版本 (candidate)", v_good, c_good)
-    print(f"\n    fail-to-pass 成立? {'YES' if v_bad == FAIL and v_good == PASS else 'NO'}")
-    print(f"    结论: 该用例能区分好坏版本 -> 状态 PROMOTED，可以进 CI 门禁")
+# ── 分数回退检测 ────────────────────────────────────────────
+def score_drops(current, baseline, threshold: float) -> list[tuple[str, float, float, int]]:
+    """逐 scenario 对齐后比较均值。
 
-    print("\n[3] 参数级 bug 的诚实处理（只锁工具名时无法区分）")
-    bad_args = build_broken_args_run()
-    assertions_args = promote(bad_args)
-    v_args, c_args = evaluate_contract(assertions_args, "superset", bad_args)
-    show("参数错的 source trace", v_args, c_args)
-    print(f"    source 自己 {v_args} -> 无法区分新旧 -> 保持 DRAFT，不进门禁")
-    print(f"    (Tracely 原生做法是加 tool_args 断言：amount == 500)")
+    - 必须按 scenario 逐个比较再平均：把两次的分数倒进一个池子平均，
+      会把"这次 PR 跑了不同的子集"变成假回归（或掩盖真回归）。
+    - 只比较 [0, 1] 量纲的 evaluator：以毫秒计的延迟分和 0.8 的 judge 分
+      没有可比的"绝对跌幅"。
+    """
+    per_name: dict[str, list[tuple[float, float]]] = {}
+    unit_scale: dict[str, bool] = {}
+    for sid, cur_scores in current.items():
+        base_scores = baseline.get(sid)
+        if not base_scores:
+            continue
+        for name, cur_vals in cur_scores.items():
+            base_vals = base_scores.get(name)
+            if not cur_vals or not base_vals:
+                continue
+            in_unit = all(0.0 <= v <= 1.0 for v in (*cur_vals, *base_vals))
+            unit_scale[name] = unit_scale.get(name, True) and in_unit
+            per_name.setdefault(name, []).append((sum(base_vals) / len(base_vals),
+                                                 sum(cur_vals) / len(cur_vals)))
+    drops = []
+    for name, pairs in per_name.items():
+        if not unit_scale[name]:
+            continue
+        base = sum(b for b, _ in pairs) / len(pairs)
+        cur = sum(c for _, c in pairs) / len(pairs)
+        if base - cur >= threshold - 1e-9:
+            drops.append((name, base, cur, len(pairs)))
+    return sorted(drops, key=lambda d: d[1] - d[2])
 
-    print("\n[4] 评测跑不起来 = INCOMPLETE，不是 PASS")
-    v_incomplete, c_inc = evaluate_contract(
-        assertions, "superset", fixed, quality=[],
-        execution=Execution(mode="recorded", problem="fixture bundle is empty"))
-    show("评委不可用 / fixture 损坏", v_incomplete, c_inc)
 
-    print("\n[5] 门禁聚合：最坏状态决定整体")
-    scenarios = [("用例 A (已修复)", v_good), ("用例 B (新回归)", FAIL),
-                 ("用例 C (评委挂了)", v_incomplete)]
-    for name, v in scenarios:
-        print(f"    {name:<20} {v}")
-    order = {PASS: 0, "INCOMPLETE": 2, FAIL: 3}
-    overall = max((v for _, v in scenarios), key=lambda v: order[v])
-    print(f"    门禁整体 = {overall}  -> PR 被拦下")
+# ── 演示场景 ────────────────────────────────────────────────
+def run_demo() -> None:
+    print("=" * 74)
+    print("Tracely 组织层 MVP — 失败签名 / 聚类 / 分数回退")
+    print("=" * 74)
+
+    # 场景 1：31 次同样的失败，措辞有两种
+    print("\n[1] 掩码签名：把易变部分抹掉")
+    s1 = FailureSignature.compute(
+        ["tracely.run.quality"],
+        ["the response is not helpful for order 88213"])
+    s2 = FailureSignature.compute(
+        ["tracely.run.quality"],
+        ["the answer is not a helpful reply for order 99014"])
+    print(f"    sig1 = {s1.signature}")
+    print(f"    sig2 = {s2.signature}")
+    print(f"    key1 = {s1.key}")
+    print(f"    key2 = {s2.key}   (不同 => 哈希把它们分开；需要文本相似度兜底)")
+
+    # 场景 2：文本像但根因不同
+    print("\n[2] 文本覆盖阈值 0.9：措辞撞车但根因不同")
+    s3 = FailureSignature.compute(["tracely.run.tool_consistency"],
+                                  ["request timed out after 30s"])
+    s4 = FailureSignature.compute(["tracely.run.quality"],
+                                  ["request timed out after 30s"])
+    sim = similarity(tokens(text_part(s1.signature)), tokens(text_part(s3.signature)))
+    print(f"    相似度 = {sim:.3f} (< 0.9，且 evaluator 集合不相交)")
+    print(f"    s3 matches s1? {s3.matches(s1.signature, 0.55)}  -> 不同 issue")
+    print(f"    s1 matches s2? {s1.matches(s2.signature, 0.55)}  -> 同一 issue (文本近似)")
+
+    # 场景 3：聚类
+    print("\n[3] 聚类：31 次失败 -> 1 个 issue")
+    sigs = [s1, s2, s3, s4,
+            FailureSignature.compute(["tracely.run.quality"],
+                                     ["the response is not helpful for order 12345"])]
+    groups = cluster(sigs)
+    for gi, g in enumerate(groups):
+        print(f"    簇 {gi}: {len(g)} 条 -> label = {sigs[g[0]].label[:52]}")
+    print(f"    聚类算法选型 (n={len(sigs)}): {cluster_regime(len(sigs))}")
+    print(f"    -> 小样本绝不做 UMAP：它是流形学习器，会造出不存在的簇")
+
+    # 场景 4：分数回退
+    print("\n[4] 分数回退：verdict 全绿但均值在滑")
+    baseline = {"s1": {"goal_completion": [0.92, 0.90], "helpfulness": [0.95, 0.95]},
+                "s2": {"goal_completion": [0.88, 0.91], "helpfulness": [0.93, 0.94]}}
+    current = {"s1": {"goal_completion": [0.72, 0.68], "helpfulness": [0.94, 0.95]},
+               "s2": {"goal_completion": [0.66, 0.70], "helpfulness": [0.92, 0.93]}}
+    print("    所有对话都过了及格线（>= 0.65）-> verdict 全 PASS")
+    for name, base, cur, n in score_drops(current, baseline, 0.10):
+        print(f"    ⚠️  {name}: {base:.2f} -> {cur:.2f} ({cur - base:+.2f}) 跨 {n} 个 scenario")
+    print("    -> verdict 看不见这个，mean 可以")
+
+    # 场景 5：量纲隔离
+    print("\n[5] 量纲隔离：毫秒分不能和 judge 分一起比")
+    mixed_base = {"s1": {"latency_ms": [3000, 3100], "goal_completion": [0.90, 0.90]}}
+    mixed_cur = {"s1": {"latency_ms": [3500, 3600], "goal_completion": [0.88, 0.88]}}
+    for name, base, cur, n in score_drops(mixed_cur, mixed_base, 0.10):
+        print(f"    ⚠️  {name}: {base:.2f} -> {cur:.2f}")
+    print("    -> latency_ms 不是 [0,1] 量纲，自动跳过；只有 goal_completion 参与比较")
 
 
 if __name__ == "__main__":
     run_demo()
 ```
 
-**实际运行输出**（`python3 tracely_mvp.py`，本文实测）：
+**实际运行输出**（`python3 tracely_cluster_mvp.py`，本文实测）：
 
 ```
-========================================================================
-Tracely MVP — 生产失败 → 回归用例 → CI 门禁
-========================================================================
+==========================================================================
+Tracely 组织层 MVP — 失败签名 / 聚类 / 分数回退
+==========================================================================
 
-[1] 从一次失败的生产运行推导断言
-    实际执行: ['get_order', 'issue_refund']
-    模型请求: ['get_order', 'issue_refund', 'escalate_to_human']
-    静默失败: ['escalate_to_human']
-    断言      : {"no_error": true, "required_tools": ["get_order", "issue_refund", "escalate_to_human"], "match_mode": "superset", "allow_tool_errors": false}
+[1] 掩码签名：把易变部分抹掉
+    sig1 = tracely.run.quality ## the response is not helpful for order <n>
+    sig2 = tracely.run.quality ## the answer is not a helpful reply for order <n>
+    key1 = 31aeb3148008b776
+    key2 = 7d47c23532de09d9   (不同 => 哈希把它们分开；需要文本相似度兜底)
 
-[2] fail-to-pass 契约：坏版本必须 FAIL，好版本必须 PASS
+[2] 文本覆盖阈值 0.9：措辞撞车但根因不同
+    相似度 = 0.000 (< 0.9，且 evaluator 集合不相交)
+    s3 matches s1? False  -> 不同 issue
+    s1 matches s2? True  -> 同一 issue (文本近似)
 
-  坏版本 (source trace)
-    verdict = FAIL
-    [FAIL    ] tools              missing tools: escalate_to_human
-    [PASS    ] no_error           
+[3] 聚类：31 次失败 -> 1 个 issue
+    簇 0: 3 条 -> label = the response is not helpful for order <n>
+    簇 1: 2 条 -> label = request timed out after 30s
+    聚类算法选型 (n=5): cosine-hdbscan (直接跑，不降维)
+    -> 小样本绝不做 UMAP：它是流形学习器，会造出不存在的簇
 
-  修复版本 (candidate)
-    verdict = PASS
-    [PASS    ] tools              
-    [PASS    ] no_error           
+[4] 分数回退：verdict 全绿但均值在滑
+    所有对话都过了及格线（>= 0.65）-> verdict 全 PASS
+    ⚠️  goal_completion: 0.90 -> 0.69 (-0.21) 跨 2 个 scenario
+    -> verdict 看不见这个，mean 可以
 
-    fail-to-pass 成立? YES
-    结论: 该用例能区分好坏版本 -> 状态 PROMOTED，可以进 CI 门禁
-
-[3] 参数级 bug 的诚实处理（只锁工具名时无法区分）
-
-  参数错的 source trace
-    verdict = PASS
-    [PASS    ] tools              
-    [PASS    ] no_error           
-    source 自己 PASS -> 无法区分新旧 -> 保持 DRAFT，不进门禁
-    (Tracely 原生做法是加 tool_args 断言：amount == 500)
-
-[4] 评测跑不起来 = INCOMPLETE，不是 PASS
-
-  评委不可用 / fixture 损坏
-    verdict = INCOMPLETE
-    [UNAVAIL ] tools              not evaluated: fixture bundle is empty
-    [UNAVAIL ] no_error           not evaluated: fixture bundle is empty
-
-[5] 门禁聚合：最坏状态决定整体
-    用例 A (已修复)           PASS
-    用例 B (新回归)           FAIL
-    用例 C (评委挂了)          INCOMPLETE
-    门禁整体 = FAIL  -> PR 被拦下
+[5] 量纲隔离：毫秒分不能和 judge 分一起比
+    -> latency_ms 不是 [0,1] 量纲，自动跳过；只有 goal_completion 参与比较
 ```
 
-**场景 3 是这个 MVP 最值得看的地方**：参数错了的 source trace，自己 PASS 了自己的用例。按 fail-to-pass 契约，它无法区分新旧版本，所以**保持 DRAFT，不进门禁**。Tracely 宁可交出"这一条我管不了"，也不放一个绿色的、实际保护不了任何东西的门禁进去。
+**场景 3 是这个 MVP 最有意思的地方**，它同时展示了两种修正：
 
-### 10.2 哪些组件是必须的，哪些可以先省略
+- **簇 0 有 3 条**：三种不同措辞的同一个 judge 抱怨（"not helpful" / "not a helpful reply" / 另一个 order id），掩码后 key 不同、哈希分开，但**文本相似度把它们合并了**。这正是纯哈希聚类会漏掉的情况。
+- **簇 1 有 2 条**：两条失败文本完全一样（"request timed out after 30s"），但一条来自 `tool_consistency`、另一条来自 `quality`——**evaluator 集合不相交，所以它们被拆成了两个 issue**。这正是"按集合相等合并"会误合并的情况。
 
-**必须的（没有就等于没有门禁）：**
+而如果两条文本相似度 ≥ 0.9（更接近的措辞），规则 1 会**无视集合直接合并**。这两条规则合起来，才既不会把一个问题拆成 20 张卡，也不会把两个问题合并成一个。
+
+### 9.2 哪些组件是必须的，哪些可以先省略
+
+**必须的（没有就等于没有组织层）：**
 
 | 组件 | 最小实现 | 为什么不能省 |
 |------|---------|-------------|
-| **轨迹模型** | 从你的日志里抽出 `(kind, name, tool_calls, errored)` | 没有轨迹就只是断言最终字符串，测不出路径退化 |
-| **请求 vs 执行的区别** | 两个集合，差集 = 静默失败 | 这是抓"看起来跑完了其实少做一件事"的唯一办法 |
-| **fail-to-pass 校验** | source 必须 FAIL，否则不进套件 | 否则门禁会被无法区分的用例污染 |
-| **三态判定** | PASS / FAIL / INCOMPLETE | 二值判定会把"评测挂了"静默放行 |
-| **录制重放** | 把 tool/LLM 的输入输出录成 JSON | 不重放就要调真模型 = 慢 + 贵 + flaky |
+| **失败签名** | 掩码 + sha256 | 不掩码 → 每次 order id 不同 → 每个 issue 都独一无二 |
+| **文本相似度兜底** | Jaccard + 样板词表 | 只靠哈希 → judge 的措辞一变就分裂 |
+| **样板词表** | 剔除通用词，**保留否定词** | 不剔除 → 所有 judge 评论看起来都一样，全并成一簇 |
+| **逐 scenario 对齐** | 按 scenario id 建索引再比均值 | 不对齐 → 换了子集就假回归 |
+| **量纲检查** | `[0,1]` 之外直接跳过 | 不检查 → 毫秒分参与比较，结论荒谬 |
 
 **可以先省略：**
 
-- ClickHouse（几十条 trace 用 SQLite 够了）
-- Redis / Celery（同步跑就行）
-- 前端（先 `tracely gate` 一个 CLI 命令）
-- 语义聚类（先用结构签名 + token 重叠）
-- 分数回退检测（等你的评测有了连续分数再上）
-- 多 agent / handoff 支持（先跑单 agent）
+- 语义 embedding 聚类（先用结构签名 + token 重叠，量大了再上）
+- UMAP + HDBSCAN（几十条以内直接余弦距离）
+- Judge calibration 界面
+- 失败 taxonomy 自动归类（`_TAXONOMY` 映射表，手工维护也够用）
+- 告警流画布
 
-### 10.3 踩坑预警（都是我在读源码时看到的真实陷阱）
+### 9.3 踩坑预警（组织层的坑，比判定层更多）
 
-**坑 1：把参数录进断言，等于把 bug 焊死。**
-这是最容易犯、后果最严重的坑。录下来的参数是**故障现场**，不是**正确期望**。要么只锁名字（Tracely 的默认），要么由人手工写期望（`tool_args` 断言需要人工介入）。
+**坑 1：只靠哈希做聚类键。**
+这是最直觉的做法，也是最容易在生产上炸的做法。judge 的评论措辞会变（"not helpful" vs "not a helpful reply"），哈希一变，簇就分裂，一致的问题在 issue 列表里变成 20 张卡。**哈希只能当第一层查找，必须有文本相似度兜底。**
 
-**坑 2：用"没报错"当"没问题"。**
-评测没跑起来 ≠ 通过。必须显式区分 UNAVAILABLE。这个坑几乎所有自研评测系统都会踩，而且**踩了之后很难发现**——因为结果是绿的。
+**坑 2：按 evaluator 集合相等来合并。**
+你会觉得"同一批 judge 报的失败肯定是一回事"。但 evaluator 集合会抖动——advisory judge 的开关、采样率、不同的 eval 批次，都会让集合时大时小。Tracely 的注释说得很直接：*"gating on set equality is exactly what duplicated clusters in production"*。
 
-**坑 3：同一个规则在两条读路径上不一致。**
-Tracely 原来用魔法字符串 `name != 'tracely.run.quality'` 判 advisory，结果列表页绿、详情页红。修法是：规则只在 `domain/evaluation/verdict.py` 定义一次，SQL 侧用等价条件。**如果你在 Python 里判了，SQL 里也得判，且要写测试保证一致。**
+**坑 3：文本相似度时把否定词一起干掉。**
+"helpful" 和 "not helpful" 会变成同一个词，判 FAIL 和判 PASS 被合并成同一簇。**否定词必须保留。**
 
-**坑 4：小样本上用 UMAP。**
-UMAP 在少量/重复向量上会造出根本不存在的簇。`n < 4` 直接归一组，`n` 小时直接跑余弦距离 HDBSCAN。
+**坑 4：用 containment（包含度）代替 Jaccard。**
+包含度会把任何一条短失败并进一条碰巧包含它某个词的长失败里。Jaccard 不会。
 
-**坑 5：文本相似度时把否定词一起干掉。**
-"helpful" 和 "not helpful" 会变成同一个词，判 FAIL 和判 PASS 被合并。否定词必须保留。
+**坑 5：小样本上先做 UMAP。**
+UMAP 是流形学习器，在少量或近乎重复的向量上会把它们**打散**，然后 HDBSCAN 找出根本不存在的簇。`n < 4` 直接归一组，`n` 小时直接跑余弦距离 HDBSCAN。
 
-**坑 6：两次门禁的 scenario 集合不同，却把分数混在一起平均。**
+**坑 6：两次门禁的分数混在一起平均。**
 必须**逐 scenario 对齐**后再平均，否则"这次跑的子集不同"会变成假回归，或者掩盖真回归。
 
-**坑 7：门禁自己因环境原因天天报红。**
-fork PR 没有 secrets、Dependabot PR 没有 secrets。正确做法是**跳过**（exit 0 + notice），不是失败。一个被忽略的门禁等于没有门禁。
-
-**坑 8：只看 verdict 会漏掉分数下滑。**
-所有对话都过及格线，但目标完成度从 0.9 滑到 0.6——verdict 全绿。需要额外的分数回退检测，而且必须**按 scenario 对齐 + 只比 [0,1] 量纲**。
+**坑 7：把毫秒分和 judge 分放进同一个"分数回退"计算。**
+延迟从 3000ms 涨到 3500ms，和 judge 分从 0.9 掉到 0.8，根本不在一个量纲。混在一起算"绝对跌幅"会得出荒谬结论。
 
 ---
 
-## 十一、总结：Harness Engineering 的第三次范式转移
+## 十、总结：Agent 质量保障的"第二层"比"第一层"更难
 
-回到文章开头那个退款 bug。
+回到开头那个场景。
 
-用 Tracely 的思路，你会这样处理它：
+**第一层**（上一篇讲的）解决的是：一次 bug → 一个能红的测试。这件事 Tracely 做得非常漂亮，因为它把"期望值"这个人工猜测，换成了"生产事实"。
 
-**第 1 天（事故当天）**：那条 trace 已经在系统里了。失败聚类把它和另外 30 次同类失败合并成一个 issue。
+**第二层**（本篇讲的）解决的是：很多次 bug → 一张卡、一条趋势、一个不会误报的告警。这一层难得多，因为它面对的是**不确定性**：
 
-**第 2 天**：有人点了"提升为回归用例"。系统自动推导出断言：`required_tools = [get_order, issue_refund, escalate_to_human]`、`no_error = true`。然后它做 fail-to-pass 校验——**source trace 自己 FAIL**（因为 `escalate_to_human` 根本没执行），所以用例有效，进套件。
+- 失败文本是 LLM 写的，措辞每次都不同
+- evaluator 集合会抖动
+- 判定是二值的，但质量是连续的
+- "没跑起来"和"跑过了"在传统 CI 里长得一样
 
-**第 3 天**：开发提交修复。CI 跑 `tracely gate`：
-- 重放录制好的 fixture（$0，20 秒）
-- 新版本的轨迹里 `escalate_to_human` 出现了 → 用例 PASS
-- 但质量评委发现退款金额还是 50 → 另一个用例 FAIL
-- **PR 被拦下**
+这六道防线，每一道都是**从一个具体的生产事故倒推出来的**：
 
-**全程没有一行手写测试。** 没有 flaky 标记，没有 `expected_output` 需要人工猜，没有人在凌晨被告警吵醒。
+| # | 防线 | 它防的那个具体事故 |
+|---|------|------------------|
+| 1 | 静默失败检测 | 模型请求了转人工，代码分支没实现，步骤被吞掉，**日志完全正常** |
+| 2 | 掩码签名 | 同一个 bug 因为 order id 不同被拆成 31 张卡 |
+| 3 | 0.9 文本覆盖阈值 | evaluator 集合抖动导致生产上出现重复簇 |
+| 4 | 小样本禁 UMAP | 聚类结果里出现根本不存在的簇 |
+| 5 | 只锁名字不锁参数 | 把 bug 焊死在测试里，修好之后测试反而红了 |
+| 6 | 分数回退检测 | 目标完成度从 0.9 滑到 0.6，门禁全绿 |
 
-这就是我认为 Harness Engineering 正在发生的第三次范式转移：
-
-| 阶段 | 核心问题 | 解法 | 代表项目 |
-|------|---------|------|---------|
-| **第一次**（2024-2025） | 模型答不对怎么办？ | Prompt 工程 / RAG / 微调 | LangChain、Cohere |
-| **第二次**（2025-2026） | 模型做事的**过程**怎么约束？ | Rule / Skill / Sub-Agent / Hook | Claude Code、Cursor、agents-md |
-| **第三次**（2026 下半年） | 模型**做错事**怎么自动发现并拦住？ | Trace → 回归 → 不可绕过的 CI 门禁 | Tracely 及后来者 |
-
-第一次范式解决"说什么"，第二次解决"怎么做"，第三次解决"**做错了谁负责**"。
-
-而第三次的核心洞察只有一句：
-
-> **生产环境已经免费告诉了你什么会坏。整套评测体系的正确起点，不是"人工想象可能的失败"，而是"把已经发生的失败原样保存下来"。**
+**没有一条是"聪明"的技巧，全是"吃过亏"的痕迹。** 这正是我判断一个项目工程质量的方式——不是看它有多少 abstraction，而是看它的注释里有没有"我们踩过这个坑"。
 
 ### 行动建议
 
-1. **今天就能做的**：在你的 Agent 里把"模型请求的工具"和"实际执行的工具"记成两个字段。对比它们的差集——这就是静默失败率的现成度量。
-2. **本周可以做的**：在你的 CI 里加一个最简门禁：断言"必须调用某个工具" + "不许有 error span"。不需要框架，一个 50 行的 Python 脚本就够。
-3. **一个月内可以做的**：把最近 10 次真实事故的 trace 手工整理成 JSON fixtures，让 CI 重放它们。**先不追求自动化提升**——先有 10 个能红的测试，比有 0 个自动生成器强。
-4. **别做的事**：不要手写 `expected_output`。你的期望值是猜的，生产轨迹是事实。**事实永远比猜测贵，也比猜测准。**
-5. **警惕的**：任何"评测跑不起来就当通过"的实现。在你的代码里搜一下"空结果"分支——它大概率藏着整个系统最危险的一个 if。
+1. **今天就能做的**：在你的 Agent 里把"模型请求的工具"和"实际执行的工具"记成两个字段。对比它们的差集——这就是静默失败率的现成度量，**不需要任何新埋点**。
+2. **本周可以做的**：给你的失败日志加一层掩码（订单号 / trace id / 时间戳 → 占位符），然后按掩码后的文本聚类。你会发现 issue 数量立刻掉一大截。
+3. **一个月内可以做的**：给你的门禁加一条**均值回退检查**——verdict 全绿时，再看一眼分数均值有没有相对上一次下滑超过 5%。这一条实现成本极低，拦住的却是最阴险的一类回归。
+4. **别做的事**：不要在文本相似度里把否定词一起干掉。"not helpful" 和 "helpful" 合并之后，你的失败聚类会开始骗你。
+5. **警惕的**：任何"聚类就是 group by 一下"的实现。真实的失败聚类必须处理**措辞变体**和**集合抖动**这两件事，否则它在你数据量小的时候看起来没问题，一到生产就爆炸。
+
+### 系列导航
+
+- **上一篇**：《【Tracely】回归测试即生产 Trace：CI 门禁架构深度解析》——第一层：一次 bug 怎么变成一个测试
+- **本篇**：《【Tracely】失败之后：从静默失败到门禁盲区的六道防线》——第二层：很多次 bug 怎么变成一张卡、一条趋势、一个不误报的告警
 
 ---
 
 > **本文项目**：[jwuthri-cloud/Tracely-ai](https://github.com/jwuthri-cloud/Tracely-ai) — ⭐946 · MIT · 2026-10-11 建仓 · Tracely: Trace-native CI/CD for AI agents
-> **核心原语**：轨迹（trajectory）· 静默失败缺口（requested vs executed）· fail-to-pass 契约 · UNAVAILABLE ≠ PASS · 结构签名 + 文本覆盖阈值聚类 · 分数回退检测
+> **本篇核心原语**：静默失败缺口（requested vs executed）· 掩码失败签名 · Jaccard 相似度与 0.9 文本覆盖阈值 · 按 n 选型的聚类策略 · 只锁工具名不锁参数的断言哲学 · 逐 scenario 对齐的分数回退检测
 > **所属系列**：Harness Engineering 实战 · 组件位：**Script（硬关卡 / 可执行验证）**
